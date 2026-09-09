@@ -1,0 +1,26 @@
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Git files
+.git/
+.gitignore
+
+# Environment variables & secrets
+.env
+.env.example
+.python-version
+pyproject.toml
+uv.lock
+# Documentation & large assets
+README.md
+README.txt
+*.pdf
+
+# Docker files
+Dockerfile
+docker-compose.yml
