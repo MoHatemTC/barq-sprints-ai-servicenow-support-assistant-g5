@@ -4,10 +4,11 @@ import os
 
 class serviceNow_client:
     
+    @staticmethod
     async def KB_connection():
-        url = f"{os.getenv("SERVICENOW_URL")}/api/sn_km_api/knowledge/articles"
-        username = os.getenv("USERNAME")
-        password = os.getenv("PASSWORD")
+        url = f"{os.getenv('SERVICENOW_INSTANCE_URL', '').rstrip('/')}/api/now/table/kb_knowledge"
+        username = os.getenv("SERVICENOW_USERNAME")
+        password = os.getenv("SERVICENOW_PASSWORD")
         header = {
             "Accept" : "application/json"
         }
