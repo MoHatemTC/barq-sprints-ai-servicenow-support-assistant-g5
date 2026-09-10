@@ -9,4 +9,5 @@ router = APIRouter(
 @router.get("/all")
 async def get_KB():
     kb_retrieve = KB_services()
-    return{"Articles" : kb_retrieve.get_articles()}
+    articles = await kb_retrieve.get_articles()
+    return {"Articles" : articles}

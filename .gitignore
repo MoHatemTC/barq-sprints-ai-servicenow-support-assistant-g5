@@ -6,7 +6,6 @@
 venv/
 env/
 .python-version
-pyproject.toml
 uv.lock
 # Python cache
 __pycache__/
