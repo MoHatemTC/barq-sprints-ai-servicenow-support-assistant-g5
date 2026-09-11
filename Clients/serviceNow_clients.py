@@ -6,7 +6,12 @@ class serviceNow_client:
 
     @staticmethod
     async def KB_connection():
-        url = f"{os.getenv('SERVICENOW_INSTANCE_URL', '').rstrip('/')}/api/now/table/kb_knowledge"
+
+        url = (
+            f"{os.getenv('SERVICENOW_INSTANCE_URL', '').rstrip('/')}"
+            "/api/now/table/kb_knowledge"
+        )
+
         username = os.getenv("SERVICENOW_USERNAME")
         password = os.getenv("SERVICENOW_PASSWORD")
         header = {
@@ -34,4 +39,5 @@ class serviceNow_client:
                 headers=header
             )
             response.raise_for_status()
+
             return response.json()
