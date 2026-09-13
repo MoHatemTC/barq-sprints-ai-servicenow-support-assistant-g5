@@ -19,12 +19,13 @@ def health_check():
 # 3. Primary Webhook Endpoint
 @router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED)
 async def receive_incident_webhook(payload: IncidentPayload):
-    logger.info("================ NEW INCOMING PAYLOAD ================")
-    logger.info(f"Incident Number   : {payload.number}")
-    logger.info(f"System ID         : {payload.sys_id}")
-    logger.info(f"Short Description : {payload.short_description}")
-    logger.info(f"Description       : {payload.description}")
-    logger.info("======================================================")
+    # Standard prints bypass Uvicorn's logging block
+    print("\n================ NEW INCOMING PAYLOAD ================")
+    print(f"Incident Number   : {payload.number}")
+    print(f"System ID         : {payload.sys_id}")
+    print(f"Short Description : {payload.short_description}")
+    print(f"Description       : {payload.description}")
+    print("======================================================\n")
 
     # Deduplication check: drop duplicate deliveries
     if payload.sys_id in processed_incident_ids:
