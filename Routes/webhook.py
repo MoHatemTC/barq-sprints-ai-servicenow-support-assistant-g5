@@ -27,6 +27,13 @@ async def receive_incident_webhook(payload: IncidentPayload):
     print(f"Description       : {payload.description}")
     print("======================================================\n")
 
+    logger.info("================ NEW INCOMING PAYLOAD ================")
+    logger.info(f"Incident Number   : {payload.number}")
+    logger.info(f"System ID         : {payload.sys_id}")
+    logger.info(f"Short Description : {payload.short_description}")
+    logger.info(f"Description       : {payload.description}")
+    logger.info("======================================================")
+
     # Deduplication check: drop duplicate deliveries
     if payload.sys_id in processed_incident_ids:
         logger.warning(f"Duplicate event ignored for Incident: {payload.number} ({payload.sys_id})")
