@@ -1,0 +1,32 @@
+from fastapi import FastAPI
+from app.api import webhook
+from dotenv import load_dotenv 
+from app.api.kb import router as kb_router
+
+load_dotenv()
+
+from contextlib import asynccontextmanager
+from app.core.database import db
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    await db.connect()
+    yield
+    # Shutdown
+    await db.disconnect()
+
+app = FastAPI(
+    title="AI ServiceNow Support Assistant API",
+    version="1.0.0",
+    description="Backend service for processing ServiceNow incident webhooks and running AI retrieval workflows.",
+    lifespan=lifespan
+)
+
+# Connect router to the main app
+app.include_router(webhook.router)
+app.include_router(kb_router)
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "fastapi-backend"}

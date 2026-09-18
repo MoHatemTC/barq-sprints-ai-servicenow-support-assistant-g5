@@ -54,10 +54,28 @@ These five are required before anything else will work — get them from your PD
 
 Leave the rest (Langfuse, Langsmith, Qdrant, Postgres, LLM/agent config) for when you get to those parts.
 
-## Running the application
+Set a unique `WEBHOOK_SECRET` in `.env` and configure the same value in
+ServiceNow. Requests without a valid `X-ServiceNow-Signature` are rejected.
 
-To run just the FastAPI application using Docker Compose, without starting dependencies:
+## Running the application locally
+
+Start only PostgreSQL through Docker Compose:
 
 ```bash
-docker compose up --no-deps fastapi_app
+docker compose up -d postgres_db
+```
+
+Then run FastAPI locally from the project root:
+
+```bash
+uv run uvicorn main:app --reload
+```
+
+FastAPI connects to PostgreSQL through `localhost:5433`. The database and the
+`events_log` table are created automatically on the first startup.
+
+To run the complete application in Docker later:
+
+```bash
+docker compose up --build
 ```
