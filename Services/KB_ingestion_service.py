@@ -148,3 +148,24 @@ class KBIngestionService:
         )
 
         return result
+
+    async def retire_article(
+        self,
+        article_id: str
+    ):
+
+        # Remove all vectors for the retired article
+        await asyncio.to_thread(
+            self.qdrant.delete_article,
+            article_id
+        )
+
+        print(
+            f"Article {article_id} "
+            f"retired successfully."
+        )
+
+        return {
+            "article_id": article_id,
+            "status": "retired"
+        }

@@ -52,7 +52,7 @@ class KB_event(BaseModel):
         description="The content/body of the article"
     )
 
-    operation: Literal["insert", "update", "delete"] = Field(
+    operation: Literal["insert", "update", "delete", "retire"] = Field(
         ...,
         description="Operation that happened to the article"
     )
