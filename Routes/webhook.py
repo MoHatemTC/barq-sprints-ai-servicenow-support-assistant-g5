@@ -1,8 +1,8 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.webhook_schema import IncidentPayload
-from app.core.auth import verify_webhook_signature
-from app.core.database import db
+from schemas.webhook_schema import IncidentPayload
+from core.auth import verify_webhook_signature
+from core.database import db
 
 logger = logging.getLogger("servicenow_webhook")
 
@@ -15,6 +15,7 @@ async def receive_incident_webhook(payload: IncidentPayload):
         extra={"incident_number": payload.number, "sys_id": payload.sys_id},
     )
 
+    event_recorded = False
     try:
         is_new_event = await db.record_event(payload.sys_id)
         if not is_new_event:
@@ -27,22 +28,33 @@ async def receive_incident_webhook(payload: IncidentPayload):
                 "number": payload.number,
                 "message": "Payload was already received."
             }
+        event_recorded = True
+
+        logger.info(
+            "Validated incident webhook",
+            extra={
+                "incident_number": payload.number,
+                "sys_id": payload.sys_id,
+                "short_description": payload.short_description,
+                "description": payload.description,
+            },
+        )
+
+        await db.update_event_status(payload.sys_id, "completed")
     except Exception as e:
+        if event_recorded:
+            try:
+                await db.update_event_status(payload.sys_id, "failed")
+            except Exception:
+                logger.exception(
+                    "Failed to update incident webhook status",
+                    extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+                )
         logger.exception(
-            "Failed to record incident webhook",
+            "Failed to process incident webhook",
             extra={"incident_number": payload.number, "sys_id": payload.sys_id},
         )
-        raise HTTPException(status_code=500, detail="Internal database error processing event.")
-
-    logger.info(
-        "Validated incident webhook",
-        extra={
-            "incident_number": payload.number,
-            "sys_id": payload.sys_id,
-            "short_description": payload.short_description,
-            "description": payload.description,
-        },
-    )
+        raise HTTPException(status_code=500, detail="Internal database error processing event.") from e
 
     return {
         "status": "accepted",

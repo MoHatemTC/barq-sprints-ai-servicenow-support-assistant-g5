@@ -18,7 +18,6 @@ def is_valid_servicenow_signature(body: bytes, incoming_signature: Optional[str]
 
     digest = hmac.new(secret.encode("utf-8"), body, hashlib.sha256).digest()
     
-    # --- أسطر جديدة لطباعة التوقيعات في نافذة السيرفر لمقارنتها ---
     expected_b64 = base64.b64encode(digest).decode("ascii")
     expected_hex = digest.hex()
     logger.warning("--- SIGNATURE DEBUG ---")

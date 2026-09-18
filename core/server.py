@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from app.api import webhook
+from Routes import webhook
 from dotenv import load_dotenv 
-from app.api.kb import router as kb_router
+from Routes.kb import router as kb_router
 
 load_dotenv()
 
 from contextlib import asynccontextmanager
-from app.core.database import db
+from core.database import db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
