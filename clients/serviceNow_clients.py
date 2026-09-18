@@ -17,9 +17,11 @@ class serviceNow_client:
 
         username = os.getenv("SERVICENOW_USERNAME")
         password = os.getenv("SERVICENOW_PASSWORD")
+
         header = {
             "Accept": "application/json"
         }
+
         # Confirmed via ServiceNow UI (i) icon → URL sys_id
         kb_knowledge_base_id = os.getenv("SERVICENOW_KB_ID")
         kb_category_id = os.getenv("SERVICENOW_KB_CATEGORY_ID")
@@ -30,17 +32,23 @@ class serviceNow_client:
                 f"^kb_category={kb_category_id}"
                 f"^workflow_state=published"
             ),
-            "sysparm_fields": "number,short_description,author,kb_category,workflow_state,sys_updated_on,text,version",
+            "sysparm_fields": (
+                "number,short_description,author,kb_category,"
+                "workflow_state,sys_updated_on,text,version"
+            ),
             "sysparm_display_value": "all"
         }
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        timeout = httpx.Timeout(10.0, connect=5.0)
+
+        async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.get(
                 url=url,
                 params=params,
                 auth=(username, password),
                 headers=header
             )
+
             response.raise_for_status()
 
             return response.json()

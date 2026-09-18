@@ -1,55 +1,64 @@
 import logging
-from typing import Set
-from fastapi import APIRouter, status
-# Import the schema your teammates already built
-from Schema.webhook_schema import IncidentPayload
+from fastapi import APIRouter, Depends, HTTPException, status
+from schemas.webhook_schema import IncidentPayload
+from core.auth import verify_webhook_signature
+from core.database import db
+
 logger = logging.getLogger("servicenow_webhook")
 
-# Use APIRouter instead of FastAPI()
 router = APIRouter()
 
-# In-memory deduplication registry (stores seen sys_id entries)
-processed_incident_ids: Set[str] = set()
-
-#  Health check endpoint (verifies server is up)
-@router.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "servicenow-webhook"}
-
-# 3. Primary Webhook Endpoint
-@router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED)
+@router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED, dependencies=[Depends(verify_webhook_signature)])
 async def receive_incident_webhook(payload: IncidentPayload):
-    # Standard prints bypass Uvicorn's logging block
-    print("\n================ NEW INCOMING PAYLOAD ================")
-    print(f"Incident Number   : {payload.number}")
-    print(f"System ID         : {payload.sys_id}")
-    print(f"Short Description : {payload.short_description}")
-    print(f"Description       : {payload.description}")
-    print("======================================================\n")
+    logger.info(
+        "Received incident webhook",
+        extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+    )
 
-    logger.info("================ NEW INCOMING PAYLOAD ================")
-    logger.info(f"Incident Number   : {payload.number}")
-    logger.info(f"System ID         : {payload.sys_id}")
-    logger.info(f"Short Description : {payload.short_description}")
-    logger.info(f"Description       : {payload.description}")
-    logger.info("======================================================")
+    event_recorded = False
+    try:
+        is_new_event = await db.record_event(payload.sys_id)
+        if not is_new_event:
+            logger.warning(
+                "Duplicate incident webhook ignored",
+                extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+            )
+            return {
+                "status": "duplicate_ignored",
+                "number": payload.number,
+                "message": "Payload was already received."
+            }
+        event_recorded = True
 
-    # Deduplication check: drop duplicate deliveries
-    if payload.sys_id in processed_incident_ids:
-        logger.warning(f"Duplicate event ignored for Incident: {payload.number} ({payload.sys_id})")
-        return {
-            "status": "duplicate_ignored",
-            "number": payload.number,
-            "message": "Payload already received and processed."
-        }
+        logger.info(
+            "Validated incident webhook",
+            extra={
+                "incident_number": payload.number,
+                "sys_id": payload.sys_id,
+                "short_description": payload.short_description,
+                "description": payload.description,
+            },
+        )
 
-    # Register the sys_id to prevent re-runs
-    processed_incident_ids.add(payload.sys_id)
+        await db.update_event_status(payload.sys_id, "completed")
+    except Exception as e:
+        if event_recorded:
+            try:
+                await db.update_event_status(payload.sys_id, "failed")
+            except Exception:
+                logger.exception(
+                    "Failed to update incident webhook status",
+                    extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+                )
+        logger.exception(
+            "Failed to process incident webhook",
+            extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+        )
+        raise HTTPException(status_code=500, detail="Internal database error processing event.") from e
 
-    # Acknowledge immediately before running any heavy downstream tasks
     return {
         "status": "accepted",
         "number": payload.number,
         "sys_id": payload.sys_id,
-        "message": "Event validated and queued successfully."
+        "message": "Event accepted."
     }

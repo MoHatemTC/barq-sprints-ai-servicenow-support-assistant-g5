@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   fastapi_app:
@@ -21,6 +19,9 @@ services:
     environment:
       QDRANT_HOST: qdrant_db
       QDRANT_PORT: 6333
+      POSTGRES_HOST: postgres_db
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
 
     volumes:
       - .:/app
