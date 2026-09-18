@@ -30,3 +30,5 @@ langchain
 langfuse
 qdrant-client
 asyncpg
+beautifulsoup4
+sentence-transformers

@@ -1,5 +1,8 @@
 import httpx
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class serviceNow_client:
@@ -31,7 +34,7 @@ class serviceNow_client:
             "sysparm_display_value": "all"
         }
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.get(
                 url=url,
                 params=params,
