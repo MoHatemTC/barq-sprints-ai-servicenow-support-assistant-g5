@@ -5,11 +5,22 @@ from Routes.kb import router as kb_router
 
 load_dotenv()
 
+from contextlib import asynccontextmanager
+from core.database import db
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    await db.connect()
+    yield
+    # Shutdown
+    await db.disconnect()
 
 app = FastAPI(
     title="AI ServiceNow Support Assistant API",
     version="1.0.0",
-    description="Backend service for processing ServiceNow incident webhooks and running AI retrieval workflows."
+    description="Backend service for processing ServiceNow incident webhooks and running AI retrieval workflows.",
+    lifespan=lifespan
 )
 
 # Connect router to the main app
