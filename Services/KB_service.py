@@ -22,7 +22,7 @@ class KB_services:
             try:
                 article = ServiceNowKBArticle(**item)
                 validated_articles.append(article)
-                print(f"✅ Validated Article: [{article.number}] {article.short_description} (State: {article.workflow_state})")
+                print(f"✅ Validated Article: [{article.article_id}] {article.short_description} (State: {article.workflow_state})")
             except ValidationError as e:
                 print(f"❌ Validation failed for article {item.get('number', 'Unknown')}:")
                 for err in e.errors():

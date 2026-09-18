@@ -27,7 +27,7 @@ class serviceNow_client:
                 f"^kb_category={kb_category_id}"
                 f"^workflow_state=published"
             ),
-            "sysparm_fields": "number,short_description,author,kb_category,workflow_state,sys_updated_on,text,version",
+            "sysparm_fields": "sys_id,article_id,short_description,author,kb_category,workflow_state,sys_updated_on,text,version",
             "sysparm_display_value": "all"
         }
 
