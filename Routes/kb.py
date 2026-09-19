@@ -1,6 +1,6 @@
 import httpx
 from fastapi import APIRouter, HTTPException, status
-from services.KB_service import KB_services
+from Services.KB_service import KB_services
 
 router = APIRouter(
     prefix = "/articles",

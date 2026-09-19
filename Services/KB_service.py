@@ -1,7 +1,7 @@
 import logging
 
-from clients.serviceNow_clients import serviceNow_client
-from schemas.KB_schema import ServiceNowKBArticle
+from Clients.serviceNow_clients import serviceNow_client
+from Schemas.KB_schema import ServiceNowKBArticle
 from pydantic import ValidationError
 
 logger = logging.getLogger("servicenow_webhook.kb_service")

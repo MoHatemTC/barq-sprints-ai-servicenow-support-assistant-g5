@@ -6,7 +6,7 @@ from Routes.kb import router as kb_router
 load_dotenv()
 
 from contextlib import asynccontextmanager
-from core.database import db
+from App.database import db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

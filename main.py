@@ -1,5 +1,5 @@
 import uvicorn
-from core.server import app
+from App.app import app
 import logging
 logging.basicConfig(level=logging.INFO)
 if __name__ == "__main__":

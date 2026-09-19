@@ -1,8 +1,8 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException, status
-from schemas.webhook_schema import IncidentPayload
-from core.auth import verify_webhook_signature
-from core.database import db
+from Schemas.webhook_schema import IncidentPayload
+from App.auth import verify_webhook_signature
+from App.database import db
 
 logger = logging.getLogger("servicenow_webhook")
 
