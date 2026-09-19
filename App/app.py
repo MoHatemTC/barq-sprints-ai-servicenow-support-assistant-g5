@@ -6,7 +6,7 @@ from Routes.kb import router as kb_router
 load_dotenv()
 
 from contextlib import asynccontextmanager
-from core.database import db
+from App.database import db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,7 +26,3 @@ app = FastAPI(
 # Connect router to the main app
 app.include_router(webhook.router)
 app.include_router(kb_router)
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "service": "fastapi-backend"}
