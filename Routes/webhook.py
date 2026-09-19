@@ -1,55 +1,91 @@
 import logging
-from typing import Set
-from fastapi import APIRouter, status
-# Import the schema your teammates already built
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from schemas.webhook_schema import IncidentPayload
+from core.auth import verify_webhook_signature
+from core.database import db
+from Routes.incident_preparer import IncidentContextPreparer
+
+# Import  Gemini processing function
+# from core.pipeline import process_incident_with_llm 
+
 logger = logging.getLogger("servicenow_webhook")
-
-# Use APIRouter instead of FastAPI()
 router = APIRouter()
+preparer = IncidentContextPreparer(max_chars=4000)
 
-# In-memory deduplication registry (stores seen sys_id entries)
-processed_incident_ids: Set[str] = set()
+@router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED, dependencies=[Depends(verify_webhook_signature)])
+async def receive_incident_webhook(payload: IncidentPayload, background_tasks: BackgroundTasks):
+    logger.info(
+        "Received incident webhook",
+        extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+    )
 
-#  Health check endpoint (verifies server is up)
-@router.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "servicenow-webhook"}
+    event_recorded = False
+    try:
+        # 1. Deduplication Check
+        is_new_event = await db.record_event(payload.sys_id)
+        if not is_new_event:
+            logger.warning(
+                "Duplicate incident webhook ignored",
+                extra={"incident_number": payload.number, "sys_id": payload.sys_id},
+            )
+            return {"status": "duplicate_ignored", "number": payload.number}
+            
+        event_recorded = True
 
-# 3. Primary Webhook Endpoint
-@router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED)
-async def receive_incident_webhook(payload: IncidentPayload):
-    # Standard prints bypass Uvicorn's logging block
-    print("\n================ NEW INCOMING PAYLOAD ================")
-    print(f"Incident Number   : {payload.number}")
-    print(f"System ID         : {payload.sys_id}")
-    print(f"Short Description : {payload.short_description}")
-    print(f"Description       : {payload.description}")
-    print("======================================================\n")
+        # 2. Run the payload through the security firewall
+        safe_short_desc = payload.short_description or ""
+        safe_desc = payload.description or ""
+        
+        incident_context = preparer.process_payload(
+            sys_id=payload.sys_id,
+            number=payload.number,
+            short_desc=safe_short_desc,
+            desc=safe_desc
+        )
 
-    logger.info("================ NEW INCOMING PAYLOAD ================")
-    logger.info(f"Incident Number   : {payload.number}")
-    logger.info(f"System ID         : {payload.sys_id}")
-    logger.info(f"Short Description : {payload.short_description}")
-    logger.info(f"Description       : {payload.description}")
-    logger.info("======================================================")
+        # 3. SECURE LOGGING: Log the schema output (Deliverable Requirement)
+        # We do not log the raw payload here to prevent PII leakage in server logs
+        logger.info(
+            "Guardrails applied successfully. Payload sanitized.",
+            extra={
+                "incident_number": incident_context.original_number,
+                "is_safe": incident_context.is_safe,
+                "extracted_tags": incident_context.extracted_tags,
+                "truncated_length": len(incident_context.truncated_description),
+            },
+        )
 
-    # Deduplication check: drop duplicate deliveries
-    if payload.sys_id in processed_incident_ids:
-        logger.warning(f"Duplicate event ignored for Incident: {payload.number} ({payload.sys_id})")
-        return {
-            "status": "duplicate_ignored",
-            "number": payload.number,
-            "message": "Payload already received and processed."
-        }
+        # 4. TRAFFIC CONTROL: Short-circuit on malicious payloads
+        if not incident_context.is_safe:
+            logger.warning(
+                f" PROMPT INJECTION BLOCKED for incident {payload.number}.",
+                extra={"sys_id": payload.sys_id}
+            )
+            await db.update_event_status(payload.sys_id, "flagged_malicious")
+            
+            return {
+                "status": "rejected",
+                "number": payload.number,
+                "message": "Payload rejected due to security policy."
+            }
+              #Next phase
+        # 5. HANDOFF: Queue Ibrahim's agent with this new cleaned  data
+        # background_tasks.add_task(Ibrahim's Agent, incident_context)
 
-    # Register the sys_id to prevent re-runs
-    processed_incident_ids.add(payload.sys_id)
+        await db.update_event_status(payload.sys_id, "completed")
+        
+    except Exception as e:
+        if event_recorded:
+            try:
+                await db.update_event_status(payload.sys_id, "failed")
+            except Exception:
+                logger.exception("Failed to update incident webhook status")
+        logger.exception("Failed to process incident webhook")
+        raise HTTPException(status_code=500, detail="Internal database error processing event.") from e
 
-    # Acknowledge immediately before running any heavy downstream tasks
     return {
         "status": "accepted",
         "number": payload.number,
         "sys_id": payload.sys_id,
-        "message": "Event validated and queued successfully."
+        "message": "Event sanitized and queued for AI processing."
     }
