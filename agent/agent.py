@@ -63,7 +63,7 @@ print("Connecting to Qdrant database...")
 # 2. Initialize Client
 # ---------------------------------------------------------
 client = QdrantClient(
-    url="https://trio-levitate-unicorn.ngrok-free.dev",
+    url=QDRANT_URL,
     headers={"ngrok-skip-browser-warning": "true"}
 )
 collections = client.get_collections()
