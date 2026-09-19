@@ -139,6 +139,32 @@ def get_knowledge_retriever() -> KnowledgeRetriever:
     return _retriever
 
 
+def count_kb_articles() -> tuple[int | None, int]:
+    """Return the stored vector-point count and unique KB article count."""
+    client = get_knowledge_retriever().client
+    collection_info = client.get_collection(collection_name=COLLECTION_NAME)
+    article_ids: set[str] = set()
+    offset = None
+
+    while True:
+        points, offset = client.scroll(
+            collection_name=COLLECTION_NAME,
+            offset=offset,
+            limit=100,
+            with_payload=["article_id"],
+            with_vectors=False,
+        )
+        for point in points:
+            article_id = (point.payload or {}).get("article_id")
+            if article_id:
+                article_ids.add(str(article_id))
+
+        if offset is None:
+            break
+
+    return collection_info.points_count, len(article_ids)
+
+
 @tool
 def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
     """Read-only search tool for approved ServiceNow KB chunks."""
@@ -182,5 +208,12 @@ def create_read_only_agent():
 
 
 if __name__ == "__main__":
-    test_query = "How do I reset my ServiceNow password?"
+    try:
+        chunk_count, article_count = count_kb_articles()
+        print(f"Vector chunks in Qdrant: {chunk_count}")
+        print(f"Unique KB articles in Qdrant: {article_count}")
+    except Exception as exc:
+        print(f"KB article count error: {exc}")
+
+    test_query = "wifi keeps disconnecting on my laptop"
     print(retrieve_knowledge.invoke({"query": test_query}))
