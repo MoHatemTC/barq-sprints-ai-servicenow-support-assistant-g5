@@ -16,7 +16,10 @@ print("Starting...")
 import os
 from typing import Any
 
+from dotenv import load_dotenv
 from qdrant_client import QdrantClient
+
+load_dotenv()
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -102,6 +105,7 @@ def calculate_query_embedding(query: str) -> list[float]:
         normalize_embeddings=True,
         convert_to_numpy=False,
     )
+    print(f"Generated embedding vector of length {len(vector)} for query: {query}")
     return [float(value) for value in vector]
 
 
@@ -117,6 +121,7 @@ def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
     try:
         print(f"Calculating embedding for query: {query}")
         query_vector = calculate_query_embedding(str(query).strip())
+        print(f"Query embedding vector length: {len(query_vector)}")
     except Exception as exc:  # pragma: no cover
         print(f"Embedding error: {exc}")
         return []
@@ -130,6 +135,7 @@ def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
             with_payload=True,
         )
         print(f"Search returned {len(search_results)} results.")
+        print(f"Search results: {search_results}")
 
 
         """
@@ -183,12 +189,13 @@ def create_read_only_agent():
     try:
         from langchain.agents import AgentExecutor, create_tool_calling_agent
         from langchain_core.prompts import ChatPromptTemplate
-        from langchain_openai import ChatOpenAI
+        from langchain_google_genai import ChatGoogleGenerativeAI
     except ImportError:  # pragma: no cover
         return None
 
-    llm = ChatOpenAI(
-        model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
+    llm = ChatGoogleGenerativeAI(
+        model=os.getenv("LLM_MODEL", "gemini-2.5-flash"),
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
         temperature=0,
     )
 
