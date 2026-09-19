@@ -26,7 +26,3 @@ app = FastAPI(
 # Connect router to the main app
 app.include_router(webhook.router)
 app.include_router(kb_router)
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "service": "fastapi-backend"}

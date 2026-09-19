@@ -20,7 +20,7 @@ class KB_services:
             try:
                 article = ServiceNowKBArticle(**item)
                 validated_articles.append(article)
-                logger.debug("Validated knowledge base article", extra={"article_number": article.number})
+                logger.debug("Validated knowledge base article", extra={"article_number": article.article_id})
             except ValidationError as e:
                 logger.warning(
                     "Knowledge base article failed validation",
