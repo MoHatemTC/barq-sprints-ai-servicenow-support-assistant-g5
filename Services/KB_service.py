@@ -1,7 +1,7 @@
 import logging
 
-from clients.serviceNow_clients import serviceNow_client
-from schemas.KB_schema import ServiceNowKBArticle
+from Clients.serviceNow_clients import serviceNow_client
+from Schemas.KB_schema import ServiceNowKBArticle
 from pydantic import ValidationError
 
 logger = logging.getLogger("servicenow_webhook.kb_service")
@@ -20,7 +20,7 @@ class KB_services:
             try:
                 article = ServiceNowKBArticle(**item)
                 validated_articles.append(article)
-                logger.debug("Validated knowledge base article", extra={"article_number": article.number})
+                logger.debug("Validated knowledge base article", extra={"article_number": article.article_id})
             except ValidationError as e:
                 logger.warning(
                     "Knowledge base article failed validation",
