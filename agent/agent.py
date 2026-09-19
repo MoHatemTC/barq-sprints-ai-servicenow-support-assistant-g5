@@ -43,7 +43,7 @@ except ImportError:  # pragma: no cover
 # 1. Configuration
 # Replace these with your actual host URL and credentials
 # ---------------------------------------------------------
-QDRANT_URL = os.getenv("QDRANT_URL", "https://trio-levitate-unicorn.ngrok-free.dev")
+QDRANT_URL = os.getenv("QDRANT_URL", "https://trio-levitate-unicorn.ngrok-free.dev:443")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "your-api-key-here")
 COLLECTION_NAME = "kb_articles"
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
