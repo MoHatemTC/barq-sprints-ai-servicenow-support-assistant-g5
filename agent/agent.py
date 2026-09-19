@@ -1,243 +1,186 @@
-#search steps:
-#input: sanitized_query, truncated_description, and is_safe in a json
-# Connect with the database (qdrant)
-# calculate query embeddings
-# semantic search ( Returns matched chunks with similarity scores.)
-#if the retrived chunk reached a threshold 70% pass it else reject it 
-# the meta data need to ckeck if it was draft it needs to refuse it else it will pass it 
-#requirements:
-#use langchain
-#use a tool to do the search steps
+"""Task 5: filtered KB retrieval and a read-only LangChain agent."""
 
-
-#Implementation:
-# Connect with the database
-print("Starting...")
 import os
 from typing import Any
 
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
-
-load_dotenv()
+from qdrant_client.models import FieldCondition, Filter, MatchAny
 
 try:
     from sentence_transformers import SentenceTransformer
     print("SentenceTransformers is available for embedding generation.")
 except ImportError:  # pragma: no cover
-    print("SentenceTransformers is not installed. Install it with: pip install sentence-transformers")
+    print("SentenceTransformers is not installed.")
     SentenceTransformer = None
 
-try:
-    from langchain_core.tools import tool
-    print("LangChain tools are available for creating retrieval tools.")
-except ImportError:  # pragma: no cover
-    try:
-        from langchain.tools import tool
-        print("LangChain tools are available for creating retrieval tools.")
-    except ImportError:  # pragma: no cover
-        print("LangChain is not installed. Install it with: pip install langchain")
-        def tool(*args, **kwargs):
-            def decorator(func):
-                return func
-            return decorator
+from langchain_core.tools import tool
 
-# ---------------------------------------------------------
-# 1. Configuration
-# Replace these with your actual host URL and credentials
-# ---------------------------------------------------------
-QDRANT_URL = os.getenv("QDRANT_URL", "https://trio-levitate-unicorn.ngrok-free.dev:443")
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", "your-api-key-here")
-COLLECTION_NAME = "kb_articles"
-EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
-MIN_SIMILARITY_SCORE = 0.70
-ALLOWED_WORKFLOW_STATES = {"published", "approved"}
+load_dotenv()
 
-
-
-from qdrant_client import QdrantClient
-print("Connecting to Qdrant database...")
-
-
-
-
-
-# ---------------------------------------------------------
-# 2. Initialize Client
-# ---------------------------------------------------------
-client = QdrantClient(
-    url=QDRANT_URL,
-    headers={"ngrok-skip-browser-warning": "true"}
+QDRANT_URL = os.getenv(
+    "QDRANT_URL",
+    "https://trio-levitate-unicorn.ngrok-free.dev:443",
 )
-collections = client.get_collections()
-print(collections)
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "kb_articles")
+EMBEDDING_MODEL_NAME = os.getenv(
+    "EMBEDDING_MODEL_NAME",
+    "all-MiniLM-L6-v2",
+)
+MIN_SIMILARITY_SCORE = 0.70
+ALLOWED_WORKFLOW_STATES = frozenset({"published", "approved"})
 
 
+class KnowledgeRetriever:
+    """Generate embeddings and return approved, high-confidence KB chunks."""
+
+    def __init__(
+        self,
+        client: QdrantClient,
+        embedding_model: Any,
+        collection_name: str = COLLECTION_NAME,
+        minimum_score: float = MIN_SIMILARITY_SCORE,
+        allowed_workflow_states: frozenset[str] = ALLOWED_WORKFLOW_STATES,
+    ) -> None:
+        self.client = client
+        self.embedding_model = embedding_model
+        self.collection_name = collection_name
+        self.minimum_score = minimum_score
+        self.allowed_workflow_states = allowed_workflow_states
+
+    def _calculate_embedding(self, query: str) -> list[float]:
+        if not query or not query.strip():
+            raise ValueError("Query text cannot be empty.")
+
+        vector = self.embedding_model.encode(
+            query.strip(),
+            normalize_embeddings=True,
+            convert_to_numpy=False,
+        )
+        print(f"Generated embedding vector of length {len(vector)}.")
+        return [float(value) for value in vector]
+
+    def search(self, query: str) -> list[dict[str, Any]]:
+        """Search Qdrant and return only approved chunks above the threshold."""
+        query_vector = self._calculate_embedding(query)
+        workflow_filter = Filter(
+            must=[
+                FieldCondition(
+                    key="workflow_state",
+                    match=MatchAny(any=list(self.allowed_workflow_states)),
+                )
+            ]
+        )
+        search_response = self.client.query_points(
+            collection_name=self.collection_name,
+            query=query_vector,
+            query_filter=workflow_filter,
+            limit=5,
+            with_payload=True,
+            score_threshold=self.minimum_score,
+        )
+        search_results = search_response.points
+        print(f"Search returned {len(search_results)} results.")
+        print(f"Search results: {search_results}")
+
+        valid_hits: list[dict[str, Any]] = []
+        for hit in search_results:
+            payload = getattr(hit, "payload", None) or {}
+            if not isinstance(payload, dict):
+                continue
+
+            workflow_state = str(payload.get("workflow_state", "")).strip().lower()
+            score = float(getattr(hit, "score", 0.0) or 0.0)
+            if workflow_state not in self.allowed_workflow_states:
+                continue
+            if score < self.minimum_score:
+                continue
+
+            valid_hits.append(
+                {
+                    "article_id": payload.get("article_id"),
+                    "title": payload.get("title"),
+                    "content": payload.get("text") or payload.get("content") or "",
+                    "score": round(score, 4),
+                    "workflow_state": workflow_state,
+                }
+            )
+
+        print(f"Returning {len(valid_hits)} approved KB chunks.")
+        return valid_hits
 
 
+_retriever: KnowledgeRetriever | None = None
 
 
+def get_knowledge_retriever() -> KnowledgeRetriever:
+    """Create the Qdrant client and embedding model on first use."""
+    global _retriever
+    if _retriever is not None:
+        return _retriever
 
-
-# ---------------------------------------------------------
-# 3. Query Embedding Section
-# ---------------------------------------------------------
-if SentenceTransformer is not None:
-    embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
-else:
-    embedding_model = None
-
-
-def calculate_query_embedding(query: str) -> list[float]:
-    """
-    Convert a cleaned user query into a dense vector embedding.
-    """
-    if not query or not str(query).strip():
-        raise ValueError("Query text cannot be empty for embedding generation.")
-
-    if embedding_model is None:
+    if SentenceTransformer is None:
         raise ImportError(
-            "SentenceTransformers is not installed. Install it with: pip install sentence-transformers"
+            "Install sentence-transformers to enable KB retrieval."
         )
 
-    vector = embedding_model.encode(
-        str(query).strip(),
-        normalize_embeddings=True,
-        convert_to_numpy=False,
+    print("Connecting to Qdrant database...")
+    client = QdrantClient(
+        url=QDRANT_URL,
+        api_key=QDRANT_API_KEY,
+        headers={"ngrok-skip-browser-warning": "true"},
     )
-    print(f"Generated embedding vector of length {len(vector)} for query: {query}")
-    return [float(value) for value in vector]
+    print(f"Connected to collection '{COLLECTION_NAME}'.")
+    print("Loading embedding model...")
+    embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    print(f"Embedding model '{EMBEDDING_MODEL_NAME}' loaded.")
+    _retriever = KnowledgeRetriever(client, embedding_model)
+    return _retriever
 
 
 @tool
 def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
-    """
-    Read-only retrieval tool for approved ServiceNow KB articles.
-    Returns relevant chunks with similarity scores and filters out draft content.
-    """
-    if not query or not str(query).strip():
+    """Read-only search tool for approved ServiceNow KB chunks."""
+    if not query or not query.strip():
         return []
 
     try:
         print(f"Calculating embedding for query: {query}")
-        query_vector = calculate_query_embedding(str(query).strip())
-        print(f"Query embedding vector length: {len(query_vector)}")
+        print(f"Searching collection '{COLLECTION_NAME}'...")
+        return get_knowledge_retriever().search(query)
     except Exception as exc:  # pragma: no cover
-        print(f"Embedding error: {exc}")
+        print(f"KB retrieval error: {exc}")
         return []
-
-    try:
-        print(f"Performing semantic search in collection '{COLLECTION_NAME}'...")
-        search_results = client.search(
-            collection_name=COLLECTION_NAME,
-            query_vector=query_vector,
-            limit=5,
-            with_payload=True,
-        )
-        print(f"Search returned {len(search_results)} results.")
-        print(f"Search results: {search_results}")
-
-
-        """
-        points = client.scroll(
-        collection_name="kb_articles",
-        limit=5,
-        with_payload=True,
-        with_vectors=False,
-        )
-        print(points)
-
-        """
-
-
-
-    except Exception as exc:  # pragma: no cover
-        print(f"Qdrant search error: {exc}")
-        return []
-    
-    valid_hits: list[dict[str, Any]] = []
-    for hit in search_results:
-        payload = getattr(hit, "payload", None) or {}
-        if not isinstance(payload, dict):
-            continue
-
-        workflow_state = str(payload.get("workflow_state", "")).strip().lower()
-        if workflow_state not in ALLOWED_WORKFLOW_STATES:
-            continue
-
-        score = float(getattr(hit, "score", 0.0) or 0.0)
-        if score < MIN_SIMILARITY_SCORE:
-            continue
-
-        valid_hits.append(
-            {
-                "article_id": payload.get("article_id"),
-                "title": payload.get("title"),
-                "content": payload.get("text") or payload.get("content") or "",
-                "score": round(score, 4),
-                "workflow_state": workflow_state,
-            }
-        )
-
-    return valid_hits
 
 
 def create_read_only_agent():
-    """
-    Build a LangChain agent with a single read-only retrieval tool.
-    """
-    try:
-        from langchain.agents import AgentExecutor, create_tool_calling_agent
-        from langchain_core.prompts import ChatPromptTemplate
-        from langchain_google_genai import ChatGoogleGenerativeAI
-    except ImportError:  # pragma: no cover
-        return None
+    """Build an agent with exactly one read-only KB retrieval tool."""
+    from langchain.agents import AgentExecutor, create_tool_calling_agent
+    from langchain_core.prompts import ChatPromptTemplate
+    from langchain_google_genai import ChatGoogleGenerativeAI
 
     llm = ChatGoogleGenerativeAI(
         model=os.getenv("LLM_MODEL", "gemini-2.5-flash"),
         google_api_key=os.getenv("GOOGLE_API_KEY"),
         temperature=0,
     )
-
     prompt = ChatPromptTemplate.from_messages(
         [
             (
                 "system",
-                "You are a ServiceNow support assistant. Use the retrieve_knowledge tool to answer using only approved KB articles. Never use write/update/delete tools. If no useful chunks are returned, ask for human review.",
+                "Use retrieve_knowledge to answer using only approved KB chunks. "
+                "This agent is read-only and has no write, update, or delete tools. "
+                "If no approved chunks are returned, request human review.",
             ),
             ("human", "{input}"),
+            ("placeholder", "{agent_scratchpad}"),
         ]
     )
-
     agent = create_tool_calling_agent(llm, [retrieve_knowledge], prompt)
     return AgentExecutor(agent=agent, tools=[retrieve_knowledge], verbose=True)
 
 
-# Example usage from the rest of the pipeline:
-# cleaned_query = sanitized_query or truncated_description
-# matches = retrieve_knowledge.invoke({"query": cleaned_query})
-# if not matches:
-#     human_review_required = True
-
-# ---------------------------------------------------------
-# 4. Test Connection & Inspect Collections
-# ---------------------------------------------------------
-try:
-    # Check if the connection works by listing available collections
-    collections_response = client.get_collections()
-    available_collections = [c.name for c in collections_response.collections]
-    print("Connected successfully!")
-    print(f"Available collections: {available_collections}")
-
-    if COLLECTION_NAME in available_collections:
-        # Get metadata, vector dimensions, and distance metric
-        collection_info = client.get_collection(collection_name=COLLECTION_NAME)
-        print(f"\nCollection '{COLLECTION_NAME}' details:")
-        print(f" - Points count: {collection_info.points_count}")
-        print(f" - Vector config: {collection_info.config.params.vectors}")
-    else:
-        print(f"\nWarning: Collection '{COLLECTION_NAME}' not found.")
-
-except Exception as e:
-    print(f"Failed to connect to Qdrant: {e}")
-
+if __name__ == "__main__":
+    test_query = "How do I reset my ServiceNow password?"
+    print(retrieve_knowledge.invoke({"query": test_query}))
