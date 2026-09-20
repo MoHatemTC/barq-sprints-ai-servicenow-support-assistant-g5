@@ -5,8 +5,8 @@ from fastapi import APIRouter, Header, HTTPException, status
 
 from Services.KB_service import KB_services
 from Services.KB_ingestion_service import KBIngestionService
-from Schemas.KB_event_schema import KB_event
-from Schemas.settings import settings
+from schemas.KB_event_schema import KB_event
+from schemas.settings import settings
 
 
 router = APIRouter(

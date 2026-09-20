@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter, Depends, HTTPException, status
-from Schemas.webhook_schema import IncidentPayload
+from schemas.webhook_schema import IncidentPayload
 from App.auth import verify_webhook_signature
 from App.database import db
 

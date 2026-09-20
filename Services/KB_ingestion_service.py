@@ -11,7 +11,7 @@ class KBIngestionService:
     def __init__(self):
 
         self.chunker = ChunkingService(
-            chunk_size=50,
+            chunk_size=70,
             chunk_overlap=1
         )
 
@@ -49,8 +49,12 @@ class KBIngestionService:
         )
 
         # 3. Create embeddings
+        embedding_inputs = [
+            f"{title}\n\n{chunk}"
+            for chunk in chunks
+        ]
         vectors = self.embedder.embed_chunks(
-            chunks
+            embedding_inputs
         )
 
         # 4. Upsert vectors into Qdrant

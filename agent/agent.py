@@ -28,7 +28,9 @@ EMBEDDING_MODEL_NAME = os.getenv(
     "EMBEDDING_MODEL_NAME",
     "all-MiniLM-L6-v2",
 )
-MIN_SIMILARITY_SCORE = 0.70
+MIN_SIMILARITY_SCORE = float(
+    os.getenv("SCORE_THRESHOLD") or "0.60"
+)
 ALLOWED_WORKFLOW_STATES = frozenset({"published", "approved"})
 
 

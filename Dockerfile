@@ -14,7 +14,9 @@ COPY requirements.txt .
 
 # Install CPU-only PyTorch first
 RUN pip install --no-cache-dir \
-    torch \
+    torch==2.6.0+cpu \
+    --timeout 300 \
+    --retries 5 \
     --index-url https://download.pytorch.org/whl/cpu
 
 # Install the remaining Python dependencies
