@@ -36,7 +36,6 @@ services:
     networks:
       - app_network
 
-
   qdrant_db:
 
     image: qdrant/qdrant:latest
@@ -54,7 +53,6 @@ services:
     networks:
       - app_network
 
-
   postgres_db:
 
     image: postgres:15-alpine
@@ -69,13 +67,13 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-servicenow_ai}
 
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-servicenow_ai}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-servicenow_ai}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -83,13 +81,11 @@ services:
     networks:
       - app_network
 
-
 volumes:
 
   qdrant_storage:
 
   postgres_data:
-
 
 networks:
 
