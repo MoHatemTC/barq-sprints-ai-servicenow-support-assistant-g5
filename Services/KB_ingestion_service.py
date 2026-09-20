@@ -11,8 +11,8 @@ class KBIngestionService:
     def __init__(self):
 
         self.chunker = ChunkingService(
-            chunk_size=300,
-            chunk_overlap=50
+            chunk_size=50,
+            chunk_overlap=1
         )
 
         self.embedder = EmbeddingService()
