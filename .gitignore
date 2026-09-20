@@ -1,5 +1,8 @@
 # Environment variables / secrets
 .env
+scratch_*.py
+seed_*.py
+logs/
 
 # Virtual environment
 .venv/
