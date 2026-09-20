@@ -4,11 +4,13 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
+
 dependencies = [
     "annotated-doc==0.0.5",
     "annotated-types==0.8.0",
     "anyio==4.15.1",
     "asyncpg>=0.31.0",
+    "beautifulsoup4",
     "certifi==2026.7.22",
     "click==8.5.0",
     "colorama==0.4.6",
@@ -32,11 +34,12 @@ dependencies = [
     "python-dotenv==1.2.3",
     "pyyaml==6.0.3",
     "qdrant-client>=1.19.0",
+    "sentence-transformers",
     "starlette==1.6.0",
     "typing-extensions==4.16.0",
     "typing-inspection==0.4.4",
     "uvicorn==0.52.4",
-    "vllm>=0.22.1",
+    "vllm>=0.22.1; sys_platform == 'linux'",
     "watchfiles==1.2.0",
     "websockets==17.1",
 ]
