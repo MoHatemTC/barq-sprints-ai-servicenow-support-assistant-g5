@@ -18,65 +18,72 @@ from qdrant_client.models import (
 load_dotenv()
 
 
+import os
+import uuid
+
+from dotenv import load_dotenv
+
+from qdrant_client import QdrantClient
+from qdrant_client.models import (
+    Distance,
+    VectorParams,
+    PointStruct,
+    Filter,
+    FieldCondition,
+    MatchValue,
+    FilterSelector,
+    PayloadSchemaType,
+)
+
+load_dotenv()
+
+
 class QdrantService:
 
-    def __init__(
-        self,
-        host: str | None = None,
-        port: int | None = None,
-        collection_name: str = "kb_articles",
-    ):
+    VECTOR_SIZE = 384  # all-MiniLM-L6-v2
 
-        self.collection_name = collection_name
+    def __init__(self, collection_name: str | None = None):
 
-        # Use environment variables when available.
-        # Defaults keep local testing working.
-        qdrant_host = host or os.getenv(
-            "QDRANT_HOST",
-            "localhost"
+        self.collection_name = collection_name or os.getenv(
+            "QDRANT_COLLECTION", "kb_articles"
         )
 
-        qdrant_port = port or int(
-            os.getenv(
-                "QDRANT_PORT",
-                "6333"
+        url = os.getenv("QDRANT_URL")
+        api_key = os.getenv("QDRANT_API_KEY")
+
+        if url:
+            # Qdrant Cloud (or any remote instance)
+            self.client = QdrantClient(url=url, api_key=api_key, timeout=30)
+        else:
+            # Local fallback (Docker Compose)
+            self.client = QdrantClient(
+                host=os.getenv("QDRANT_HOST", "localhost"),
+                port=int(os.getenv("QDRANT_PORT", "6333")),
+                timeout=30,
             )
-        )
+        self.ensure_collection()
 
-        self.client = QdrantClient(
-            host=qdrant_host,
-            port=qdrant_port,
-        )
+    def ensure_collection(self):
+        """Create the collection and payload indexes if they don't exist. Safe to call repeatedly."""
 
-    def create_collection(self):
-
-        collections = self.client.get_collections()
-
-        existing_collections = [
-            collection.name
-            for collection in collections.collections
-        ]
-
-        if self.collection_name not in existing_collections:
-
+        if not self.client.collection_exists(self.collection_name):
             self.client.create_collection(
                 collection_name=self.collection_name,
                 vectors_config=VectorParams(
-                    size=384,
+                    size=self.VECTOR_SIZE,
                     distance=Distance.COSINE,
                 ),
             )
-
-            print(
-                f"Collection '{self.collection_name}' "
-                f"created successfully."
-            )
-
+            print(f"Collection '{self.collection_name}' created.")
         else:
+            print(f"Collection '{self.collection_name}' already exists.")
 
-            print(
-                f"Collection '{self.collection_name}' "
-                f"already exists."
+        # Indexes are needed for filtering (Task 5) and delete-by-article_id
+        for field in ("article_id", "workflow_state", "category"):
+            self.client.create_payload_index(
+                collection_name=self.collection_name,
+                field_name=field,
+                field_schema=PayloadSchemaType.KEYWORD,
             )
 
     def upsert_chunks(

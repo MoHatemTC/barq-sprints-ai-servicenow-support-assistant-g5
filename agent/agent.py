@@ -20,7 +20,7 @@ load_dotenv()
 
 QDRANT_URL = os.getenv(
     "QDRANT_URL",
-    "https://trio-levitate-unicorn.ngrok-free.dev:443",
+    " https://unmanned-footman-army.ngrok-free.dev:443",
 )
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "kb_articles")
