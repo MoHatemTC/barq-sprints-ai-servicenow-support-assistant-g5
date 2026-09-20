@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 
 
 class KB_event(BaseModel):
@@ -17,8 +17,8 @@ class KB_event(BaseModel):
         description="Article Number, e.g., KB0010039"
     )
 
-    version: str = Field(
-        ...,
+    version: Optional[str] = Field(
+        None,
         description="Article Version"
     )
 
@@ -27,13 +27,13 @@ class KB_event(BaseModel):
         description="Short description of the article"
     )
 
-    author: str = Field(
-        ...,
+    author: Optional[str] = Field(
+        None,
         description="Author of the article"
     )
 
-    kb_category: str = Field(
-        ...,
+    kb_category: Optional[str] = Field(
+        None,
         description="Article category"
     )
 
@@ -42,13 +42,13 @@ class KB_event(BaseModel):
         description="Workflow state of the article (published or retired)"
     )
 
-    sys_updated_on: str = Field(
-        ...,
+    sys_updated_on: Optional[str] = Field(
+        None,
         description="Last updated timestamp"
     )
 
-    text: str = Field(
-        ...,
+    text: Optional[str] = Field(
+        None,
         description="The content/body of the article"
     )
 
@@ -60,22 +60,18 @@ class KB_event(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def validation(cls, data: Any) -> Any:
-
         if not isinstance(data, dict):
             return data
 
         unwrapped = {}
 
         for key, value in data.items():
-
             if isinstance(value, dict):
-
                 if key == "sys_updated_on":
                     unwrapped[key] = (
                         value.get("value")
                         or value.get("display_value", "")
                     )
-
                 else:
                     display_value = value.get("display_value")
 
@@ -84,7 +80,6 @@ class KB_event(BaseModel):
                         if display_value
                         else value.get("value", "")
                     )
-
             else:
                 unwrapped[key] = value
 

@@ -5,8 +5,8 @@ from fastapi import APIRouter, Header, HTTPException, status
 
 from Services.KB_service import KB_services
 from Services.KB_ingestion_service import KBIngestionService
-from schemas.KB_event_schema import KB_event
-from schemas.settings import settings
+from Schemas.KB_event_schema import KB_event
+from Schemas.settings import settings
 
 
 router = APIRouter(
@@ -25,8 +25,8 @@ async def get_KB():
 
     except httpx.HTTPError:
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Knowledge base service is unavailable.",
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Failed to retrieve articles from ServiceNow."
         )
 
     return {

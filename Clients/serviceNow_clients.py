@@ -33,8 +33,8 @@ class serviceNow_client:
                 f"^workflow_state=published"
             ),
             "sysparm_fields": (
-                "number,short_description,author,kb_category,"
-                "workflow_state,sys_updated_on,text,version"
+                "sys_id,article_id,short_description,author,"
+                "kb_category,workflow_state,sys_updated_on,text,version"
             ),
             "sysparm_display_value": "all"
         }
