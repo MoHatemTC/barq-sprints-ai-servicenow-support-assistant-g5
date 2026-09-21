@@ -9,19 +9,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
 
-# Install CPU-only PyTorch first
+# Install CPU-only PyTorch first (kept separate so it's cached independently)
 RUN pip install --no-cache-dir \
     torch \
     --index-url https://download.pytorch.org/whl/cpu
 
-# Install the remaining Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application files
+# Copy the whole project (pyproject.toml needs the rest of the source
+# to install the project itself, e.g. package folders referenced in it)
 COPY . .
+
+# Install the project and its dependencies from pyproject.toml
+RUN pip install --no-cache-dir .
 
 # Expose FastAPI port
 EXPOSE 8000
