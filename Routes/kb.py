@@ -49,6 +49,46 @@ def build_ingestion_article(event: KB_event) -> dict:
     }
 
 
+def build_reindex_article(article: dict) -> dict:
+    return {
+        "article_id": article["article_id"],
+        "title": article.get("short_description") or "",
+        "text": article.get("text") or "",
+        "workflow_state": article.get("workflow_state") or "published",
+        "category": article.get("kb_category"),
+    }
+
+
+@router.post("/reindex")
+async def reindex_articles(
+    x_api_key: str | None = Header(default=None),
+):
+    if x_api_key != settings.API_SECRET_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key.",
+        )
+
+    try:
+        articles = await KB_services().get_articles()
+        ingestion = KBIngestionService()
+        results = await ingestion.ingest_articles(
+            [build_reindex_article(article) for article in articles]
+        )
+    except httpx.HTTPError:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Failed to retrieve articles from ServiceNow.",
+        )
+
+    return {
+        "status": "success",
+        "articles": len(results),
+        "chunks": sum(result["chunks"] for result in results),
+        "vectors": sum(result["vectors"] for result in results),
+    }
+
+
 @router.post("/events")
 async def handle_kb_event(
     event: KB_event,

@@ -5,7 +5,6 @@ from typing import Any
 
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
-from qdrant_client.models import FieldCondition, Filter, MatchAny
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -23,14 +22,12 @@ QDRANT_URL = os.getenv(
     "https://trio-levitate-unicorn.ngrok-free.dev:443",
 )
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
-COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "kb_articles")
+COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "kb_articles_bge_base")
 EMBEDDING_MODEL_NAME = os.getenv(
     "EMBEDDING_MODEL_NAME",
-    "all-MiniLM-L6-v2",
+    "BAAI/bge-base-en-v1.5",
 )
-MIN_SIMILARITY_SCORE = float(
-    os.getenv("SCORE_THRESHOLD") or "0.60"
-)
+MIN_SIMILARITY_SCORE = 0.70
 ALLOWED_WORKFLOW_STATES = frozenset({"published", "approved"})
 
 
@@ -66,21 +63,11 @@ class KnowledgeRetriever:
     def search(self, query: str) -> list[dict[str, Any]]:
         """Search Qdrant and return only approved chunks above the threshold."""
         query_vector = self._calculate_embedding(query)
-        workflow_filter = Filter(
-            must=[
-                FieldCondition(
-                    key="workflow_state",
-                    match=MatchAny(any=list(self.allowed_workflow_states)),
-                )
-            ]
-        )
         search_response = self.client.query_points(
             collection_name=self.collection_name,
             query=query_vector,
-            query_filter=workflow_filter,
             limit=5,
             with_payload=True,
-            score_threshold=self.minimum_score,
         )
         search_results = search_response.points
         print(f"Search returned {len(search_results)} results.")
@@ -111,6 +98,14 @@ class KnowledgeRetriever:
 
         print(f"Returning {len(valid_hits)} approved KB chunks.")
         return valid_hits
+
+    def search_with_status(self, query: str) -> dict[str, Any]:
+        """Return retrieved context and whether human review is required."""
+        context = self.search(query)
+        return {
+            "context": context,
+            "human_review_required": not context,
+        }
 
 
 _retriever: KnowledgeRetriever | None = None
@@ -167,6 +162,25 @@ def count_kb_articles() -> tuple[int | None, int]:
     return collection_info.points_count, len(article_ids)
 
 
+def inspect_collection_vectors() -> None:
+    """Print the collection vector size and distance metric."""
+    client = get_knowledge_retriever().client
+    collection_info = client.get_collection(collection_name=COLLECTION_NAME)
+    vectors = collection_info.config.params.vectors
+
+    if isinstance(vectors, dict):
+        print("Collection vector configurations:")
+        for name, vector_config in vectors.items():
+            print(
+                f" - {name}: size={vector_config.size}, "
+                f"distance={vector_config.distance}"
+            )
+        return
+
+    print(f"Collection vector size: {vectors.size}")
+    print(f"Collection distance metric: {vectors.distance}")
+
+
 @tool
 def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
     """Read-only search tool for approved ServiceNow KB chunks."""
@@ -180,6 +194,11 @@ def retrieve_knowledge(query: str) -> list[dict[str, Any]]:
     except Exception as exc:  # pragma: no cover
         print(f"KB retrieval error: {exc}")
         return []
+
+
+def get_read_only_tools() -> list[Any]:
+    """Return the complete read-only tool registry for the agent."""
+    return [retrieve_knowledge]
 
 
 def create_read_only_agent():
@@ -205,17 +224,96 @@ def create_read_only_agent():
             ("placeholder", "{agent_scratchpad}"),
         ]
     )
-    agent = create_tool_calling_agent(llm, [retrieve_knowledge], prompt)
-    return AgentExecutor(agent=agent, tools=[retrieve_knowledge], verbose=True)
+    tools = get_read_only_tools()
+    agent = create_tool_calling_agent(llm, tools, prompt)
+    return AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+
+def run_self_validation_tests() -> None:
+    """Run Task 5 metadata, threshold, and tool-security checks."""
+    from types import SimpleNamespace
+
+    embedding_model = SimpleNamespace(
+        encode=lambda *args, **kwargs: [0.1, 0.2]
+    )
+    published_hit = SimpleNamespace(
+        score=0.91,
+        payload={
+            "article_id": "KB-PUBLISHED",
+            "title": "Approved article",
+            "text": "Approved content",
+            "workflow_state": "published",
+        },
+    )
+    draft_hit = SimpleNamespace(
+        score=0.95,
+        payload={
+            "article_id": "KB-DRAFT",
+            "title": "Draft article",
+            "text": "Draft content",
+            "workflow_state": "draft",
+        },
+    )
+    low_score_hit = SimpleNamespace(
+        score=0.69,
+        payload={
+            "article_id": "KB-LOW-SCORE",
+            "title": "Low score article",
+            "text": "Low score content",
+            "workflow_state": "approved",
+        },
+    )
+
+    mock_client = SimpleNamespace(
+        query_points=lambda **kwargs: SimpleNamespace(
+            points=[published_hit, draft_hit, low_score_hit]
+        )
+    )
+    retriever = KnowledgeRetriever(mock_client, embedding_model)
+    filtered_context = retriever.search("draft article test")
+    assert [chunk["article_id"] for chunk in filtered_context] == [
+        "KB-PUBLISHED"
+    ], "Draft and low-score chunks must be excluded."
+
+    low_score_client = SimpleNamespace(
+        query_points=lambda **kwargs: SimpleNamespace(points=[low_score_hit])
+    )
+    low_score_result = KnowledgeRetriever(
+        low_score_client,
+        embedding_model,
+    ).search_with_status("low score test")
+    assert low_score_result == {
+        "context": [],
+        "human_review_required": True,
+    }, "Low-score retrieval must require human review."
+
+    tool_names = {
+        getattr(tool_item, "name", "")
+        for tool_item in get_read_only_tools()
+    }
+    assert tool_names == {"retrieve_knowledge"}, (
+        "The agent must register only retrieve_knowledge."
+    )
+    assert not any(
+        any(action in name.lower() for action in ("write", "update", "delete"))
+        for name in tool_names
+    ), "Write/update/delete tools must not be registered."
+
+    print("Task 5 self-validation passed: metadata filtering.")
+    print("Task 5 self-validation passed: similarity threshold and human review.")
+    print("Task 5 self-validation passed: read-only tool security.")
 
 
 if __name__ == "__main__":
+    run_self_validation_tests()
+
     try:
+        inspect_collection_vectors()
         chunk_count, article_count = count_kb_articles()
         print(f"Vector chunks in Qdrant: {chunk_count}")
         print(f"Unique KB articles in Qdrant: {article_count}")
     except Exception as exc:
         print(f"KB article count error: {exc}")
 
-    test_query = "wifi keeps disconnecting on my laptop"
+    test_query = "WI-FI Keeps Disconnecting on Laptop"
     print(retrieve_knowledge.invoke({"query": test_query}))

@@ -58,6 +58,7 @@ class KBIngestionService:
         )
 
         # 4. Upsert vectors into Qdrant
+        self.qdrant.delete_article(article_id)
         self.qdrant.upsert_chunks(
             article_id=article_id,
             title=title,

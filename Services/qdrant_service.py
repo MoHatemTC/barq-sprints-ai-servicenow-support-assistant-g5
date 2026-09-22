@@ -17,6 +17,11 @@ from qdrant_client.models import (
 
 load_dotenv()
 
+VECTOR_SIZE = 768
+COLLECTION_NAME = os.getenv("QDRANT_COLLECTION", "kb_articles_bge_base")
+QDRANT_URL = os.getenv("QDRANT_URL")
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+
 
 class QdrantService:
 
@@ -24,29 +29,24 @@ class QdrantService:
         self,
         host: str | None = None,
         port: int | None = None,
-        collection_name: str = "kb_articles",
+        collection_name: str = COLLECTION_NAME,
     ):
 
         self.collection_name = collection_name
 
-        # Use environment variables when available.
-        # Defaults keep local testing working.
-        qdrant_host = host or os.getenv(
-            "QDRANT_HOST",
-            "localhost"
-        )
-
-        qdrant_port = port or int(
-            os.getenv(
-                "QDRANT_PORT",
-                "6333"
+        configured_host = host or os.getenv("QDRANT_HOST")
+        configured_port = port or os.getenv("QDRANT_PORT")
+        if configured_host and configured_port:
+            self.client = QdrantClient(
+                host=configured_host,
+                port=int(configured_port),
             )
-        )
-
-        self.client = QdrantClient(
-            host=qdrant_host,
-            port=qdrant_port,
-        )
+        else:
+            self.client = QdrantClient(
+                url=QDRANT_URL or "http://localhost:6333",
+                api_key=QDRANT_API_KEY,
+                headers={"ngrok-skip-browser-warning": "true"},
+            )
 
     def create_collection(self):
 
@@ -62,7 +62,7 @@ class QdrantService:
             self.client.create_collection(
                 collection_name=self.collection_name,
                 vectors_config=VectorParams(
-                    size=384,
+                    size=VECTOR_SIZE,
                     distance=Distance.COSINE,
                 ),
             )
@@ -73,6 +73,17 @@ class QdrantService:
             )
 
         else:
+
+            collection_info = self.client.get_collection(
+                collection_name=self.collection_name
+            )
+            vectors = collection_info.config.params.vectors
+            if isinstance(vectors, dict) or vectors.size != VECTOR_SIZE:
+                raise ValueError(
+                    f"Collection '{self.collection_name}' must use "
+                    f"unnamed vectors with size {VECTOR_SIZE}. "
+                    "Recreate the collection before reindexing."
+                )
 
             print(
                 f"Collection '{self.collection_name}' "
@@ -88,6 +99,8 @@ class QdrantService:
         chunks: list[str],
         vectors: list[list[float]],
     ):
+
+        self.create_collection()
 
         points = []
 
