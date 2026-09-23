@@ -1,16 +1,30 @@
+import asyncio
 import logging
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from Schemas.webhook_schema import IncidentPayload
 from App.auth import verify_webhook_signature
 from App.database import db
-from Routes.incident_preparer import IncidentContextPreparer
-
-# Import  Gemini processing function
-# from core.pipeline import process_incident_with_llm 
+from Services.incident_preparer import IncidentContextPreparer
+from run_pipeline import process_incident
 
 logger = logging.getLogger("servicenow_webhook")
 router = APIRouter()
 preparer = IncidentContextPreparer(max_chars=4000)
+
+
+async def run_ai_pipeline(incident_context, sys_id: str):
+    """Background task: retrieval, answer/escalation, console trace."""
+    try:
+        # process_incident is blocking (model + network), so keep it off the event loop
+        await asyncio.to_thread(process_incident, incident_context)
+        await db.update_event_status(sys_id, "completed")
+    except Exception:
+        logger.exception("AI pipeline failed", extra={"sys_id": sys_id})
+        try:
+            await db.update_event_status(sys_id, "failed")
+        except Exception:
+            logger.exception("Failed to update incident webhook status")
+
 
 @router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED, dependencies=[Depends(verify_webhook_signature)])
 async def receive_incident_webhook(payload: IncidentPayload, background_tasks: BackgroundTasks):
@@ -29,22 +43,18 @@ async def receive_incident_webhook(payload: IncidentPayload, background_tasks: B
                 extra={"incident_number": payload.number, "sys_id": payload.sys_id},
             )
             return {"status": "duplicate_ignored", "number": payload.number}
-            
+
         event_recorded = True
 
         # 2. Run the payload through the security firewall
-        safe_short_desc = payload.short_description or ""
-        safe_desc = payload.description or ""
-        
         incident_context = preparer.process_payload(
             sys_id=payload.sys_id,
             number=payload.number,
-            short_desc=safe_short_desc,
-            desc=safe_desc
+            short_desc=payload.short_description or "",
+            desc=payload.description or "",
         )
 
-        # 3. SECURE LOGGING: Log the schema output (Deliverable Requirement)
-        # We do not log the raw payload here to prevent PII leakage in server logs
+        # 3. Secure logging (no raw payload, to avoid PII in logs)
         logger.info(
             "Guardrails applied successfully. Payload sanitized.",
             extra={
@@ -54,26 +64,29 @@ async def receive_incident_webhook(payload: IncidentPayload, background_tasks: B
                 "truncated_length": len(incident_context.truncated_description),
             },
         )
-
-        # 4. TRAFFIC CONTROL: Short-circuit on malicious payloads
+        logger.info(
+            "Guardrails applied | %s | safe=%s | tags=%s | desc_len=%d",
+            incident_context.original_number,
+            incident_context.is_safe,
+            incident_context.extracted_tags,
+            len(incident_context.truncated_description),
+        )
+        # 4. Short-circuit on malicious payloads
         if not incident_context.is_safe:
             logger.warning(
-                f" PROMPT INJECTION BLOCKED for incident {payload.number}.",
-                extra={"sys_id": payload.sys_id}
+                f"PROMPT INJECTION BLOCKED for incident {payload.number}.",
+                extra={"sys_id": payload.sys_id},
             )
             await db.update_event_status(payload.sys_id, "flagged_malicious")
-            
             return {
                 "status": "rejected",
                 "number": payload.number,
-                "message": "Payload rejected due to security policy."
+                "message": "Payload rejected due to security policy.",
             }
-              #Next phase
-        # 5. HANDOFF: Queue Ibrahim's agent with this new cleaned  data
-        # background_tasks.add_task(Ibrahim's Agent, incident_context)
 
-        await db.update_event_status(payload.sys_id, "completed")
-        
+        # 5. Hand off to the AI pipeline; the 202 goes back before it runs
+        background_tasks.add_task(run_ai_pipeline, incident_context, payload.sys_id)
+
     except Exception as e:
         if event_recorded:
             try:
@@ -87,5 +100,5 @@ async def receive_incident_webhook(payload: IncidentPayload, background_tasks: B
         "status": "accepted",
         "number": payload.number,
         "sys_id": payload.sys_id,
-        "message": "Event sanitized and queued for AI processing."
+        "message": "Event sanitized and queued for AI processing.",
     }

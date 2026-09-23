@@ -1,6 +1,13 @@
+import re
+
+SENTENCE_SPLIT = re.compile(r"(?<=[.!?؟])\s+|\n+")
+
+
 class ChunkingService:
 
-    def __init__(self, chunk_size: int = 50, chunk_overlap: int = 1):
+    def __init__(self, chunk_size: int = 70, chunk_overlap: int = 1):
+        if chunk_size < 1 or chunk_overlap < 0:
+            raise ValueError("Invalid chunking configuration")
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
 
@@ -8,33 +15,18 @@ class ChunkingService:
         if not text:
             return []
 
-        units = [
-            line.strip()
-            for line in text.splitlines()
-            if line.strip()
-        ]
+        units = [u.strip() for u in SENTENCE_SPLIT.split(text.strip()) if u.strip()]
 
-        chunks = []
-        current_chunk = []
-        current_size = 0
-
+        chunks, current, size = [], [], 0
         for unit in units:
-            unit_words = unit.split()
-            unit_size = len(unit_words)
+            n = len(unit.split())
+            if current and size + n > self.chunk_size:
+                chunks.append(" ".join(current))
+                current = current[-self.chunk_overlap:] if self.chunk_overlap else []
+                size = sum(len(u.split()) for u in current)
+            current.append(unit)
+            size += n
 
-            if current_chunk and current_size + unit_size > self.chunk_size:
-                chunks.append(" ".join(current_chunk))
-
-                # Keep the last logical unit(s) as overlap
-                current_chunk = current_chunk[-self.chunk_overlap:]
-                current_size = sum(
-                    len(item.split()) for item in current_chunk
-                )
-
-            current_chunk.append(unit)
-            current_size += unit_size
-
-        if current_chunk:
-            chunks.append(" ".join(current_chunk))
-
+        if current:
+            chunks.append(" ".join(current))
         return chunks

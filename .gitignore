@@ -9,7 +9,6 @@ logs/
 venv/
 env/
 .python-version
-uv.lock
 # Python cache
 __pycache__/
 *.py[cod]
@@ -30,3 +29,4 @@ Thumbs.db
 
 # Logs
 *.log
+outputs/

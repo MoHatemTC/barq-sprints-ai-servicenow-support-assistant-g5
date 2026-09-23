@@ -20,12 +20,7 @@ def is_valid_servicenow_signature(body: bytes, incoming_signature: Optional[str]
     
     expected_b64 = base64.b64encode(digest).decode("ascii")
     expected_hex = digest.hex()
-    logger.warning("--- SIGNATURE DEBUG ---")
-    logger.warning(f"1. Received from ServiceNow: {incoming_signature}")
-    logger.warning(f"2. Python Expected (Base64): {expected_b64}")
-    logger.warning(f"3. Python Expected (Hex): {expected_hex}")
-    logger.warning(f"4. Raw Body Received: {body.decode('utf-8', errors='ignore')}")
-    logger.warning("-----------------------")
+    
     # -------------------------------------------------------------
 
     candidate_signatures = {
