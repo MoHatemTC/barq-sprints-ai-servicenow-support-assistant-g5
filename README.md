@@ -32,6 +32,19 @@ uv sync
 
 This creates a `.venv`, resolves dependencies from `pyproject.toml`, and installs them. If no `uv.lock` exists yet, this first run generates one — commit it afterwards so everyone builds from the same resolved versions.
 
+#### Updating dependencies
+
+`pyproject.toml` is the source of truth. `requirements.txt` is generated from it — never edit it by hand.
+
+After adding, removing, or changing a package:
+
+```bash
+uv add <package>          # or edit pyproject.toml, then: uv lock
+uv export --no-hashes --emit-index-url --format requirements-txt -o requirements.txt
+```
+
+Commit all three files together: `pyproject.toml`, `uv.lock`, `requirements.txt`.
+
 ### 3. Set up your environment file
 
 Copy the example file and fill it in:

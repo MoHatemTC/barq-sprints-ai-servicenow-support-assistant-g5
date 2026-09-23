@@ -1,21 +1,31 @@
+"""Incident pipeline: sanitized context -> retrieval -> grounded answer or escalation.
+
+Called by the webhook background task (process_incident), or locally:
+    python run_pipeline.py "wifi keeps disconnecting on my laptop"
+"""
+
 import json
-import os
+import logging
+import re
 import sys
+from pathlib import Path
+from Services.exporters import to_markdown, to_html, to_json
 
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 from agent.agent import get_knowledge_retriever
 from Schemas.Incident_context import IncidentContext
+from Services.incident_preparer import IncidentContextPreparer
+from Services.llm import get_llm
 from Services.response_formatter import (
     build_escalation,
-    compute_confidence,
     format_response,
     to_writeback_payload,
 )
 from utils.console_tracer import print_execution_trace
 
 load_dotenv()
+logger = logging.getLogger("servicenow_webhook.pipeline")
 
 RULES = (
     "Answer ONLY from the provided knowledge base chunks. "
@@ -27,53 +37,87 @@ RULES = (
 )
 
 
+def plain_query(ctx: IncidentContext, limit: int = 1000) -> str:
+    """Remove the guardrail wrapper so the search text is clean."""
+    text = re.sub(r"</?incident_data>", "", ctx.sanitized_query)
+    text = re.sub(r"\.\.\. \[SYSTEM WARNING:.*?\]", "", text, flags=re.S)
+    return " ".join(text.split())[:limit]
+
+
 def ask_llm(query: str, chunks: list[dict]) -> str:
-    context = "\n\n".join(f"[{c['article_id']}] {c['title']}\n{c['content']}" for c in chunks)
-    llm = ChatGoogleGenerativeAI(
-        model=os.getenv("LLM_MODEL", "gemini-2.5-flash"),
-        google_api_key=os.getenv("GOOGLE_API_KEY"),
-        temperature=0,
+    context = "\n\n".join(
+        f"[{c['article_id']}] {c['title']}\n{c['content']}" for c in chunks
     )
     prompt = (
         f"{RULES}\n\n<incident>{query}</incident>\n\n"
         f"Knowledge base chunks:\n{context}"
     )
-    return llm.invoke(prompt).content
+    return get_llm().invoke(prompt).content
+
+
+def process_incident(ctx: IncidentContext) -> dict:
+    """One incident, one run. Always returns a write-back payload with human review set."""
+    number = ctx.original_number
+    query = plain_query(ctx)
+    retrieval: dict = {}
+    chunks: list[dict] = []
+
+    if not ctx.is_safe:
+        response = build_escalation("The incident text was flagged as unsafe.", number)
+    else:
+        retrieval = get_knowledge_retriever().retrieve(query)
+        chunks = retrieval["chunks"]
+
+        if retrieval.get("error"):
+            response = build_escalation("The knowledge search failed.", number)
+        elif retrieval["human_review_required"]:
+            # Below threshold: no LLM call, no guessing (FR-15)
+            response = build_escalation(
+                f"No knowledge article scored above {retrieval['threshold']} "
+                f"(best: {retrieval['best_score']}).",
+                number,
+            )
+        else:
+            try:
+                response = format_response(
+                    ask_llm(query, chunks),
+                    chunks,
+                    human_review_required=False,
+                    incident_number=number,
+                )
+            except Exception:
+                logger.exception("LLM call failed for %s", number)
+                response = build_escalation("The AI model call failed.", number)
+
+    # FR-17: confidence = best retrieval score, recorded even when escalated
+    confidence = retrieval.get("best_score") or 0.0
+
+    print_execution_trace(ctx, chunks, response, confidence)
+    payload = to_writeback_payload(response, confidence)
+    logger.info("Write-back payload for %s: %s", number, json.dumps(payload))
+
+    # NEXT STEP: send `payload` to ServiceNow through the Table API client
+    # (update AI fields + work note). Not wired yet.
+    out = Path("outputs")
+    out.mkdir(exist_ok=True)
+    (out / f"{number}.md").write_text(to_markdown(response), encoding="utf-8")
+    (out / f"{number}.html").write_text(to_html(response), encoding="utf-8")
+    (out / f"{number}.json").write_text(to_json(response, confidence), encoding="utf-8")
+    return payload
 
 
 def main() -> None:
-    query = " ".join(sys.argv[1:]) or "wifi keeps disconnecting on my laptop"
-    ctx = IncidentContext(
-        sys_id="local-test",
-        original_number="INC0000000",
-        sanitized_query=query,
-        truncated_description=query,
-        extracted_tags=[],
-        is_safe=True,
+    logging.basicConfig(level=logging.INFO)
+    text = " ".join(sys.argv[1:]) or "wifi keeps disconnecting on my laptop"
+
+    # Run the real guardrails, same as the webhook does
+    ctx = IncidentContextPreparer().process_payload(
+        sys_id="0" * 32,
+        number="INC0000000",
+        short_desc=text,
+        desc="",
     )
-
-    threshold = float(os.getenv("SCORE_THRESHOLD") or 0.40)
-    retriever = get_knowledge_retriever()
-    retriever.minimum_score = threshold  # config value, we don't edit Ibrahim's file
-    chunks = retriever.search(ctx.sanitized_query)
-
-    number = ctx.original_number
-    if not ctx.is_safe:
-        response = build_escalation("The incident text was flagged as unsafe.", number)
-    elif not chunks:
-        response = format_response("", chunks, incident_number=number)  # no LLM call
-    else:
-        try:
-            response = format_response(ask_llm(ctx.sanitized_query, chunks), chunks, incident_number=number)
-        except Exception as exc:
-            print(f"LLM call failed: {type(exc).__name__}: {str(exc)[:200]}")
-            response = build_escalation("The AI model call failed.", number)
-
-    confidence = compute_confidence(chunks)
-    print(f"\nthreshold used: {threshold}\n")
-    print_execution_trace(ctx, chunks, response, confidence)
-    print("\nWRITE-BACK PAYLOAD")
-    print(json.dumps(to_writeback_payload(response, confidence), indent=2))
+    print(json.dumps(process_incident(ctx), indent=2))
 
 
 if __name__ == "__main__":

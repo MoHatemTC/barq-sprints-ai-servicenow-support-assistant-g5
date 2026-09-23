@@ -36,22 +36,6 @@ services:
     networks:
       - app_network
 
-  qdrant_db:
-
-    image: qdrant/qdrant:latest
-
-    container_name: qdrant_vector_db
-
-    restart: always
-
-    ports:
-      - "6333:6333"
-
-    volumes:
-      - qdrant_storage:/qdrant/storage
-
-    networks:
-      - app_network
 
   postgres_db:
 
