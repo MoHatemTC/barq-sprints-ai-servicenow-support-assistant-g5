@@ -117,7 +117,7 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
     pages_meta = []
     for p in range(1, page_count + 1):
         pages_meta.append({
-            "page_no": p,
+            "page": p,
             "ocr_used": True,
             "rotation_corrected_deg": 0,
             "warnings": []

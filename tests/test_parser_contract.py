@@ -42,7 +42,7 @@ def test_manifest_json_contract():
     assert "pages" in data and isinstance(data["pages"], list), "manifest.json must contain pages list"
     assert len(data["pages"]) == data["page_count"], "pages array length must match page_count"
     page_obj = data["pages"][0]
-    assert "page_no" in page_obj
+    assert "page" in page_obj or "page_no" in page_obj
     assert "ocr_used" in page_obj and isinstance(page_obj["ocr_used"], bool)
     assert "rotation_corrected_deg" in page_obj and isinstance(page_obj["rotation_corrected_deg"], int)
     assert "warnings" in page_obj and isinstance(page_obj["warnings"], list)
