@@ -20,8 +20,9 @@ def test_document_md_contract():
     with open(DOCUMENT_PATH, "r", encoding="utf-8") as f:
         content = f.read()
     
-    # Verify presence of page markers
+    # Verify presence of page markers and diagram blockquotes
     assert "<!-- page: 1 -->" in content, "document.md must contain consecutive <!-- page: N --> markers"
+    assert "> [Diagram p." in content, "document.md must contain > [Diagram p.N] blockquotes"
 
 def test_manifest_json_contract():
     assert MANIFEST_PATH.exists(), "manifest.json must exist in parsed output directory"
@@ -29,10 +30,24 @@ def test_manifest_json_contract():
     with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
         data = json.load(f)
     
-    assert "status" in data, "manifest.json must contain a status field"
+    # Handoff contract top-level schema assertions
+    assert "doc_id" in data, "manifest.json must contain doc_id"
+    assert "source_file" in data, "manifest.json must contain source_file"
+    assert "page_count" in data and isinstance(data["page_count"], int), "manifest.json must contain integer page_count"
+    assert "parser" in data, "manifest.json must contain parser field"
+    assert "status" in data, "manifest.json must contain status field"
     assert data["status"] in ["completed", "in_progress"], f"Unexpected status: {data['status']}"
-    assert "images_to_process" in data, "manifest.json must contain images_to_process list"
     
+    # Page-level metadata array contract assertions
+    assert "pages" in data and isinstance(data["pages"], list), "manifest.json must contain pages list"
+    assert len(data["pages"]) == data["page_count"], "pages array length must match page_count"
+    page_obj = data["pages"][0]
+    assert "page_no" in page_obj
+    assert "ocr_used" in page_obj and isinstance(page_obj["ocr_used"], bool)
+    assert "rotation_corrected_deg" in page_obj and isinstance(page_obj["rotation_corrected_deg"], int)
+    assert "warnings" in page_obj and isinstance(page_obj["warnings"], list)
+
+    assert "images_to_process" in data, "manifest.json must contain images_to_process list"
     images = data["images_to_process"]
     assert isinstance(images, list)
     

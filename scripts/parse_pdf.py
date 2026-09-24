@@ -112,16 +112,31 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
                 })
             image_counter += 1
 
+    # Calculate total page count and page-level metadata list
+    page_count = len(doc.pages) if (hasattr(doc, "pages") and doc.pages) else (current_page or 1)
+    pages_meta = []
+    for p in range(1, page_count + 1):
+        pages_meta.append({
+            "page_no": p,
+            "ocr_used": True,
+            "rotation_corrected_deg": 0,
+            "warnings": []
+        })
+
     final_markdown = "\n\n".join(markdown_content)
 
     try:
         with open(output_path / "document_draft.md", "w", encoding="utf-8") as f:
             f.write(final_markdown)
 
-        # Preserve status if manifest exists, else initialize
         manifest_path = output_path / "manifest.json"
         manifest_payload = {
+            "doc_id": output_path.name,
+            "source_file": Path(pdf_path).name,
+            "page_count": page_count,
+            "parser": "Docling + RapidOCR + LiteLLM Vision",
             "status": "in_progress",
+            "pages": pages_meta,
             "images_to_process": images_metadata
         }
         with open(manifest_path, "w", encoding="utf-8") as f:
@@ -213,12 +228,13 @@ def process_images_from_manifest(output_dir: str, max_workers: int = 5) -> dict:
         img_index = img_meta.get("image_index", idx)
         doc_prefix = img_meta.get("doc_prefix", default_doc_prefix)
         img_label = f"{doc_prefix} image {img_index}"
+        page_n = img_meta.get("page_no", "?")
         
         # Check if already extracted in previous successful run
         if img_meta.get("status") == "success" and img_meta.get("extracted_text"):
             print(f"[Phase 2] Image {img_label} already extracted. Using cached result.", flush=True)
             llm_text = img_meta["extracted_text"]
-            formatted_text = f"\n\n### {img_label}\n> **[Page {img_meta.get('page_no', '?')}]**\n{llm_text}\n"
+            formatted_text = f"\n\n> [Diagram p.{page_n}]\n{llm_text}\n"
             return (img_id, formatted_text, img_meta, None)
 
         if img_path and os.path.exists(img_path):
@@ -227,7 +243,7 @@ def process_images_from_manifest(output_dir: str, max_workers: int = 5) -> dict:
                 base64_img = encode_image_to_base64(img_path)
                 llm_text = extract_insights_with_llm(base64_img)
                 
-                formatted_text = f"\n\n### {img_label}\n> **[Page {img_meta.get('page_no', '?')}]**\n{llm_text}\n"
+                formatted_text = f"\n\n> [Diagram p.{page_n}]\n{llm_text}\n"
                 img_meta["extracted_text"] = llm_text
                 img_meta["status"] = "success"
                 img_meta.pop("error", None)
