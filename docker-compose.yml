@@ -30,9 +30,6 @@ services:
       postgres_db:
         condition: service_healthy
 
-      qdrant_db:
-        condition: service_started
-
     networks:
       - app_network
 

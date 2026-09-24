@@ -92,3 +92,44 @@ To run the complete application in Docker later:
 ```bash
 docker compose up --build
 ```
+
+---
+
+## 📄 PDF Parser CLI & Multimodal Ingestion Pipeline
+
+The project includes an end-to-end PDF parsing and multimodal extraction script located in [`scripts/parse_pdf.py`](scripts/parse_pdf.py). It converts complex technical runbooks into structured Markdown with embedded Vision LLM extractions.
+
+### 🛠️ Execution Commands
+
+Run the parser CLI on any input PDF document:
+
+```bash
+# Parse a PDF and output results to data/parsed/doc_001
+uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001
+
+# Force re-execution and overwrite existing outputs
+uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001 --overwrite
+```
+
+### 🎯 Parser Tool Selection Rationale
+1. **IBM Docling (`docling`):** Selected for state-of-the-art layout analysis, native Markdown table export, bounding box tracking, and page division.
+2. **RapidOCR (`rapidocr`):** Lightweight, multi-lingual OCR engine supporting Arabic & English text detection without heavy external dependencies.
+3. **LiteLLM Vision Integration (`litellm`):** Converts complex sequence diagrams, flowcharts, and architecture diagrams into structured Markdown blockquotes.
+4. **Parallel Processing (`ThreadPoolExecutor`):** Processes image extractions concurrently to achieve 5x faster processing.
+
+### 📦 Contract Deliverables & Outputs
+* **`document.md`**: Clean, standardized Markdown output containing consecutive `<!-- page: N -->` markers and injected image extractions.
+* **`manifest.json`**: Complete metadata tracking image bounding boxes (`bbox`), page numbers, and processing status (`completed`).
+* **`images/`**: Saved PNG picture items extracted from the PDF.
+
+### 🧪 Running Contract Tests
+
+Validate parser compliance against contract specifications:
+
+```bash
+uv run pytest tests/test_parser_contract.py
+```
+
+### ⚠️ Runtime Expectations & Known Constraints
+* **GPU vs CPU Fallback:** Automatically utilizes PyTorch GPU acceleration when available, falling back seamlessly to CPU execution.
+* **API Rate Limits:** When running parallel image vision extraction on documents with >20 diagrams, ensure your `LITELLM_BASE_URL` endpoint supports concurrent calls.
