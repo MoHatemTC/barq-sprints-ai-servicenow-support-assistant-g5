@@ -1,0 +1,125 @@
+{
+    "status": "completed",
+    "images_to_process": [
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_1 -->",
+            "image_index": 1,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_1.png",
+            "page_no": 1,
+            "bbox": [
+                64.53711700439453,
+                751.2099456787109,
+                190.68960571289062,
+                721.5571136474609
+            ],
+            "status": "success",
+            "extracted_text": "Sprints"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_2 -->",
+            "image_index": 2,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_2.png",
+            "page_no": 5,
+            "bbox": [
+                85.43183135986328,
+                445.26800537109375,
+                506.99169921875,
+                119.7950439453125
+            ],
+            "status": "success",
+            "extracted_text": "### 1 - SERVICENOW PLATFORM\n\n> * **Incident raised**\n>   * *Details:* A requester reports a symptom. Category, service and text captured.\n>   * ➔ **Business Rule**\n>\n> * **Business Rule**\n>   * *Details:* Fires on insert and on relevant update. Checks eligibility.\n>   * ➔ **RESTMessageV2**\n>\n> * **RESTMessageV2**\n>   * *Details:* Posts event_id, sys_id, number, event_type. Never the record.\n>   * ➔ *(minimal event over HTTPS)* ➔ **POST /events** (in Section 2)\n>\n> * **Incident form**\n>   * *Details:* AI Suggested Response and Human Review Required render here.\n>   *  *(write-back)*  **Write back** (from Section 3)\n\n---\n\n### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR\n\n> * **POST /events**\n>   * *Details:* Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.\n>   * ➔ **Idempotency + claim**\n>\n> * **Idempotency + claim**\n>   * *Details:* Persist the event key. A replay is discarded. Claim the incident.\n>   * ➔ **202 Accepted**\n>\n> * **202 Accepted**\n>   * *Details:* Returned before any model runs. ServiceNow is never blocked.\n>   * ➔ **Dispatch**\n>\n> * **Dispatch**\n>   * *Details:* Intermediate: background task. Advanced: Redis and Celery.\n>   * ➔ *(dispatched to the worker)* ➔ **Retrieve** (in Section 3)\n\n---\n\n### 3 - REASONING — RETRIEVE, GROUND, DECIDE\n\n> * **Retrieve**\n>   * *Details:* Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.\n>   * ➔ **Reason**\n>\n> * **Reason**\n>   * *Details:* LangChain agent, or an explicit LangGraph state machine.\n>   * ➔ **Ground + check**\n>\n> * **Ground + check**\n>   * *Details:* Numbered procedure, cited article. Score, risk and confidence gates.\n>   * ➔ **Write back**\n>\n> * **Write back**\n>   * *Details:* Table API: suggestion, confidence, work note, Human Review Required.\n>   * ➔ *(write-back)* ➔ **Incident form** (in Section 1)\n\n---\n\n### 4 · Evidence — every run leaves a record\n\n* **Langfuse** holds the trace: retrieval, generation, prompt version, tokens, latency, cost, errors.\n* **PostgreSQL (advanced)** holds executions, idempotency keys, approvals, failures and retry state.\n* The **benchmark harness** re-scores the same ten incidents after every change, so quality is measured, not claimed."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_3 -->",
+            "image_index": 3,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_3.png",
+            "page_no": 6,
+            "bbox": [
+                85.46723937988281,
+                475.4353332519531,
+                519.977294921875,
+                261.47088623046875
+            ],
+            "status": "success",
+            "extracted_text": "| Component | Intermediate<br>AI ServiceNow Support Assistant | Advanced<br>Agentic Incident Resolution Platform |\n| :--- | :--- | :--- |\n| **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |\n| **Execution** | FastAPI background task | Redis queue + Celery workers |\n| **Orchestration** | LangChain agent, four tools | LangGraph, checkpointed nodes |\n| **Retrieval** | Dense top-k + metadata filters | Hybrid dense + sparse, reranked |\n| **State** | Idempotency store only | PostgreSQL: state, approvals, audit |\n| **Identity** | Least-privilege integration user | OAuth, least-privilege, ACL-governed |\n| **Safety** | Restricted toolset, human review | Permission classes, interrupts, guardrails |\n| **Evidence** | Langfuse traces + benchmark | Per-node traces, eval suite gating CI |\n| **Autonomy** | Suggests and escalates. Never resolves. | Low-risk writes only, after approval |\n| **Load** | ~30 hrs/week | ~35 hrs/week |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_4 -->",
+            "image_index": 4,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_4.png",
+            "page_no": 16,
+            "bbox": [
+                88.04874420166016,
+                705.3962860107422,
+                505.0399475097656,
+                481.4256286621094
+            ],
+            "status": "success",
+            "extracted_text": "### Sequence Diagram: Event Flow Handling\n\n**Participants:**\n* **ServiceNow**\n* **Webhook**\n* **Store**\n* **Worker**\n\n---\n\n#### Section 1: FIRST EVENT\n\n> * **Step 1:** `ServiceNow` **→** `Webhook`\n>   * **Message:** `POST /events`\n>   * **Details:** `event_id, sys_id, number, event_type`\n> \n> * **Step 2:** `Webhook` **→** `Store`\n>   * **Message:** `put(event_id)`\n>   * **Details:** `new key stored`\n> \n> * **Step 3:** `Webhook` **→** `ServiceNow`\n>   * **Message:** `PATCH ai_status = in_progress`\n>   * **Details:** `the incident is claimed`\n> \n> * **Step 4:** `Webhook` **→** `ServiceNow`\n>   * **Message:** `202 Accepted`\n>   * **Details:** `under one second, no model called`\n> \n> * **Step 5:** `Webhook` **→** `Worker`\n>   * **Message:** `dispatch(event)`\n>   * **Details:** `background task or queued job`\n> \n> * **Step 6:** `Worker` **→** `ServiceNow`\n>   * **Message:** `PATCH suggestion + human_review`\n>   * **Details:** `write-back after retrieval and generation`\n\n---\n\n#### Section 2: REPLAY OF THE SAME EVENT\n\n> * **Step 1:** `ServiceNow` **→** `Webhook`\n>   * **Message:** `POST /events`\n>   * **Details:** `identical event_id`\n> \n> * **Step 2:** `Webhook` **--→** `Store`\n>   * **Message:** `put(event_id) — already present`"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_5 -->",
+            "image_index": 5,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_5.png",
+            "page_no": 19,
+            "bbox": [
+                85.04821014404297,
+                676.2929840087891,
+                508.6885681152344,
+                458.98175048828125
+            ],
+            "status": "success",
+            "extracted_text": "### BUILD TIME - ONE COMMAND, REPEATABLE\n\n> * **Load**\n>   * Pull published knowledge articles from the KB.\n>   * ➔ *Connects to:* **Chunk**\n>\n> * **Chunk**\n>   * Fixed size with overlap. Article identity kept.\n>   * ➔ *Connects to:* **Embed**\n>\n> * **Embed**\n>   * Dense vectors. Sparse too, at advanced level.\n>   * ➔ *Connects to:* **Index**\n>\n> * **Index**\n>   * Persisted Qdrant collection with payload metadata.\n\n---\n\n### QUERY TIME - ONCE PER INCIDENT\n\n> * **Query**\n>   * Short description plus the symptom text. No credentials, no PII.\n>   * ➔ *Connects to:* **Filter**\n>\n> * **Filter**\n>   * state = published, category, service, current version only.\n>   * ➔ *Connects to:* **Search**\n>\n> * **Search**\n>   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.\n>   * ➔ *Connects to:* **Rerank**\n>\n> * **Rerank**\n>   * Advanced only. Reorder the fused candidates before anything reaches the model.\n\n**Output:** top-k chunks, each with a similarity score and the article number it came from.\n\n---\n\n> **Note:** Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_6 -->",
+            "image_index": 6,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_6.png",
+            "page_no": 19,
+            "bbox": [
+                63.992069244384766,
+                349.3708801269531,
+                532.1177368164062,
+                96.12249755859375
+            ],
+            "status": "success",
+            "extracted_text": "```markdown\n---\narticle_number: KB0001\ntitle: VPN authentication fails after a password change\ncategory: network\nservice: corporate-vpn\nstate: published        # published | draft | retired\nversion: 2\nsecurity_level: internal    # internal | restricted\nupdated: 2026-04-11\n---\n\n## Symptom\n...\n## Cause\n...\n## Resolution\n1. ...\n## Escalation\n...\n```"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_7 -->",
+            "image_index": 7,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_7.png",
+            "page_no": 28,
+            "bbox": [
+                97.850830078125,
+                443.7716369628906,
+                496.8967590332031,
+                189.44793701171875
+            ],
+            "status": "success",
+            "extracted_text": "> ### Runbook Workflow Diagram Structure\n\n#### Main Sequence (Left Column)\n\n* **load**\n  * *Description:* Fetch the incident by sys_id\n  * *Next Step:* ↓ `validate`\n\n* **validate**\n  * *Description:* Schema, required fields, eligibility re-check\n  * *Next Step:* ↓ `classify`\n\n* **classify**\n  * *Description:* Category, service, symptom type\n  * *Next Step:* ↓ `determine_risk`\n\n* **determine_risk**\n  * *Description:* Risk assessed BEFORE retrieval\n  * *Next Steps:* \n    * ↓ `retrieve` (Main path)\n    * ➔ `interrupt` (Branch path for high risk)\n\n* **retrieve**\n  * *Description:* Hybrid search, filters, rerank\n  * *Next Step:* ↓ `diagnose`\n\n* **diagnose**\n  * *Description:* Reason over the retrieved evidence\n  * *Next Step:* ↓ `generate`\n\n* **generate**\n  * *Description:* Draft the numbered procedure\n  * *Next Step:* ↓ `verify_evidence`\n\n* **verify_evidence**\n  * *Description:* Every step traced to a chunk\n  * *Next Step:* ↓ `safety_check`\n\n* **safety_check**\n  * *Description:* Output schema, tool allowlist, redaction\n  * *Next Step:* ↓ `confidence_check`\n\n* **confidence_check**\n  * *Description:* Compare against the configured floor\n  * *Next Steps (Branches):*\n    * ➔ `act` (Green path: high confidence / pass)\n    * ➔ `escalate` (Teal path: fail / unsafe)\n\n---\n\n#### Outcome & Exception Nodes (Right Column)\n\n* **act**\n  * *Description:* Low-risk write only. Suggestion and work note go back through the Table API.\n  * *Triggered by:* `confidence_check`\n\n* **interrupt**\n  * *Description:* High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.\n  * *Triggered by:* `determine_risk`\n  * *Next Step:* ┆ `resume` (Dashed connection)\n\n* **resume**\n  * *Description:* Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.\n  * *Preceded by:* `interrupt`\n\n* **escalate**\n  * *Description:* No safe action available. Human Review Required is set and the run ends with a written reason.\n  * *Triggered by:* `confidence_check`\n\n* **dead_letter**\n  * *Description:* Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks.\n  * *Triggered by:* Celery retry exhaustion (External to main graph flow)"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_8 -->",
+            "image_index": 8,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_8.png",
+            "page_no": 30,
+            "bbox": [
+                93.6989517211914,
+                732.0482025146484,
+                509.05859375,
+                502.0883483886719
+            ],
+            "status": "success",
+            "extracted_text": "### Workflow Gates\n\n> * **GATE 1: Evidence**\n>   * **Question:** Did any chunk clear the score threshold?\n>   * **➔ Connections:** Next step → **GATE 2**\n>\n> * **GATE 2: Risk**\n>   * **Question:** Is this a high-risk category, service or action?\n>   * **➔ Connections:** Next step → **GATE 3**\n>\n> * **GATE 3: Confidence**\n>   * **Question:** Is the derived confidence above the floor?\n\n---\n\n### OUTCOMES\n\n* **Suggest**\n  * All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.\n\n* **Escalate to a human**\n  * Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.\n\n* **Refuse and hand off**\n  * No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here."
+        }
+    ]
+}
