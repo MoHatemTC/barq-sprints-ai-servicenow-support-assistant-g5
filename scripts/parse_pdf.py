@@ -3,6 +3,7 @@ import json
 import base64
 import sys
 from pathlib import Path
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 from litellm import completion
 
@@ -129,11 +130,25 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
         with open(output_path / "document_draft.md", "w", encoding="utf-8") as f:
             f.write(final_markdown)
 
+        # Determine document title from filename or doc items
+        title_str = Path(pdf_path).stem.replace('_', ' ').title()
+        if hasattr(doc, "iterate_items"):
+            for item, _ in doc.iterate_items():
+                if hasattr(item, "label") and item.label == DocItemLabel.TITLE and hasattr(item, "text") and item.text:
+                    title_str = item.text.strip()
+                    break
+
+        source_type = Path(pdf_path).suffix.lstrip('.').lower() or "pdf"
+        parsed_at_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
         manifest_path = output_path / "manifest.json"
         manifest_payload = {
             "doc_id": output_path.name,
+            "title": title_str,
             "source_file": Path(pdf_path).name,
+            "source_type": source_type,
             "page_count": page_count,
+            "parsed_at": parsed_at_iso,
             "parser": "Docling + RapidOCR + LiteLLM Vision",
             "status": "in_progress",
             "pages": pages_meta,
@@ -270,8 +285,9 @@ def process_images_from_manifest(output_dir: str, max_workers: int = 5) -> dict:
             if failed_label:
                 failed_images.append(failed_label)
 
-    # Save manifest with status
+    # Save manifest with status and timestamp
     manifest_data["status"] = "completed" if not failed_images else "partial_failure"
+    manifest_data["parsed_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     try:
         with open(manifest_path, "w", encoding="utf-8") as f:
