@@ -99,74 +99,58 @@ One event in, one grounded suggestion out. Nothing polls; nothing auto-resolves.
 
 
 > [Diagram p.5]
-### 1 - SERVICENOW PLATFORM
+### System Architecture & Workflow Runbook
 
+---
+
+> ### 1 - SERVICENOW PLATFORM
+>
 > * **Incident raised**
->   * Description: A requester reports a symptom. Category, service and text captured.
->   * **Next Step:** Business Rule
-> 
-> * **Business Rule**
->   * Description: Fires on insert and on relevant update. Checks eligibility.
->   * **Next Step:** RESTMessageV2
-> 
-> * **RESTMessageV2**
->   * Description: Posts event_id, sys_id, number, event_type. Never the record.
->   * **Transition Label:** `minimal event over HTTPS`
->   * **Next Step:** Connects to Section 2 -> **POST /events**
-> 
-> * **Incident form**
->   * Description: AI Suggested Response and Human Review Required render here.
->   * **Incoming Connection:** Receives `write-back` from Section 3 -> **Write back**
+>   * *Description:* A requester reports a symptom. Category, service and text captured.
+>   * ➔ **Business Rule**
+>     * *Description:* Fires on insert and on relevant update. Checks eligibility.
+>     * ➔ **RESTMessageV2**
+>       * *Description:* Posts `event_id`, `sys_id`, `number`, `event_type`. Never the record.
+>       * ➔ *(Connection via `minimal event over HTTPS`)* ➔ **2 - INGESTION EDGE**
+>
+> * **Incident form** *(Target of Write-back)*
+>   * *Description:* AI Suggested Response and Human Review Required render here.
 
 ---
 
-### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR
-
-> * **POST /events**
->   * Description: Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.
->   * **Next Step:** Idempotency + claim
-> 
-> * **Idempotency + claim**
->   * Description: Persist the event key. A replay is discarded. Claim the incident.
->   * **Next Step:** 202 Accepted
-> 
-> * **202 Accepted**
->   * Description: Returned before any model runs. ServiceNow is never blocked.
->   * **Next Step:** Dispatch
-> 
-> * **Dispatch**
->   * Description: Intermediate: background task. Advanced: Redis and Celery.
->   * **Transition Label:** `dispatched to the worker`
->   * **Next Step:** Connects to Section 3 -> **Retrieve**
+> ### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR
+>
+> * **POST /events** *(Triggered by minimal event over HTTPS)*
+>   * *Description:* Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.
+>   * ➔ **Idempotency + claim**
+>     * *Description:* Persist the event key. A replay is discarded. Claim the incident.
+>     * ➔ **202 Accepted**
+>       * *Description:* Returned before any model runs. ServiceNow is never blocked.
+>       * ➔ **Dispatch**
+>         * *Description:* Intermediate: background task. Advanced: Redis and Celery.
+>         * ➔ *(Connection via `dispatched to the worker`)* ➔ **3 - REASONING**
 
 ---
 
-### 3 - REASONING — RETRIEVE, GROUND, DECIDE
-
-> * **Retrieve**
->   * Description: Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.
->   * **Next Step:** Reason
-> 
-> * **Reason**
->   * Description: LangChain agent, or an explicit LangGraph state machine.
->   * **Next Step:** Ground + check
-> 
-> * **Ground + check**
->   * Description: Numbered procedure, cited article. Score, risk and confidence gates.
->   * **Next Step:** Write back
-> 
-> * **Write back**
->   * Description: Table API: suggestion, confidence, work note, Human Review Required.
->   * **Transition Label:** `write-back`
->   * **Next Step:** Connects to Section 1 -> **Incident form**
+> ### 3 - REASONING — RETRIEVE, GROUND, DECIDE
+>
+> * **Retrieve** *(Triggered by dispatched to the worker)*
+>   * *Description:* Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.
+>   * ➔ **Reason**
+>     * *Description:* LangChain agent, or an explicit LangGraph state machine.
+>     * ➔ **Ground + check**
+>       * *Description:* Numbered procedure, cited article. Score, risk and confidence gates.
+>       * ➔ **Write back**
+>         * *Description:* Table API: suggestion, confidence, work note, Human Review Required.
+>         * ➔ *(Connection via `write-back`)* ➔ **Incident form** (in Section 1)
 
 ---
 
 ### 4 · Evidence — every run leaves a record
 
-* Langfuse holds the trace: retrieval, generation, prompt version, tokens, latency, cost, errors.
-* PostgreSQL (advanced) holds executions, idempotency keys, approvals, failures and retry state.
-* The benchmark harness re-scores the same ten incidents after every change, so quality is measured, not claimed.
+* **Langfuse** holds the trace: retrieval, generation, prompt version, tokens, latency, cost, errors.
+* **PostgreSQL (advanced)** holds executions, idempotency keys, approvals, failures and retry state.
+* **The benchmark harness** re-scores the same ten incidents after every change, so quality is measured, not claimed.
 
 
 
@@ -194,7 +178,7 @@ The difference is engineering maturity, not the amount of Al.
 
 
 > [Diagram p.6]
-| Category | Intermediate<br>**AI ServiceNow Support Assistant** | Advanced<br>**Agentic Incident Resolution Platform** |
+| Feature | Intermediate<br><sub>AI ServiceNow Support Assistant</sub> | Advanced<br><sub>Agentic Incident Resolution Platform</sub> |
 | :--- | :--- | :--- |
 | **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |
 | **Execution** | FastAPI background task | Redis queue + Celery workers |
@@ -481,7 +465,7 @@ The webhook answers first and reasons afterwards. A replay is answered too — a
 
 
 > [Diagram p.16]
-### Components / Lifelines
+### Components
 * **ServiceNow**
 * **Webhook**
 * **Store**
@@ -489,44 +473,28 @@ The webhook answers first and reasons afterwards. A replay is answered too — a
 
 ---
 
-### Sequence Diagram Flow
+### Sequence Flow
 
-#### **FIRST EVENT**
-
-> * **ServiceNow → Webhook**
->   * **Action:** `POST /events`
->   * **Payload / Details:** `event_id, sys_id, number, event_type`
->
-> * **Webhook → Store**
->   * **Action:** `put(event_id)`
->   * **Details:** `new key stored`
->
-> * **Webhook → ServiceNow**
->   * **Action:** `PATCH ai_status = in_progress`
->   * **Details:** `the incident is claimed`
->
-> * **Webhook → ServiceNow**
->   * **Response:** `202 Accepted`
->   * **Details:** `under one second, no model called`
->
-> * **Webhook → Worker**
->   * **Action:** `dispatch(event)`
->   * **Details:** `background task or queued job`
->
-> * **Worker → ServiceNow**
->   * **Action:** `PATCH suggestion + human_review`
->   * **Details:** `write-back after retrieval and generation`
+> #### **FIRST EVENT**
+> * **ServiceNow** ➔ **Webhook**: `POST /events`
+>   * *Payload / Parameters:* `event_id, sys_id, number, event_type`
+> * **Webhook** ➔ **Store**: `put(event_id)`
+>   * *Details:* `new key stored`
+> * **Webhook** ➔ **ServiceNow**: `PATCH ai_status = in_progress`
+>   * *Details:* `the incident is claimed`
+> * **Webhook** ➔ **ServiceNow**: `202 Accepted`
+>   * *Details:* `under one second, no model called`
+> * **Webhook** ➔ **Worker**: `dispatch(event)`
+>   * *Details:* `background task or queued job`
+> * **Worker** ➔ **ServiceNow**: `PATCH suggestion + human_review`
+>   * *Details:* `write-back after retrieval and generation`
 
 ---
 
-#### **REPLAY OF THE SAME EVENT**
-
-> * **ServiceNow → Webhook**
->   * **Action:** `POST /events`
->   * **Payload / Details:** `identical event_id`
->
-> * **Webhook - - > Store** *(dashed line)*
->   * **Action:** `put(event_id) — already present`
+> #### **REPLAY OF THE SAME EVENT**
+> * **ServiceNow** ➔ **Webhook**: `POST /events`
+>   * *Details:* `identical event_id`
+> * **Webhook** ➔ **Store**: `put(event_id) — already present` *(Dashed Line)*
 
 
 
@@ -598,11 +566,14 @@ Build time runs once per corpus change. Query time runs once per incident.
 
 > * **Load**
 >   * Pull published knowledge articles from the KB.
-> * $\rightarrow$ **Chunk**
+>   * $\rightarrow$
+> * **Chunk**
 >   * Fixed size with overlap. Article identity kept.
-> * $\rightarrow$ **Embed**
+>   * $\rightarrow$
+> * **Embed**
 >   * Dense vectors. Sparse too, at advanced level.
-> * $\rightarrow$ **Index**
+>   * $\rightarrow$
+> * **Index**
 >   * Persisted Qdrant collection with payload metadata.
 
 ---
@@ -611,18 +582,21 @@ Build time runs once per corpus change. Query time runs once per incident.
 
 > * **Query**
 >   * Short description plus the symptom text. No credentials, no PII.
-> * $\rightarrow$ **Filter**
+>   * $\rightarrow$
+> * **Filter**
 >   * state = published, category, service, current version only.
-> * $\rightarrow$ **Search**
+>   * $\rightarrow$
+> * **Search**
 >   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.
-> * $\rightarrow$ **Rerank**
+>   * $\rightarrow$
+> * **Rerank**
 >   * Advanced only. Reorder the fused candidates before anything reaches the model.
->
-> **Output:** top-k chunks, each with a similarity score and the article number it came from.
+
+**Output:** top-k chunks, each with a similarity score and the article number it came from.
 
 ---
 
-> Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure.
+> **Note:** Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure.
 
 
 
@@ -640,9 +614,9 @@ article_number: KB0001
 title: VPN authentication fails after a password change
 category: network
 service: corporate-vpn
-state: published        # published | draft | retired
+state: published         # published | draft | retired
 version: 2
-security_level: internal  # internal | restricted
+security_level: internal   # internal | restricted
 updated: 2026-04-11
 ---
 
@@ -887,72 +861,66 @@ Explicit nodes, explicit edges, checkpointed state. An interrupted run resumes; 
 
 > [Diagram p.28]
 > ### Workflow Diagram Structure
-
-> #### **Sequential Main Path (Left Column)**
+> 
+> #### Main Sequence (Left Column)
+> 
 > * **`load`**
 >   * *Description:* Fetch the incident by sys_id
->   * *Next Step:* ↓ `validate`
-> 
+>   * ↓
 > * **`validate`**
 >   * *Description:* Schema, required fields, eligibility re-check
->   * *Next Step:* ↓ `classify`
-> 
+>   * ↓
 > * **`classify`**
 >   * *Description:* Category, service, symptom type
->   * *Next Step:* ↓ `determine_risk`
-> 
+>   * ↓
 > * **`determine_risk`**
 >   * *Description:* Risk assessed BEFORE retrieval
->   * *Next Step:* ↓ `retrieve`
->   * *Branch (Orange Arrow):* → `interrupt`
-> 
+>   * ──(High risk or low confidence)──> Branches to **`interrupt`**
+>   * ↓
 > * **`retrieve`**
 >   * *Description:* Hybrid search, filters, rerank
->   * *Next Step:* ↓ `diagnose`
-> 
+>   * ↓
 > * **`diagnose`**
 >   * *Description:* Reason over the retrieved evidence
->   * *Next Step:* ↓ `generate`
-> 
+>   * ↓
 > * **`generate`**
 >   * *Description:* Draft the numbered procedure
->   * *Next Step:* ↓ `verify_evidence`
-> 
+>   * ↓
 > * **`verify_evidence`**
 >   * *Description:* Every step traced to a chunk
->   * *Next Step:* ↓ `safety_check`
-> 
+>   * ↓
 > * **`safety_check`**
 >   * *Description:* Output schema, tool allowlist, redaction
->   * *Next Step:* ↓ `confidence_check`
-> 
+>   * ↓
 > * **`confidence_check`**
 >   * *Description:* Compare against the configured floor
->   * *Branch (Green Arrow):* → `act`
->   * *Branch (Cyan Arrow):* → `escalate`
+>   * ──(Passed confidence)──> Branches to **`act`**
+>   * ──(Failed confidence / No safe action)──> Branches to **`escalate`**
 
 ---
 
-> #### **Outcome / Branch Nodes (Right Column)**
+> #### Action & State Nodes (Right Column)
+> 
 > * **`act`**
 >   * *Description:* Low-risk write only. Suggestion and work note go back through the Table API.
->   * *Source:* Triggered from `confidence_check`
-> 
+>   * *Trigger:* Connected from **`confidence_check`**.
+>
 > * **`interrupt`**
 >   * *Description:* High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.
->   * *Source:* Triggered from `determine_risk`
->   * *Next Step (Dashed Blue Arrow):* ↓ `resume`
-> 
+>   * *Trigger:* Connected from **`determine_risk`**.
+>   * ┆ (dashed arrow)
+>   * ↓
 > * **`resume`**
 >   * *Description:* Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.
->   * *Source:* Triggered from `interrupt`
-> 
+>   * *Trigger:* Follows **`interrupt`**.
+>
 > * **`escalate`**
 >   * *Description:* No safe action available. Human Review Required is set and the run ends with a written reason.
->   * *Source:* Triggered from `confidence_check`
-> 
+>   * *Trigger:* Connected from **`confidence_check`**.
+>
 > * **`dead_letter`**
 >   * *Description:* Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks.
+>   * *Trigger:* System/Celery retry policy failure.
 
 
 
@@ -997,31 +965,33 @@ Three gates stand between a retrieved chunk and a written suggestion. Any one of
 
 
 > [Diagram p.30]
-### Process Flow: Gates
+### Sequential Gates Flow
 
-> * **GATE 1: Evidence**
->   * **Question:** Did any chunk clear the score threshold?
->   * **Next Step:** Proceeds to Gate 2 $\rightarrow$
+> **[GATE 1] Evidence**
+> * **Question:** Did any chunk clear the score threshold?
 >
-> * **GATE 2: Risk**
->   * **Question:** Is this a high-risk category, service or action?
->   * **Next Step:** Proceeds to Gate 3 $\rightarrow$
+> ➔ *(Connects to Gate 2)*
 >
-> * **GATE 3: Confidence**
->   * **Question:** Is the derived confidence above the floor?
+> **[GATE 2] Risk**
+> * **Question:** Is this a high-risk category, service or action?
+>
+> ➔ *(Connects to Gate 3)*
+>
+> **[GATE 3] Confidence**
+> * **Question:** Is the derived confidence above the floor?
 
 ---
 
 ### OUTCOMES
 
 * **Suggest**
-  * **Condition & Action:** All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.
+  * All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.
 
 * **Escalate to a human**
-  * **Condition & Action:** Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.
+  * Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.
 
 * **Refuse and hand off**
-  * **Condition & Action:** No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here.
+  * No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here.
 
 
 
