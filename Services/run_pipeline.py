@@ -13,7 +13,7 @@ from Services.exporters import to_markdown, to_html, to_json
 
 from dotenv import load_dotenv
 
-from agent.agent import get_knowledge_retriever
+from Agent.agent import get_knowledge_retriever
 from Schemas.Incident_context import IncidentContext
 from Services.incident_preparer import IncidentContextPreparer
 from Services.llm import get_llm
@@ -90,7 +90,7 @@ def process_incident(ctx: IncidentContext) -> dict:
                 response = build_escalation("The AI model call failed.", number)
 
     # FR-17: confidence = best retrieval score, recorded even when escalated
-    confidence = retrieval.get("best_score") or 0.0
+    confidence = retrieval.get("best_score")
 
     print_execution_trace(ctx, chunks, response, confidence)
     payload = to_writeback_payload(response, confidence)
