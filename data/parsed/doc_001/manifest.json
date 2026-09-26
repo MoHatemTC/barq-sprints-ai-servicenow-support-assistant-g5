@@ -1,358 +1,711 @@
 {
     "doc_id": "doc_001",
-    "title": "Kbpdf",
+    "title": "AI-Powered ServiceNow IT Incident Resolution Assistant — architecture, contracts, worked",
     "source_file": "kbpdf.pdf",
     "source_type": "pdf",
     "page_count": 58,
-    "parsed_at": "2026-09-24T17:37:16Z",
+    "parsed_at": "2026-09-26T15:26:35Z",
     "parser": "Docling + RapidOCR + LiteLLM Vision",
+    "ocr_engine": "rapidocr",
+    "ocr_languages": [
+        "english",
+        "arabic"
+    ],
     "status": "completed",
     "pages": [
         {
             "page": 1,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 2,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 3,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 4,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 5,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 6,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 7,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 8,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 9,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 10,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 11,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 12,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 13,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 14,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 15,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 16,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 17,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 18,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 19,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 20,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 21,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 22,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 23,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 24,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 25,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 26,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 27,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 28,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 29,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 30,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 31,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 32,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 33,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 34,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 35,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 36,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 37,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 38,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 39,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 40,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 41,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 42,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 43,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 44,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 45,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 46,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 47,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 48,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 49,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 50,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 51,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 52,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 53,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 54,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 55,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 56,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 57,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 58,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         }
@@ -362,52 +715,60 @@
             "image_id": "<!-- IMAGE_PLACEHOLDER_1 -->",
             "image_index": 1,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_1.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_1.png",
             "page_no": 1,
             "bbox": [
-                64.53711700439453,
-                751.2099456787109,
+                64.537109375,
+                751.2099380493164,
                 190.68960571289062,
                 721.5571136474609
             ],
-            "status": "success",
-            "extracted_text": "Sprints"
+            "status": "skipped_decorative",
+            "width": 126,
+            "height": 29,
+            "is_diagram_candidate": false
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_2 -->",
             "image_index": 2,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_2.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_2.png",
             "page_no": 5,
             "bbox": [
-                85.43183135986328,
+                85.43186950683594,
                 445.26800537109375,
                 506.99169921875,
                 119.7950439453125
             ],
             "status": "success",
-            "extracted_text": "### 1 - SERVICENOW PLATFORM\n\n> * **Incident raised**\n>   * A requester reports a symptom. Category, service and text captured.\n>   * **↓**\n> * **Business Rule**\n>   * Fires on insert and on relevant update. Checks eligibility.\n>   * **↓**\n> * **RESTMessageV2**\n>   * Posts event_id, sys_id, number, event_type. Never the record.\n>   * **↓** *(minimal event over HTTPS)*\n> * **Incident form**\n>   * AI Suggested Response and Human Review Required render here.\n>   * *(Receives `write-back` from Section 3: Write back)*\n\n---\n\n### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR\n\n> *(Triggers from Section 1: RESTMessageV2 via `minimal event over HTTPS`)*\n>\n> * **POST /events**\n>   * Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.\n>   * **↓**\n> * **Idempotency + claim**\n>   * Persist the event key. A replay is discarded. Claim the incident.\n>   * **↓**\n> * **202 Accepted**\n>   * Returned before any model runs. ServiceNow is never blocked.\n>   * **↓**\n> * **Dispatch**\n>   * Intermediate: background task. Advanced: Redis and Celery.\n>   * **↓** *(dispatched to the worker)*\n\n---\n\n### 3 - REASONING — RETRIEVE, GROUND, DECIDE\n\n> *(Triggers from Section 2: Dispatch via `dispatched to the worker`)*\n>\n> * **Retrieve**\n>   * Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.\n>   * **↓**\n> * **Reason**\n>   * LangChain agent, or an explicit LangGraph state machine.\n>   * **↓**\n> * **Ground + check**\n>   * Numbered procedure, cited article. Score, risk and confidence gates.\n>   * **↓**\n> * **Write back**\n>   * Table API: suggestion, confidence, work note, Human Review Required.\n>   * **↓** *(write-back ➔ sends output to Section 1: Incident form)*\n\n---\n\n### 4 · Evidence — every run leaves a record\n\n* **Langfuse holds the trace:** retrieval, generation, prompt version, tokens, latency, cost, errors.\n* **PostgreSQL (advanced) holds:** executions, idempotency keys, approvals, failures and retry state.\n* **Benchmark harness:** re-scores the same ten incidents after every change, so quality is measured, not claimed."
+            "width": 422,
+            "height": 325,
+            "is_diagram_candidate": true,
+            "extracted_text": "### 1 - SERVICENOW PLATFORM\n\n> * **Incident raised**\n>   * *Description*: A requester reports a symptom. Category, service and text captured.\n>   * ➔ Flows to **Business Rule**\n> * **Business Rule**\n>   * *Description*: Fires on insert and on relevant update. Checks eligibility.\n>   * ➔ Flows to **RESTMessageV2**\n> * **RESTMessageV2**\n>   * *Description*: Posts event_id, sys_id, number, event_type. Never the record.\n>   * ➔ Connection: **minimal event over HTTPS** ➔ Connects to **POST /events** (in Section 2)\n> * **Incident form**\n>   * *Description*: AI Suggested Response and Human Review Required render here.\n>   *  Connection: **write-back**  Receives update from **Write back** (in Section 3)\n\n---\n\n### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR\n\n> * **POST /events**\n>   * *Description*: Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.\n>   * ➔ Flows to **Idempotency + claim**\n> * **Idempotency + claim**\n>   * *Description*: Persist the event key. A replay is discarded. Claim the incident.\n>   * ➔ Flows to **202 Accepted**\n> * **202 Accepted**\n>   * *Description*: Returned before any model runs. ServiceNow is never blocked.\n>   * ➔ Flows to **Dispatch**\n> * **Dispatch**\n>   * *Description*: Intermediate: background task. Advanced: Redis and Celery.\n>   * ➔ Connection: **dispatched to the worker** ➔ Connects to **Retrieve** (in Section 3)\n\n---\n\n### 3 - REASONING — RETRIEVE, GROUND, DECIDE\n\n> * **Retrieve**\n>   * *Description*: Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.\n>   * ➔ Flows to **Reason**\n> * **Reason**\n>   * *Description*: LangChain agent, or an explicit LangGraph state machine.\n>   * ➔ Flows to **Ground + check**\n> * **Ground + check**\n>   * *Description*: Numbered procedure, cited article. Score, risk and confidence gates.\n>   * ➔ Flows to **Write back**\n> * **Write back**\n>   * *Description*: Table API: suggestion, confidence, work note, Human Review Required.\n>   * ➔ Connection: **write-back** ➔ Connects back to **Incident form** (in Section 1)\n\n---\n\n### 4 · Evidence — every run leaves a record\n\n> * **Langfuse** holds the trace: retrieval, generation, prompt version, tokens, latency, cost, errors.\n> * **PostgreSQL (advanced)** holds executions, idempotency keys, approvals, failures and retry state.\n> * **The benchmark harness** re-scores the same ten incidents after every change, so quality is measured, not claimed."
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_3 -->",
             "image_index": 3,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_3.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_3.png",
             "page_no": 6,
             "bbox": [
-                85.46723937988281,
+                85.4672622680664,
                 475.4353332519531,
-                519.977294921875,
+                519.9771118164062,
                 261.47088623046875
             ],
             "status": "success",
-            "extracted_text": "| | **Intermediate**<br>AI ServiceNow Support Assistant | **Advanced**<br>Agentic Incident Resolution Platform |\n| :--- | :--- | :--- |\n| **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |\n| **Execution** | FastAPI background task | Redis queue + Celery workers |\n| **Orchestration** | LangChain agent, four tools | LangGraph, checkpointed nodes |\n| **Retrieval** | Dense top-k + metadata filters | Hybrid dense + sparse, reranked |\n| **State** | Idempotency store only | PostgreSQL: state, approvals, audit |\n| **Identity** | Least-privilege integration user | OAuth, least-privilege, ACL-governed |\n| **Safety** | Restricted toolset, human review | Permission classes, interrupts, guardrails |\n| **Evidence** | Langfuse traces + benchmark | Per-node traces, eval suite gating CI |\n| **Autonomy** | Suggests and escalates. Never resolves. | Low-risk writes only, after approval |\n| **Load** | ~30 hrs/week | ~35 hrs/week |"
+            "width": 435,
+            "height": 214,
+            "is_diagram_candidate": true,
+            "extracted_text": "| | Intermediate <br> AI ServiceNow Support Assistant | Advanced <br> Agentic Incident Resolution Platform |\n| :--- | :--- | :--- |\n| **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |\n| **Execution** | FastAPI background task | Redis queue + Celery workers |\n| **Orchestration** | LangChain agent, four tools | LangGraph, checkpointed nodes |\n| **Retrieval** | Dense top-k + metadata filters | Hybrid dense + sparse, reranked |\n| **State** | Idempotency store only | PostgreSQL: state, approvals, audit |\n| **Identity** | Least-privilege integration user | OAuth, least-privilege, ACL-governed |\n| **Safety** | Restricted toolset, human review | Permission classes, interrupts, guardrails |\n| **Evidence** | Langfuse traces + benchmark | Per-node traces, eval suite gating CI |\n| **Autonomy** | Suggests and escalates. Never resolves. | Low-risk writes only, after approval |\n| **Load** | ~30 hrs/week | ~35 hrs/week |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_4 -->",
             "image_index": 4,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_4.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_4.png",
             "page_no": 16,
             "bbox": [
                 88.04874420166016,
@@ -416,58 +777,70 @@
                 481.4256286621094
             ],
             "status": "success",
-            "extracted_text": "### Participants / Lifelines\n\n* **ServiceNow**\n* **Webhook**\n* **Store**\n* **Worker**\n\n---\n\n### Sequence Flow\n\n#### FIRST EVENT\n\n> * **ServiceNow** → **Webhook**: `POST /events`\n>   * *Parameters:* `event_id, sys_id, number, event_type`\n>\n> * **Webhook** → **Store**: `put(event_id)`\n>   * *Note:* `new key stored`\n>\n> * **Webhook** → **ServiceNow**: `PATCH ai_status = in_progress`\n>   * *Note:* `the incident is claimed`\n>\n> * **Webhook** → **ServiceNow**: `202 Accepted`\n>   * *Note:* `under one second, no model called`\n>\n> * **Webhook** → **Worker**: `dispatch(event)`\n>   * *Note:* `background task or queued job`\n>\n> * **Worker** → **ServiceNow**: `PATCH suggestion + human_review`\n>   * *Note:* `write-back after retrieval and generation`\n\n---\n\n#### REPLAY OF THE SAME EVENT\n\n> * **ServiceNow** → **Webhook**: `POST /events`\n>   * *Note:* `identical event_id`\n>\n> * **Webhook** --dashed--> **Store**: `put(event_id) — already present`"
+            "width": 417,
+            "height": 224,
+            "is_diagram_candidate": true,
+            "extracted_text": "### Participants / Lifelines\n* **ServiceNow**\n* **Webhook**\n* **Store**\n* **Worker**\n\n---\n\n### Sequence Flow\n\n#### **FIRST EVENT**\n\n> * **ServiceNow** $\\xrightarrow{\\text{POST /events}}$ **Webhook**\n>   * *Payload / Params:* `event_id, sys_id, number, event_type`\n>\n> * **Webhook** $\\xrightarrow{\\text{put(event_id)}}$ **Store**\n>   * *Details:* `new key stored`\n>\n> * **Webhook** $\\xrightarrow{\\text{PATCH ai_status = in_progress}}$ **ServiceNow**\n>   * *Details:* `the incident is claimed`\n>\n> * **Webhook** $\\xrightarrow{\\text{202 Accepted}}$ **ServiceNow**\n>   * *Details:* `under one second, no model called`\n>\n> * **Webhook** $\\xrightarrow{\\text{dispatch(event)}}$ **Worker**\n>   * *Details:* `background task or queued job`\n>\n> * **Worker** $\\xrightarrow{\\text{PATCH suggestion + human_review}}$ **ServiceNow**\n>   * *Details:* `write-back after retrieval and generation`\n\n---\n\n#### **REPLAY OF THE SAME EVENT**\n\n> * **ServiceNow** $\\xrightarrow{\\text{POST /events}}$ **Webhook**\n>   * *Details:* `identical event_id`\n>\n> * **Webhook** $\\xrightarrow{\\text{put(event_id) — already present}}$ **Store** *(dashed flow)*"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_5 -->",
             "image_index": 5,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_5.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_5.png",
             "page_no": 19,
             "bbox": [
                 85.04821014404297,
                 676.2929840087891,
                 508.6885681152344,
-                458.98175048828125
+                458.9817810058594
             ],
             "status": "success",
-            "extracted_text": "### BUILD TIME - ONE COMMAND, REPEATABLE\n\n> * **Load**\n>   * Pull published knowledge articles from the KB.\n>   * $\\rightarrow$\n> * **Chunk**\n>   * Fixed size with overlap. Article identity kept.\n>   * $\\rightarrow$\n> * **Embed**\n>   * Dense vectors. Sparse too, at advanced level.\n>   * $\\rightarrow$\n> * **Index**\n>   * Persisted Qdrant collection with payload metadata.\n\n---\n\n### QUERY TIME - ONCE PER INCIDENT\n\n> * **Query**\n>   * Short description plus the symptom text. No credentials, no PII.\n>   * $\\rightarrow$\n> * **Filter**\n>   * state = published, category, service, current version only.\n>   * $\\rightarrow$\n> * **Search**\n>   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.\n>   * $\\rightarrow$\n> * **Rerank**\n>   * Advanced only. Reorder the fused candidates before anything reaches the model.\n\n**Output:** top-k chunks, each with a similarity score and the article number it came from.\n\n---\n\n> **Note:** Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure."
+            "width": 424,
+            "height": 217,
+            "is_diagram_candidate": true,
+            "extracted_text": "### BUILD TIME - ONE COMMAND, REPEATABLE\n\n> * **Load**\n>   * Pull published knowledge articles from the KB.\n>   * **$\\rightarrow$**\n> * **Chunk**\n>   * Fixed size with overlap. Article identity kept.\n>   * **$\\rightarrow$**\n> * **Embed**\n>   * Dense vectors. Sparse too, at advanced level.\n>   * **$\\rightarrow$**\n> * **Index**\n>   * Persisted Qdrant collection with payload metadata.\n\n---\n\n### QUERY TIME - ONCE PER INCIDENT\n\n> * **Query**\n>   * Short description plus the symptom text. No credentials, no PII.\n>   * **$\\rightarrow$**\n> * **Filter**\n>   * state = published, category, service, current version only.\n>   * **$\\rightarrow$**\n> * **Search**\n>   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.\n>   * **$\\rightarrow$**\n> * **Rerank**\n>   * Advanced only. Reorder the fused candidates before anything reaches the model.\n\n**Output:** top-k chunks, each with a similarity score and the article number it came from.\n\n---\n\n> Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure."
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_6 -->",
             "image_index": 6,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_6.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_6.png",
             "page_no": 19,
             "bbox": [
-                63.992069244384766,
-                349.3708801269531,
-                532.1177368164062,
-                96.12249755859375
+                63.992122650146484,
+                349.37066650390625,
+                532.1176147460938,
+                96.122314453125
             ],
             "status": "success",
-            "extracted_text": "```yaml\n---\narticle_number: KB0001\ntitle: VPN authentication fails after a password change\ncategory: network\nservice: corporate-vpn\nstate: published        # published | draft | retired\nversion: 2\nsecurity_level: internal    # internal | restricted\nupdated: 2026-04-11\n---\n```\n\n## Symptom\n...\n## Cause\n...\n## Resolution\n1. ...\n## Escalation\n..."
+            "width": 468,
+            "height": 253,
+            "is_diagram_candidate": true,
+            "extracted_text": "```yaml\n---\narticle_number: KB0001\ntitle: VPN authentication fails after a password change\ncategory: network\nservice: corporate-vpn\nstate: published        # published | draft | retired\nversion: 2\nsecurity_level: internal  # internal | restricted\nupdated: 2026-04-11\n---\n\n## Symptom\n...\n## Cause\n...\n## Resolution\n1. ...\n## Escalation\n...\n```"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_7 -->",
             "image_index": 7,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_7.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_7.png",
             "page_no": 28,
             "bbox": [
                 97.850830078125,
-                443.7716369628906,
+                443.77166748046875,
                 496.8967590332031,
-                189.44793701171875
+                189.4478759765625
             ],
             "status": "success",
-            "extracted_text": "> ### Workflow Diagram Overview\n> \n> The diagram illustrates an incident processing graph flow consisting of sequential execution steps on the main left pipeline, branching logic based on risk and confidence, and right-hand side handling states (actions, interrupts, escalations, and dead letters).\n\n---\n\n### Sequential Main Pipeline (Left Column)\n\n* **`load`**\n  * **Description:** Fetch the incident by sys_id\n  * **Next Step:** `validate`\n\n* **`validate`**\n  * **Description:** Schema, required fields, eligibility re-check\n  * **Next Step:** `classify`\n\n* **`classify`**\n  * **Description:** Category, service, symptom type\n  * **Next Step:** `determine_risk`\n\n* **`determine_risk`**\n  * **Description:** Risk assessed BEFORE retrieval\n  * **Next Step:** `retrieve`\n  * **Branch Connection:** Points to **`interrupt`** (via orange arrow for high risk or low confidence assessment)\n\n* **`retrieve`**\n  * **Description:** Hybrid search, filters, rerank\n  * **Next Step:** `diagnose`\n\n* **`diagnose`**\n  * **Description:** Reason over the retrieved evidence\n  * **Next Step:** `generate`\n\n* **`generate`**\n  * **Description:** Draft the numbered procedure\n  * **Next Step:** `verify_evidence`\n\n* **`verify_evidence`**\n  * **Description:** Every step traced to a chunk\n  * **Next Step:** `safety_check`\n\n* **`safety_check`**\n  * **Description:** Output schema, tool allowlist, redaction\n  * **Next Step:** `confidence_check`\n\n* **`confidence_check`**\n  * **Description:** Compare against the configured floor\n  * **Branch Connections:**\n    * Points to **`act`** (via green arrow)\n    * Points to **`escalate`** (via cyan arrow)\n\n---\n\n### Handling & Execution States (Right Column)\n\n* **`act`**\n  * **Description:** Low-risk write only. Suggestion and work note go back through the Table API.\n  * **Source:** Triggered from **`confidence_check`**\n\n* **`interrupt`**\n  * **Description:** High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.\n  * **Source:** Triggered from **`determine_risk`**\n  * **Next Connection:** Flows into **`resume`** (via dashed blue arrow)\n\n* **`resume`**\n  * **Description:** Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.\n  * **Source:** Follows from **`interrupt`**\n\n* **`escalate`**\n  * **Description:** No safe action available. Human Review Required is set and the run ends with a written reason.\n  * **Source:** Triggered from **`confidence_check`**\n\n* **`dead_letter`**\n  * **Description:** Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks."
+            "width": 399,
+            "height": 254,
+            "is_diagram_candidate": true,
+            "extracted_text": "> ### Main Sequential Pipeline\n> \n> * **load**\n>   * *Description*: Fetch the incident by sys_id\n>   * *Flow*: Connects directly to **validate**\n> \n> * **validate**\n>   * *Description*: Schema, required fields, eligibility re-check\n>   * *Flow*: Connects directly to **classify**\n> \n> * **classify**\n>   * *Description*: Category, service, symptom type\n>   * *Flow*: Connects directly to **determine_risk**\n> \n> * **determine_risk**\n>   * *Description*: Risk assessed BEFORE retrieval\n>   * *Flow*: \n>     * Primary path continues to **retrieve**\n>     * Branch path (orange arrow) leads to **interrupt**\n> \n> * **retrieve**\n>   * *Description*: Hybrid search, filters, rerank\n>   * *Flow*: Connects directly to **diagnose**\n> \n> * **diagnose**\n>   * *Description*: Reason over the retrieved evidence\n>   * *Flow*: Connects directly to **generate**\n> \n> * **generate**\n>   * *Description*: Draft the numbered procedure\n>   * *Flow*: Connects directly to **verify_evidence**\n> \n> * **verify_evidence**\n>   * *Description*: Every step traced to a chunk\n>   * *Flow*: Connects directly to **safety_check**\n> \n> * **safety_check**\n>   * *Description*: Output schema, tool allowlist, redaction\n>   * *Flow*: Connects directly to **confidence_check**\n> \n> * **confidence_check**\n>   * *Description*: Compare against the configured floor\n>   * *Flow / Branches*:\n>     * Branch path (green arrow) leads to **act**\n>     * Branch path (teal arrow) leads to **escalate**\n\n---\n\n> ### Action, Branch, and Exception Nodes\n> \n> * **act**\n>   * *Description*: Low-risk write only. Suggestion and work note go back through the Table API.\n>   * *Source*: Triggered from **confidence_check**\n> \n> * **interrupt**\n>   * *Description*: High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.\n>   * *Source*: Triggered from **determine_risk**\n>   * *Flow*: Leads to **resume** (via dashed arrow)\n> \n> * **resume**\n>   * *Description*: Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.\n>   * *Source*: Triggered following an **interrupt**\n> \n> * **escalate**\n>   * *Description*: No safe action available. Human Review Required is set and the run ends with a written reason.\n>   * *Source*: Triggered from **confidence_check**\n> \n> * **dead_letter**\n>   * *Description*: Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks.\n>   * *Source*: Standalone execution state outside the standard graph flow."
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_8 -->",
             "image_index": 8,
             "doc_prefix": "doc",
-            "image_path": "data/parsed/doc_001/images/image_8.png",
+            "image_path": "data\\parsed\\doc_001\\images\\image_8.png",
             "page_no": 30,
             "bbox": [
                 93.6989517211914,
@@ -476,7 +849,10 @@
                 502.0883483886719
             ],
             "status": "success",
-            "extracted_text": "> **GATE 1**  \n> ### Evidence  \n> Did any chunk clear the score threshold?  \n>  \n> ➔  \n>  \n> **GATE 2**  \n> ### Risk  \n> Is this a high-risk category, service or action?  \n>  \n> ➔  \n>  \n> **GATE 3**  \n> ### Confidence  \n> Is the derived confidence above the floor?  \n\n---\n\n### OUTCOMES\n\n* **Suggest**  \n  All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.\n\n* **Escalate to a human**  \n  Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.\n\n* **Refuse and hand off**  \n  No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here."
+            "width": 415,
+            "height": 230,
+            "is_diagram_candidate": true,
+            "extracted_text": "> ### Process Flow: Decision Gates\n> \n> * **GATE 1: Evidence**\n>   * **Question:** Did any chunk clear the score threshold?\n>   * **Connection:** $\\rightarrow$ Connects to **GATE 2**\n>\n> * **GATE 2: Risk**\n>   * **Question:** Is this a high-risk category, service or action?\n>   * **Connection:** $\\rightarrow$ Connects to **GATE 3**\n>\n> * **GATE 3: Confidence**\n>   * **Question:** Is the derived confidence above the floor?\n\n---\n\n### OUTCOMES\n\n* **Suggest**\n  * All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.\n\n* **Escalate to a human**\n  * Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.\n\n* **Refuse and hand off**\n  * No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here."
         }
     ]
 }

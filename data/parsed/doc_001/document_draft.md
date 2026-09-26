@@ -964,9 +964,11 @@ The judgement call, and how to make it defensible
 | Refuse and hand off, naming what you saw - recommended | Scores are flat and middling, which is exactly this case.          | None, and it is the honest answer. Flat scores across unrelated articles is precisely the signal your confidence formula (KB-20) exists to catch. |
 
 
-Whichever you choose, the work note must say what the system observed - that it detected three distinct symptoms across three services and could not attribute them to one cause. That single sentence is worth more to the reviewing agent than a partial procedure would be, because it tells them the pattern is simultaneous multi-service failure , which is itself a diagnosis.
+Whichever you choose, the work note must say what the system observed - that it detected three distinct symptoms across three services and could not attribute them to one cause. That single sentence is worth more
 
 <!-- page: 38 -->
+
+to the reviewing agent than a partial procedure would be, because it tells them the pattern is simultaneous multi-service failure , which is itself a diagnosis.
 
 The pattern behind this incident
 
