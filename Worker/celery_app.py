@@ -21,12 +21,17 @@ celery_app = Celery(
 
 celery_app.conf.update(
     task_acks_late=True,
+    
     task_reject_on_worker_lost=True,
+    
     worker_prefetch_multiplier=1,
-    task_soft_time_limit=300,
-    task_time_limit=360,
+    
+    task_soft_time_limit=60,
+    
+    task_time_limit=90,
+    
     broker_transport_options={
-        "visibility_timeout": 420,
+        "visibility_timeout": 120,
     },
 )
 
