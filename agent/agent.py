@@ -1,4 +1,6 @@
-"""Task 5: filtered KB retrieval and a read-only LangChain agent.
+"""Task 5: filtered KB retrieval (+ read-only tool check).
+
+The agent itself now lives in Agent/react_agent.py (S3.4 ReAct loop).
 
 Uses the shared EmbeddingService and QdrantService so ingestion and
 retrieval always use the same model and the same collection.
@@ -176,31 +178,6 @@ def assert_read_only(tools) -> None:
     for t in tools:
         if any(word in t.name.lower() for word in FORBIDDEN_TOOL_WORDS):
             raise RuntimeError(f"Write-capable tool registered on read-only agent: {t.name}")
-
-
-def create_read_only_agent():
-    """Build the agent with read-only tools only."""
-    from langchain.agents import AgentExecutor, create_tool_calling_agent
-    from langchain_core.prompts import ChatPromptTemplate
-    from Services.llm import get_llm
-
-    assert_read_only(READ_ONLY_TOOLS)
-
-    llm = get_llm()
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "Use search_knowledge to answer using only published KB chunks. "
-                "This agent is read-only. If search_knowledge returns "
-                "human_review_required=true or no chunks, reply NO_ANSWER.",
-            ),
-            ("human", "{input}"),
-            ("placeholder", "{agent_scratchpad}"),
-        ]
-    )
-    agent = create_tool_calling_agent(llm, READ_ONLY_TOOLS, prompt)
-    return AgentExecutor(agent=agent, tools=READ_ONLY_TOOLS, verbose=True)
 
 
 if __name__ == "__main__":
