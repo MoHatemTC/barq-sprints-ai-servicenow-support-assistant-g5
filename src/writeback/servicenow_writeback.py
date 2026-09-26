@@ -354,7 +354,7 @@ class ServiceNowWritebackClient:
             payload = {
                 "x_2216229_sprint_1_ai_status": "escalated",
                 "x_2216229_sprint_1_ai_suggested_response": "",
-                "x_2216229_sprint_1_human_review_required": True,
+                "x_2216229_sprint_1_human_review_required": False,
                 "work_notes": (
                     "AI escalation reason: "
                     f"{reason.strip()}"

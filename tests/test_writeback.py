@@ -55,11 +55,11 @@ async def test_suggest_sends_correct_payload(monkeypatch):
     )
 
     assert captured["json"] == {
-        "ai_status": "suggested",
-        "ai_suggested_response": "Please restart the service.",
-        "ai_confidence": 0.92,
-        "human_review_required": True,
-        "ai_processed": True,
+        "x_2216229_sprint_1_ai_status": "suggested",
+        "x_2216229_sprint_1_ai_suggested_response": "Please restart the service.",
+        "x_2216229_sprint_1_ai_confidence": 0.92,
+        "x_2216229_sprint_1_human_review_required": True,
+        "x_2216229_sprint_1_ai_processed": True,
     }
 
     assert captured["auth"] == (
@@ -156,9 +156,9 @@ async def test_escalate_sends_correct_payload(monkeypatch):
     )
 
     assert captured["json"] == {
-        "ai_status": "escalated",
-        "ai_suggested_response": "",
-        "human_review_required": True,
+        "x_2216229_sprint_1_ai_status": "escalated",
+        "x_2216229_sprint_1_ai_suggested_response": "",
+        "x_2216229_sprint_1_human_review_required": False,
         "work_notes": (
             "AI escalation reason: "
             "AI confidence is too low "
