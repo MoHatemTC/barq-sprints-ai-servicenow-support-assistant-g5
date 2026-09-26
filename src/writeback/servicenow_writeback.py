@@ -1,4 +1,4 @@
-import asyncio
+﻿import asyncio
 import os
 from typing import Any
 
@@ -46,14 +46,32 @@ class ServiceNowWritebackClient:
         max_retries: int | None = None,
     ) -> None:
         self.instance_url = (
-            instance_url or os.getenv("SERVICENOW_INSTANCE_URL", "")
+            instance_url
+            if instance_url is not None
+            else os.getenv("SERVICENOW_INSTANCE_URL", "")
         ).rstrip("/")
 
-        self.username = username or os.getenv("SERVICENOW_USERNAME")
-        self.password = password or os.getenv("SERVICENOW_PASSWORD")
+        self.username = (
+            username
+            if username is not None
+            else os.getenv("SERVICENOW_USERNAME")
+        )
 
-        self.timeout = timeout or float(
-            os.getenv("SERVICENOW_WRITEBACK_TIMEOUT", "10")
+        self.password = (
+            password
+            if password is not None
+            else os.getenv("SERVICENOW_PASSWORD")
+        )
+
+        self.timeout = (
+            timeout
+            if timeout is not None
+            else float(
+                os.getenv(
+                    "SERVICENOW_WRITEBACK_TIMEOUT",
+                    "10",
+                )
+            )
         )
 
         self.max_retries = (
