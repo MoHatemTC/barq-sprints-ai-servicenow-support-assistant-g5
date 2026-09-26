@@ -81,6 +81,13 @@ class KnowledgeRetriever:
                     "content": payload.get("text") or "",
                     "chunk_index": payload.get("chunk_index"),
                     "workflow_state": payload.get("workflow_state"),
+                    "document_id": payload.get("document_id"),
+                    "source_file": payload.get("source_file"),
+                    "page_start": payload.get("page_start"),
+                    "page_end": payload.get("page_end"),
+                    "heading_path": payload.get("heading_path", []),
+                    "section_ids": payload.get("section_ids", []),
+                    "content_types": payload.get("content_types", []),
                     "score": round(float(point.score or 0.0), 4),
                 }
             )
