@@ -41,7 +41,8 @@ dependencies = [
     "uvicorn==0.52.4",
     "watchfiles==1.2.0",
     "websockets==17.1",
-    "torch>=2.6.0"
+    "torch>=2.6.0",
+    "pytest-asyncio>=1.4.0",
 ]
 
 [tool.uv.sources]
@@ -51,3 +52,6 @@ torch = [{ index = "pytorch-cpu" }]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
