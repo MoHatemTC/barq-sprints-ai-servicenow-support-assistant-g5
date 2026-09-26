@@ -36,15 +36,17 @@ uv sync
 
 This creates the `.venv` and installs the project dependencies.
 
-If dependencies are changed, update the lock file and generated requirements file:
+If dependencies are changed:
 
 ```bash
 uv add <package>
+
 uv lock
+
 uv export --no-hashes --emit-index-url --format requirements-txt -o requirements.txt
 ```
 
-Commit:
+Commit the updated dependency files:
 
 ```text
 pyproject.toml
@@ -68,9 +70,9 @@ Copy-Item .env.example .env
 
 Fill in the required environment variables.
 
-### 4. ServiceNow configuration
+### 4. Required environment variables
 
-The following ServiceNow variables are required:
+#### ServiceNow
 
 | Variable                    | Description                                      |
 | --------------------------- | ------------------------------------------------ |
@@ -79,6 +81,21 @@ The following ServiceNow variables are required:
 | `SERVICENOW_PASSWORD`       | Integration user's password                      |
 | `SERVICENOW_KB_ID`          | Knowledge Base Sys ID                            |
 | `SERVICENOW_KB_CATEGORY_ID` | Knowledge Base Category Sys ID                   |
+
+#### Webhook and worker
+
+| Variable           | Description                                           |
+| ------------------ | ----------------------------------------------------- |
+| `WEBHOOK_SECRET`   | Secret used to verify ServiceNow webhook signatures   |
+| `REDIS_URL`        | Redis URL used by Celery as broker and result backend |
+| `INCIDENT_HANDLER` | Dotted Python path for the incident handler           |
+
+Example:
+
+```text
+REDIS_URL=redis://redis:6379/0
+INCIDENT_HANDLER=Worker.incident_handler.handle_incident
+```
 
 Set a unique `WEBHOOK_SECRET` and configure the same secret in ServiceNow.
 
@@ -146,6 +163,14 @@ The Celery worker runs with bounded concurrency:
 
 Redis and PostgreSQL health checks are used before dependent services start.
 
+### Run the Celery worker directly
+
+The worker can also be started directly with:
+
+```bash
+celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=2
+```
+
 ## Sprint 3.5 — Celery Worker
 
 The webhook endpoint performs the synchronous work required for request handling:
@@ -186,11 +211,16 @@ The worker uses:
 
 ```text
 task_acks_late = True
+
 task_reject_on_worker_lost = True
+
 worker_prefetch_multiplier = 1
-task_soft_time_limit = 300 seconds
-task_time_limit = 360 seconds
-Redis visibility_timeout = 420 seconds
+
+task_soft_time_limit = 60 seconds
+
+task_time_limit = 90 seconds
+
+Redis visibility_timeout = 120 seconds
 ```
 
 The Redis visibility timeout is greater than the hard task time limit so an active task is not redelivered prematurely.
@@ -277,7 +307,7 @@ attempt
 outcome
 ```
 
-Sensitive credentials and incident descriptions are not written to logs.
+Sensitive credentials and incident descriptions are not written to the worker's structured logs.
 
 ## DLQ CLI
 
@@ -382,7 +412,6 @@ pytest -q tests/test_worker.py
 ```
 
 Run the complete test suite with:
-
 
 ```bash
 pytest -q
