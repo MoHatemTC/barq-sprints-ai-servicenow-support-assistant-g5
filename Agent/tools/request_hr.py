@@ -10,7 +10,7 @@ State & Terminal Semantics:
 import logging
 from typing import Any, Dict
 from agent.config import MIN_REASON_LENGTH
-from agent.formatting import format_escalation_message
+from agent.formatting import calculate_ai_confidence, format_escalation_message
 from agent.ports import WriteBackPort
 from agent.run_context import RunContext
 
@@ -59,11 +59,20 @@ class RequestHRTool:
                 "incident_number": self.run_context.number,
             }
 
-        # 3. Build escalation payload
+        # 3. Dynamically calculate AI Confidence from retrieval scores
+        retrieval_scores = [
+            float(c.get("score", 0.0))
+            for c in self.run_context.retrieved_chunks
+        ]
+        if self.run_context.best_score > 0.0:
+            retrieval_scores.append(self.run_context.best_score)
+
+        ai_confidence = calculate_ai_confidence(retrieval_scores)
+
+        # 4. Build escalation payload
         escalation_text = format_escalation_message(
             incident_number=self.run_context.number, reason=cleaned_reason
         )
-        ai_confidence = self.run_context.best_score or 0.0
 
         writeback_payload = {
             "ai_suggested_response": escalation_text,
@@ -74,7 +83,7 @@ class RequestHRTool:
             "citations": [],
         }
 
-        # 4. Execute Write-Back Call
+        # 5. Execute Write-Back Call
         try:
             port_result = self.write_back_port.escalate(
                 sys_id=self.run_context.sys_id,
@@ -96,8 +105,8 @@ class RequestHRTool:
                     "port_result": port_result,
                 }
 
-            # Success: Explicitly mark run context as completed to block subsequent tool calls
-            self.run_context.mark_completed("requestHR", writeback_payload)
+            # Success: Explicitly update active run context to finished to block subsequent tool calls
+            self.run_context.mark_finished("requestHR", writeback_payload)
 
             return {
                 "status": "success",

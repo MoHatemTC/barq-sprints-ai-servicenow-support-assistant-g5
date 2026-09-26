@@ -110,8 +110,8 @@ class SuggestAnswerTool:
                     "port_result": port_result,
                 }
 
-            # Success: Explicitly mark run context as completed to block subsequent tool calls
-            self.run_context.mark_completed("suggestAnswer", writeback_payload)
+            # Success: Explicitly update active run context to finished to block subsequent tool calls
+            self.run_context.mark_finished("suggestAnswer", writeback_payload)
 
             return {
                 "status": "success",
