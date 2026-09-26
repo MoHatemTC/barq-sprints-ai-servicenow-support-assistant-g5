@@ -223,8 +223,20 @@ def test_search_kb_happy_path(run_context, write_back_port, in_memory_qdrant, mo
     assert res["status"] == "success"
     assert res["count"] >= 1
     assert res["chunks"][0]["article_id"] == "KB0010001"
+    # Relevance scoring metrics
     assert res["best_score"] >= 0.50
+    assert "avg_score" in res
+    assert isinstance(res["scores"], list)
+    assert len(res["scores"]) >= 1
+    assert isinstance(res["all_scores"], list)
+    # Threshold flags
+    assert res["threshold"] == 0.50
+    assert res["score_threshold"] == 0.50
+    assert res["threshold_met"] is True
+    assert res["threshold_passed"] is True
+    assert res["human_review_required"] is False
     assert not run_context.is_finished  # Must remain non-terminal
+    assert not run_context.is_completed
 
     # Check RunContext updated
     assert len(run_context.retrieved_chunks) >= 1
@@ -258,6 +270,14 @@ def test_search_kb_threshold_pruning(run_context, in_memory_qdrant, mock_embedde
     assert res["count"] == 0
     assert res["chunks"] == []
     assert res["best_score"] < 0.70
+    # Threshold flags & metrics verification
+    assert res["threshold"] == 0.70
+    assert res["threshold_met"] is False
+    assert res["threshold_passed"] is False
+    assert res["human_review_required"] is True
+    assert isinstance(res["scores"], list)
+    assert len(res["scores"]) == 0
+    assert isinstance(res["all_scores"], list)
 
 
 
@@ -356,7 +376,10 @@ def test_suggest_answer_happy_path(run_context, write_back_port):
     assert res["status"] == "success"
     assert res["ai_confidence"] == 0.8521
     assert res["citations"] == ["KB0010001"]
-    assert run_context.is_finished is True  # Terminal state transition
+    # Explicit terminal lifecycle verification
+    assert run_context.is_finished is True
+    assert run_context.is_completed is True
+    assert run_context.status == "completed"
     assert run_context.terminal_tool == "suggestAnswer"
 
     # Verify write-back port received payload
@@ -371,6 +394,8 @@ def test_suggest_answer_blocks_subsequent_calls(run_context, write_back_port, in
     res = tool.run("1. Step one. [Article: KB0010001]")
     assert res["status"] == "success"
     assert run_context.is_finished is True
+    assert run_context.is_completed is True
+    assert run_context.status == "completed"
 
     # Attempt second call to suggestAnswer
     second_res = tool.run("1. Another step. [Article: KB0010001]")
@@ -399,6 +424,7 @@ def test_suggest_answer_rejects_non_numbered_procedure(run_context, write_back_p
     assert res["status"] == "error"
     assert "numbered" in res["error"].lower()
     assert run_context.is_finished is False  # Must not lock run on validation error
+    assert run_context.is_completed is False
 
 
 def test_suggest_answer_rejects_uncited_step(run_context, write_back_port):
@@ -410,6 +436,7 @@ def test_suggest_answer_rejects_uncited_step(run_context, write_back_port):
     assert res["status"] == "error"
     assert "citation" in res["error"].lower()
     assert run_context.is_finished is False
+    assert run_context.is_completed is False
 
 
 def test_suggest_answer_rejects_hallucinated_source(run_context, write_back_port):
@@ -422,6 +449,7 @@ def test_suggest_answer_rejects_hallucinated_source(run_context, write_back_port
     assert res["status"] == "error"
     assert "unretrieved" in res["error"].lower() or "unknown" in res["error"].lower()
     assert run_context.is_finished is False
+    assert run_context.is_completed is False
 
 
 def test_suggest_answer_port_failure_leaves_run_open(run_context):
@@ -433,6 +461,24 @@ def test_suggest_answer_port_failure_leaves_run_open(run_context):
     assert res["status"] == "error"
     assert "ServiceNow Timeout" in res["error"]
     assert run_context.is_finished is False  # Open for retry!
+    assert run_context.is_completed is False
+    assert run_context.status == "in_progress"
+
+
+def test_suggest_answer_port_error_dict_leaves_run_open(run_context):
+    class ErrorDictPort(FakeWriteBackPort):
+        def suggest(self, sys_id, number, payload):
+            return {"status": "error", "error": "ServiceNow 500 Internal Error"}
+
+    run_context.retrieved_chunks.append({"article_id": "KB0010001", "score": 0.80})
+    tool = SuggestAnswerTool(run_context=run_context, write_back_port=ErrorDictPort())
+
+    res = tool.run("1. Step one. [Article: KB0010001]")
+    assert res["status"] == "error"
+    assert "500 Internal Error" in res["error"]
+    assert run_context.is_finished is False
+    assert run_context.is_completed is False
+    assert run_context.status == "in_progress"
 
 
 # ============================================================================ #
@@ -448,7 +494,10 @@ def test_request_hr_happy_path(run_context, write_back_port):
 
     assert res["status"] == "success"
     assert res["ai_confidence"] == 0.42
+    # Explicit terminal lifecycle verification
     assert run_context.is_finished is True
+    assert run_context.is_completed is True
+    assert run_context.status == "completed"
     assert run_context.terminal_tool == "requestHR"
 
     assert len(write_back_port.escalations) == 1
@@ -463,6 +512,8 @@ def test_request_hr_blocks_subsequent_calls(run_context, write_back_port):
     res = tool.run("Escalating due to policy.")
     assert res["status"] == "success"
     assert run_context.is_finished is True
+    assert run_context.is_completed is True
+    assert run_context.status == "completed"
 
     # Subsequent call blocked
     second = tool.run("Another escalation.")
@@ -476,6 +527,7 @@ def test_request_hr_validation_empty_reason(run_context, write_back_port):
     assert res["status"] == "error"
     assert "empty" in res["error"].lower()
     assert run_context.is_finished is False
+    assert run_context.is_completed is False
 
 
 def test_request_hr_port_failure_leaves_run_open(run_context):
@@ -486,6 +538,23 @@ def test_request_hr_port_failure_leaves_run_open(run_context):
     assert res["status"] == "error"
     assert "Connection Reset" in res["error"]
     assert run_context.is_finished is False  # Stays open for retry
+    assert run_context.is_completed is False
+    assert run_context.status == "in_progress"
+
+
+def test_request_hr_port_error_dict_leaves_run_open(run_context):
+    class ErrorDictPort(FakeWriteBackPort):
+        def escalate(self, sys_id, number, reason, payload):
+            return {"status": "error", "error": "ServiceNow Gateway Timeout"}
+
+    tool = RequestHRTool(run_context=run_context, write_back_port=ErrorDictPort())
+    res = tool.run("Valid reason for escalation.")
+
+    assert res["status"] == "error"
+    assert "Gateway Timeout" in res["error"]
+    assert run_context.is_finished is False
+    assert run_context.is_completed is False
+    assert run_context.status == "in_progress"
 
 
 # ============================================================================ #

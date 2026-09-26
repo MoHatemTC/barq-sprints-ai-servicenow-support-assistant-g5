@@ -64,6 +64,18 @@ class AddWorkNoteTool:
                 note=cleaned_note,
             )
 
+            # Check if write-back port returned an explicit error/failure payload
+            if isinstance(port_result, dict) and (
+                port_result.get("status") in ("error", "failed")
+                or port_result.get("success") is False
+            ):
+                return {
+                    "status": "error",
+                    "error": f"Failed to post work note via write-back port: {port_result.get('error', 'Operation unconfirmed')}",
+                    "incident_number": self.run_context.number,
+                    "port_result": port_result,
+                }
+
             # Record in RunContext
             self.run_context.record_work_note(cleaned_note)
 

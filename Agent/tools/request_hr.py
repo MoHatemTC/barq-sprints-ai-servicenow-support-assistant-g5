@@ -83,8 +83,21 @@ class RequestHRTool:
                 payload=writeback_payload,
             )
 
-            # Success: Lock terminal state
-            self.run_context.mark_finished("requestHR", writeback_payload)
+            # Check if write-back port returned an explicit error/failure payload
+            if isinstance(port_result, dict) and (
+                port_result.get("status") in ("error", "failed")
+                or port_result.get("success") is False
+            ):
+                # Write-back operation failed: keep run OPEN for retry
+                return {
+                    "status": "error",
+                    "error": f"Write-back port escalation failed: {port_result.get('error', 'Operation unconfirmed')}",
+                    "incident_number": self.run_context.number,
+                    "port_result": port_result,
+                }
+
+            # Success: Explicitly mark run context as completed to block subsequent tool calls
+            self.run_context.mark_completed("requestHR", writeback_payload)
 
             return {
                 "status": "success",

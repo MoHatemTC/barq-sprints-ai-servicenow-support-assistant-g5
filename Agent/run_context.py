@@ -17,6 +17,8 @@ class RunContext(BaseModel):
     sys_id: str = Field(..., description="ServiceNow 32-character Sys ID")
     number: str = Field(..., description="Incident identifier, e.g., INC0010001")
     is_finished: bool = Field(default=False, description="Flag indicating if a terminal tool has completed")
+    is_completed: bool = Field(default=False, description="Explicit flag indicating if incident run is completed")
+    status: str = Field(default="in_progress", description="Run lifecycle state ('in_progress' or 'completed')")
     
     # Retrieval and Observation State
     retrieved_chunks: List[Dict[str, Any]] = Field(default_factory=list, description="All chunks retrieved during run")
@@ -52,11 +54,17 @@ class RunContext(BaseModel):
         """Record an added work note to audit history."""
         self.work_notes.append(note)
 
-    def mark_finished(self, tool_name: str, payload: Dict[str, Any]) -> None:
-        """Lock the run context when a terminal tool succeeds."""
+    def mark_completed(self, tool_name: str, payload: Dict[str, Any]) -> None:
+        """Explicitly lock the run context as completed when a terminal tool succeeds."""
         self.is_finished = True
+        self.is_completed = True
+        self.status = "completed"
         self.terminal_tool = tool_name
         self.terminal_payload = payload
+
+    def mark_finished(self, tool_name: str, payload: Dict[str, Any]) -> None:
+        """Alias for mark_completed to maintain backward compatibility."""
+        self.mark_completed(tool_name, payload)
 
     def get_known_article_ids(self) -> Set[str]:
         """Return the set of article numbers retrieved in this run."""
@@ -67,11 +75,15 @@ class RunContext(BaseModel):
         }
 
     def check_finished(self) -> Optional[Dict[str, Any]]:
-        """Return a structured error observation if the run is already finished."""
-        if self.is_finished:
+        """Return a structured error observation if the run is already completed/finished."""
+        if self.is_finished or self.is_completed or self.status == "completed":
             return {
                 "status": "error",
                 "code": "RUN_ALREADY_FINISHED",
-                "error": f"Incident run {self.number} is already finished. No further tool executions are permitted.",
+                "error": f"Incident run {self.number} is already completed/finished. No further tool executions are permitted.",
             }
         return None
+
+    def check_completed(self) -> Optional[Dict[str, Any]]:
+        """Alias for check_finished."""
+        return self.check_finished()

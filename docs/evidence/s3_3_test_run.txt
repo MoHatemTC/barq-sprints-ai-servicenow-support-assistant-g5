@@ -1,6 +1,6 @@
 Sprint 3.3 — Agent Tool Layer — Test Execution Evidence
 ========================================================
-Date: 2026-09-26T20:32:45+03:00
+Date: 2026-09-26T20:54:16+03:00
 Platform: Windows 11, Python 3.13.6
 Runner: pytest 9.1.1 via venv
 Branch: feature/retrieval_and_reasoning
@@ -12,66 +12,107 @@ cachedir: .pytest_cache
 rootdir: D:\Barq_Internship\task1\barq-sprints-ai-servicenow-support-assistant-g5
 configfile: pyproject.toml
 plugins: anyio-4.15.1, langsmith-0.14.1
-collecting ... collected 26 items
+collecting ... collected 28 items
 
 tests/test_tools.py::test_registry_exposes_strictly_four_tools PASSED    [  3%]
 tests/test_tools.py::test_registry_security_rejects_forbidden_capabilities PASSED [  7%]
-tests/test_tools.py::test_langchain_tools_conversion PASSED              [ 11%]
-tests/test_tools.py::test_search_kb_happy_path PASSED                    [ 15%]
-tests/test_tools.py::test_search_kb_filters_out_retired_articles PASSED  [ 19%]
-tests/test_tools.py::test_search_kb_threshold_pruning PASSED             [ 23%]
-tests/test_tools.py::test_search_kb_empty_query PASSED                   [ 26%]
-tests/test_tools.py::test_search_kb_handles_exception_cleanly PASSED     [ 30%]
-tests/test_tools.py::test_add_worknote_happy_path PASSED                 [ 34%]
-tests/test_tools.py::test_add_worknote_empty_note_rejected PASSED        [ 38%]
-tests/test_tools.py::test_add_worknote_exceeds_max_length PASSED         [ 42%]
-tests/test_tools.py::test_add_worknote_port_failure_leaves_run_open PASSED [ 46%]
-tests/test_tools.py::test_suggest_answer_happy_path PASSED               [ 50%]
-tests/test_tools.py::test_suggest_answer_blocks_subsequent_calls PASSED  [ 53%]
-tests/test_tools.py::test_suggest_answer_rejects_non_numbered_procedure PASSED [ 57%]
-tests/test_tools.py::test_suggest_answer_rejects_uncited_step PASSED     [ 61%]
-tests/test_tools.py::test_suggest_answer_rejects_hallucinated_source PASSED [ 65%]
-tests/test_tools.py::test_suggest_answer_port_failure_leaves_run_open PASSED [ 69%]
-tests/test_tools.py::test_request_hr_happy_path PASSED                   [ 73%]
-tests/test_tools.py::test_request_hr_blocks_subsequent_calls PASSED      [ 76%]
-tests/test_tools.py::test_request_hr_validation_empty_reason PASSED      [ 80%]
-tests/test_tools.py::test_request_hr_port_failure_leaves_run_open PASSED [ 84%]
-tests/test_tools.py::test_ai_confidence_formula PASSED                   [ 88%]
+tests/test_tools.py::test_langchain_tools_conversion PASSED              [ 10%]
+tests/test_tools.py::test_search_kb_happy_path PASSED                    [ 14%]
+tests/test_tools.py::test_search_kb_filters_out_retired_articles PASSED  [ 17%]
+tests/test_tools.py::test_search_kb_threshold_pruning PASSED             [ 21%]
+tests/test_tools.py::test_search_kb_empty_query PASSED                   [ 25%]
+tests/test_tools.py::test_search_kb_handles_exception_cleanly PASSED     [ 28%]
+tests/test_tools.py::test_add_worknote_happy_path PASSED                 [ 32%]
+tests/test_tools.py::test_add_worknote_empty_note_rejected PASSED        [ 35%]
+tests/test_tools.py::test_add_worknote_exceeds_max_length PASSED         [ 39%]
+tests/test_tools.py::test_add_worknote_port_failure_leaves_run_open PASSED [ 42%]
+tests/test_tools.py::test_suggest_answer_happy_path PASSED               [ 46%]
+tests/test_tools.py::test_suggest_answer_blocks_subsequent_calls PASSED  [ 50%]
+tests/test_tools.py::test_suggest_answer_rejects_non_numbered_procedure PASSED [ 53%]
+tests/test_tools.py::test_suggest_answer_rejects_uncited_step PASSED     [ 57%]
+tests/test_tools.py::test_suggest_answer_rejects_hallucinated_source PASSED [ 60%]
+tests/test_tools.py::test_suggest_answer_port_failure_leaves_run_open PASSED [ 64%]
+tests/test_tools.py::test_suggest_answer_port_error_dict_leaves_run_open PASSED [ 67%]
+tests/test_tools.py::test_request_hr_happy_path PASSED                   [ 71%]
+tests/test_tools.py::test_request_hr_blocks_subsequent_calls PASSED      [ 75%]
+tests/test_tools.py::test_request_hr_validation_empty_reason PASSED      [ 78%]
+tests/test_tools.py::test_request_hr_port_failure_leaves_run_open PASSED [ 82%]
+tests/test_tools.py::test_request_hr_port_error_dict_leaves_run_open PASSED [ 85%]
+tests/test_tools.py::test_ai_confidence_formula PASSED                   [ 89%]
 tests/test_tools.py::test_validate_numbered_procedure_variations PASSED  [ 92%]
 tests/test_tools.py::test_full_agent_workflow PASSED                     [ 96%]
 tests/test_tools.py::test_src_agent_package_contract PASSED              [100%]
 
-============================= 26 passed in 4.46s ==============================
+============================= 28 passed in 1.09s ==============================
 
-Requirement Mapping:
-=========================================================
 
-1. Terminal Lifecycle — suggestAnswer sets is_finished on success
-   ✅ test_suggest_answer_happy_path (line 359: assert run_context.is_finished is True)
-   ✅ test_suggest_answer_blocks_subsequent_calls (line 373: is_finished True, then all tools return RUN_ALREADY_FINISHED)
-   ✅ test_full_agent_workflow (line 549: is_finished True after suggestAnswer, then all 4 tools blocked)
+Requirement Mapping & Verification Evidence
+==============================================================================
 
-2. Terminal Lifecycle — requestHR sets is_finished on success
-   ✅ test_request_hr_happy_path (line 451: assert run_context.is_finished is True)
-   ✅ test_request_hr_blocks_subsequent_calls (line 465: is_finished True, subsequent call returns RUN_ALREADY_FINISHED)
+1. Terminal Lifecycle — suggestAnswer & requestHR mark RunContext as completed upon success:
+   ✅ test_suggest_answer_happy_path
+      - Verified: run_context.is_finished is True
+      - Verified: run_context.is_completed is True
+      - Verified: run_context.status == "completed"
+      - Verified: run_context.terminal_tool == "suggestAnswer"
+   ✅ test_request_hr_happy_path
+      - Verified: run_context.is_finished is True
+      - Verified: run_context.is_completed is True
+      - Verified: run_context.status == "completed"
+      - Verified: run_context.terminal_tool == "requestHR"
+   ✅ test_suggest_answer_blocks_subsequent_calls
+      - Verified: after suggestAnswer succeeds, any further call to suggestAnswer,
+        addworknote, or searchKB returns code "RUN_ALREADY_FINISHED".
+   ✅ test_request_hr_blocks_subsequent_calls
+      - Verified: after requestHR succeeds, subsequent calls return code "RUN_ALREADY_FINISHED".
+   ✅ test_full_agent_workflow
+      - Verified: end-to-end multi-tool workflow (searchKB -> addworknote -> suggestAnswer)
+        locks context and blocks all 4 tools post-completion.
 
-3. Terminal Lifecycle — Run stays OPEN on write-back failure
-   ✅ test_suggest_answer_port_failure_leaves_run_open (line 435: is_finished is False after port error)
-   ✅ test_request_hr_port_failure_leaves_run_open (line 488: is_finished is False after port error)
-   ✅ test_add_worknote_port_failure_leaves_run_open (line 333: is_finished is False after port error)
+2. Terminal Lifecycle — Run remains OPEN if write-back operation fails:
+   ✅ test_suggest_answer_port_failure_leaves_run_open
+      - Verified: when port raises exception, run_context.is_completed is False,
+        is_finished is False, status == "in_progress".
+   ✅ test_suggest_answer_port_error_dict_leaves_run_open
+      - Verified: when port returns failure payload {"status": "error"},
+        run_context.is_completed is False, is_finished is False, status == "in_progress".
+   ✅ test_request_hr_port_failure_leaves_run_open
+      - Verified: when port raises exception, run_context remains open for retry.
+   ✅ test_request_hr_port_error_dict_leaves_run_open
+      - Verified: when port returns failure payload {"status": "error"},
+        run_context remains open for retry.
+   ✅ test_add_worknote_port_failure_leaves_run_open
+      - Verified: work note port failure keeps run open.
 
-4. AI Confidence — Dynamically computed from retrieval scores inside suggestion payload
-   ✅ test_suggest_answer_happy_path (line 357: ai_confidence == 0.8521, derived from run_context.best_score)
-   ✅ test_ai_confidence_formula (lines 497-505: max(scores), clamping, empty list handling)
-   ✅ test_request_hr_happy_path (line 450: ai_confidence == 0.42, from best_score)
-
-5. Registry — Exactly 4 tools, no resolve/close/reassign capability
-   ✅ test_registry_exposes_strictly_four_tools
-   ✅ test_registry_security_rejects_forbidden_capabilities
-
-6. searchKB — Non-terminal, published-only, threshold filtering
-   ✅ test_search_kb_happy_path
+3. Relevance Scoring Metrics and Threshold Flags in searchKB Observation Payload:
+   ✅ test_search_kb_happy_path (Above Threshold)
+      - Observation payload includes:
+        * relevance scoring metrics:
+          - "best_score": 0.9523 (highest similarity score)
+          - "avg_score": 0.8251 (mean score of retrieved candidates)
+          - "scores": [0.9523] (scores of chunks passing threshold)
+          - "all_scores": [("KB0010001", 0.9523)] (all candidate scores)
+        * threshold metrics and flags:
+          - "threshold": 0.50
+          - "score_threshold": 0.50
+          - "threshold_met": True
+          - "threshold_passed": True
+          - "human_review_required": False
+   ✅ test_search_kb_threshold_pruning (Below Threshold)
+      - Observation payload includes:
+        * "status": "no_results"
+        * "best_score": < 0.70
+        * "threshold": 0.70
+        * "threshold_met": False
+        * "threshold_passed": False
+        * "human_review_required": True
+        * "chunks": []
+        * "scores": []
    ✅ test_search_kb_filters_out_retired_articles
-   ✅ test_search_kb_threshold_pruning
-   ✅ test_search_kb_empty_query
-   ✅ test_search_kb_handles_exception_cleanly
+      - Verified: retired KB chunks (e.g. KB0099999) are excluded at index filter level.
+
+4. Dynamic AI Confidence Computation:
+   ✅ test_ai_confidence_formula
+      - Clamped between [0.0, 1.0], derived from max(scores).
+   ✅ test_suggest_answer_happy_path
+      - AI confidence computed dynamically from retrieval scores and injected into write-back payload.

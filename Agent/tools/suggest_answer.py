@@ -96,8 +96,22 @@ class SuggestAnswerTool:
                 payload=writeback_payload,
             )
 
-            # Success: Mark run finished and lock state
-            self.run_context.mark_finished("suggestAnswer", writeback_payload)
+            # Check if write-back port returned an explicit error/failure payload
+            if isinstance(port_result, dict) and (
+                port_result.get("status") in ("error", "failed")
+                or port_result.get("success") is False
+            ):
+                # Write-back operation failed: keep run OPEN for retry
+                return {
+                    "status": "error",
+                    "error": f"Write-back port failed: {port_result.get('error', 'Operation unconfirmed')}",
+                    "incident_number": self.run_context.number,
+                    "ai_confidence": ai_confidence,
+                    "port_result": port_result,
+                }
+
+            # Success: Explicitly mark run context as completed to block subsequent tool calls
+            self.run_context.mark_completed("suggestAnswer", writeback_payload)
 
             return {
                 "status": "success",

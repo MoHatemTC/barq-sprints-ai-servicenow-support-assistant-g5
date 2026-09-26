@@ -52,6 +52,13 @@ class SearchKBTool:
                 "chunks": [],
                 "count": 0,
                 "best_score": 0.0,
+                "scores": [],
+                "all_scores": [],
+                "threshold": self.score_threshold,
+                "score_threshold": self.score_threshold,
+                "threshold_met": False,
+                "threshold_passed": False,
+                "human_review_required": True,
             }
 
         cleaned_query = query.strip()
@@ -101,6 +108,11 @@ class SearchKBTool:
 
             best_score = max((h["score"] for h in hits), default=0.0)
             passed_chunks = [h for h in hits if h["score"] >= self.score_threshold]
+            passed_scores = [h["score"] for h in passed_chunks]
+            all_scores = [h["score"] for h in hits]
+            avg_score = round(sum(all_scores) / len(all_scores), 4) if all_scores else 0.0
+            threshold_met = bool(passed_chunks)
+            human_review_required = not threshold_met
 
             # 4. Record retrieval ledger in RunContext
             self.run_context.record_retrieval(
@@ -109,26 +121,35 @@ class SearchKBTool:
                 best_score=best_score,
             )
 
-            # 5. Return structured observation schema
-            if not passed_chunks:
-                return {
-                    "status": "no_results",
-                    "query": cleaned_query,
-                    "count": 0,
-                    "best_score": best_score,
-                    "threshold": self.score_threshold,
-                    "message": f"No knowledge article scored above threshold {self.score_threshold} (best: {best_score}).",
-                    "chunks": [],
-                }
-
-            return {
-                "status": "success",
+            # 5. Return structured observation schema with metrics & threshold flags
+            observation: Dict[str, Any] = {
                 "query": cleaned_query,
                 "count": len(passed_chunks),
+                "total_candidates": len(hits),
+                # Relevance scoring metrics
                 "best_score": best_score,
+                "avg_score": avg_score,
+                "scores": passed_scores,
+                "all_scores": [(h["article_id"], h["score"]) for h in hits],
+                # Threshold flags
                 "threshold": self.score_threshold,
+                "score_threshold": self.score_threshold,
+                "threshold_met": threshold_met,
+                "threshold_passed": threshold_met,
+                "human_review_required": human_review_required,
                 "chunks": passed_chunks,
             }
+
+            if not passed_chunks:
+                observation["status"] = "no_results"
+                observation["message"] = (
+                    f"No knowledge article scored above threshold {self.score_threshold} "
+                    f"(best: {best_score})."
+                )
+            else:
+                observation["status"] = "success"
+
+            return observation
 
         except Exception as exc:
             logger.exception("searchKB execution error")
@@ -139,4 +160,11 @@ class SearchKBTool:
                 "chunks": [],
                 "count": 0,
                 "best_score": 0.0,
+                "scores": [],
+                "all_scores": [],
+                "threshold": self.score_threshold,
+                "score_threshold": self.score_threshold,
+                "threshold_met": False,
+                "threshold_passed": False,
+                "human_review_required": True,
             }
