@@ -1,11 +1,7 @@
 import os
-import asyncio
 
 from celery import Celery
-from celery.signals import worker_process_init, worker_process_shutdown
 from dotenv import load_dotenv
-
-from App.database import db
 
 load_dotenv()
 
@@ -34,20 +30,3 @@ celery_app.conf.update(
     },
 )
 
-
-@worker_process_init.connect
-def init_worker_process(**kwargs):
-    """
-    Initialize a separate PostgreSQL connection pool
-    for each Celery worker process.
-    """
-    asyncio.run(db.connect())
-
-
-@worker_process_shutdown.connect
-def shutdown_worker_process(**kwargs):
-    """
-    Close the PostgreSQL connection pool
-    when a Celery worker process shuts down.
-    """
-    asyncio.run(db.disconnect())

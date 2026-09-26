@@ -3,7 +3,9 @@ import asyncio
 import os
 import random
 from importlib import import_module
+
 import httpx
+
 from Schemas.webhook_schema import IncidentPayload
 from Schemas.incident_worker import WorkerPayload
 from App.database import db
@@ -16,6 +18,7 @@ from Worker.dead_letter import on_dead_letter
 logger = logging.getLogger("incident task by celery")
 
 preparer = IncidentContextPreparer(max_chars=4000)
+
 
 def load_incident_handler():
     """
@@ -50,8 +53,6 @@ def load_incident_handler():
 incident_handler = load_incident_handler()
 
 
-
-
 def calculate_retry_delay(retry_number: int) -> int:
     """
     Calculates an exponential backoff delay with jitter.
@@ -83,7 +84,7 @@ async def initialize_incident(
         desc=payload.description or "",
     )
 
-    # 2. Secure logging (no raw payload, to avoid PII in logs)
+    # 2. Secure logging
     logger.info(
         "Guardrails applied successfully. Payload sanitized.",
         extra={
@@ -161,8 +162,6 @@ async def fetch_incident(sys_id: str):
     url = f"{instance_url}/api/now/table/incident/{sys_id}"
 
     # Network errors are transient.
-    # Convert httpx exceptions into RetryableError
-    # so Celery can retry the task.
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(
@@ -219,169 +218,182 @@ def process_incident_worker(self, incident):
 
     async def run():
 
-        # --------------------------------------------------
-        # 1. Validate the worker payload
-        # --------------------------------------------------
-        worker_payload = WorkerPayload(**incident)
+        # IMPORTANT:
+        # Create the asyncpg pool inside the same event loop
+        # used by this asyncio.run().
+        await db.connect()
 
-        # --------------------------------------------------
-        # 2. Check if this event was already completed
-        # --------------------------------------------------
-        is_completed = await db.is_event_completed(
-            worker_payload.event_id
-        )
-
-        if is_completed:
-            logger.info(
-                "Skipping already completed event",
-                extra={
-                    "event_id": worker_payload.event_id,
-                    "sys_id": worker_payload.sys_id,
-                    "outcome": "skipped_already_completed",
-                },
-            )
-
-            return {
-                "status": "already_completed",
-                "event_id": worker_payload.event_id,
-                "sys_id": worker_payload.sys_id,
-            }
-
-        # --------------------------------------------------
-        # 3. Fetch the latest incident from ServiceNow
-        # --------------------------------------------------
         try:
-            response = await fetch_incident(
-                worker_payload.sys_id
+
+            # --------------------------------------------------
+            # 1. Validate the worker payload
+            # --------------------------------------------------
+            worker_payload = WorkerPayload(**incident)
+
+            # --------------------------------------------------
+            # 2. Check if this event was already completed
+            # --------------------------------------------------
+            is_completed = await db.is_event_completed(
+                worker_payload.event_id
             )
 
-        # --------------------------------------------------
-        # 4. Permanent error -> send directly to DLQ
-        # --------------------------------------------------
-        except PermanentError as exc:
-
-            attempts = self.request.retries + 1
-
-            await on_dead_letter(
-                event=incident,
-                error=exc,
-                attempts=attempts,
-            )
-
-            await db.update_event_status(
-                worker_payload.event_id,
-                "dead_lettered",
-            )
-
-            return {
-                "status": "dead_lettered",
-                "event_id": worker_payload.event_id,
-                "sys_id": worker_payload.sys_id,
-                "attempts": attempts,
-            }
-
-        # --------------------------------------------------
-        # 5. Retryable error -> retry or send to DLQ
-        # --------------------------------------------------
-        except RetryableError as exc:
-
-            attempts = self.request.retries + 1
-
-            # We still have retry attempts available.
-            if self.request.retries < self.max_retries:
-
-                retry_delay = calculate_retry_delay(
-                    self.request.retries
-                )
-
-                logger.warning(
-                    "Retryable error, scheduling retry",
+            if is_completed:
+                logger.info(
+                    "Skipping already completed event",
                     extra={
                         "event_id": worker_payload.event_id,
                         "sys_id": worker_payload.sys_id,
-                        "attempt": attempts,
-                        "outcome": "retry",
-                        "retry_delay": retry_delay,
+                        "outcome": "skipped_already_completed",
                     },
                 )
 
-                raise self.retry(
-                    exc=exc,
-                    countdown=retry_delay,
+                return {
+                    "status": "already_completed",
+                    "event_id": worker_payload.event_id,
+                    "sys_id": worker_payload.sys_id,
+                }
+
+            # --------------------------------------------------
+            # 3. Fetch the latest incident from ServiceNow
+            # --------------------------------------------------
+            try:
+                response = await fetch_incident(
+                    worker_payload.sys_id
                 )
 
             # --------------------------------------------------
-            # All retry attempts have been exhausted.
-            # Move the event to the DLQ.
+            # 4. Permanent error -> send directly to DLQ
             # --------------------------------------------------
-            await on_dead_letter(
-                event=incident,
-                error=exc,
-                attempts=attempts,
+            except PermanentError as exc:
+
+                attempts = self.request.retries + 1
+
+                await on_dead_letter(
+                    event=incident,
+                    error=exc,
+                    attempts=attempts,
+                )
+
+                await db.update_event_status(
+                    worker_payload.event_id,
+                    "dead_lettered",
+                )
+
+                return {
+                    "status": "dead_lettered",
+                    "event_id": worker_payload.event_id,
+                    "sys_id": worker_payload.sys_id,
+                    "attempts": attempts,
+                }
+
+            # --------------------------------------------------
+            # 5. Retryable error -> retry or send to DLQ
+            # --------------------------------------------------
+            except RetryableError as exc:
+
+                attempts = self.request.retries + 1
+
+                # We still have retry attempts available.
+                if self.request.retries < self.max_retries:
+
+                    retry_delay = calculate_retry_delay(
+                        self.request.retries
+                    )
+
+                    logger.warning(
+                        "Retryable error, scheduling retry",
+                        extra={
+                            "event_id": worker_payload.event_id,
+                            "sys_id": worker_payload.sys_id,
+                            "attempt": attempts,
+                            "outcome": "retry",
+                            "retry_delay": retry_delay,
+                        },
+                    )
+
+                    raise self.retry(
+                        exc=exc,
+                        countdown=retry_delay,
+                    )
+
+                # --------------------------------------------------
+                # All retry attempts have been exhausted.
+                # Move the event to the DLQ.
+                # --------------------------------------------------
+                await on_dead_letter(
+                    event=incident,
+                    error=exc,
+                    attempts=attempts,
+                )
+
+                await db.update_event_status(
+                    worker_payload.event_id,
+                    "dead_lettered",
+                )
+
+                return {
+                    "status": "dead_lettered",
+                    "event_id": worker_payload.event_id,
+                    "sys_id": worker_payload.sys_id,
+                    "attempts": attempts,
+                }
+
+            # --------------------------------------------------
+            # 6. Convert ServiceNow response into IncidentPayload
+            # --------------------------------------------------
+            incident_payload = IncidentPayload(
+                sys_id=response["sys_id"],
+                number=response["number"],
+                short_description=response["short_description"],
+                description=response.get(
+                    "description",
+                    "",
+                ),
             )
 
-            await db.update_event_status(
+            # --------------------------------------------------
+            # 7. Run security guardrails
+            # --------------------------------------------------
+            incident_context = await initialize_incident(
+                incident_payload,
                 worker_payload.event_id,
-                "dead_lettered",
             )
 
-            return {
-                "status": "dead_lettered",
-                "event_id": worker_payload.event_id,
-                "sys_id": worker_payload.sys_id,
-                "attempts": attempts,
-            }
+            # --------------------------------------------------
+            # 8. If the payload was malicious,
+            #    processing is finished.
+            # --------------------------------------------------
+            if isinstance(incident_context, dict):
 
-        # --------------------------------------------------
-        # 6. Convert ServiceNow response into IncidentPayload
-        # --------------------------------------------------
-        incident_payload = IncidentPayload(
-            sys_id=response["sys_id"],
-            number=response["number"],
-            short_description=response["short_description"],
-            description=response.get(
-                "description",
-                "",
-            ),
-        )
+                await db.mark_event_completed(
+                    worker_payload.event_id
+                )
 
-        # --------------------------------------------------
-        # 7. Run security guardrails
-        # --------------------------------------------------
-        incident_context = await initialize_incident(
-            incident_payload,
-            worker_payload.event_id,
-        )
+                return incident_context
 
-        # --------------------------------------------------
-        # 8. If the payload was malicious,
-        #    processing is finished.
-        # --------------------------------------------------
-        if isinstance(incident_context, dict):
+            # --------------------------------------------------
+            # 9. Run the AI pipeline
+            # --------------------------------------------------
+            result = incident_handler(
+                incident_context
+            )
 
+            # --------------------------------------------------
+            # 10. Mark the event as completed
+            # --------------------------------------------------
             await db.mark_event_completed(
                 worker_payload.event_id
             )
 
-            return incident_context
+            # --------------------------------------------------
+            # 11. Return the AI result
+            # --------------------------------------------------
+            return result
 
-        # --------------------------------------------------
-        # 9. Run the AI pipeline
-        # --------------------------------------------------
-        result = incident_handler(
-            incident_context
-            )
-
-        # --------------------------------------------------
-        # 10. Mark the event as completed
-        # --------------------------------------------------
-        await db.mark_event_completed(
-            worker_payload.event_id
-        )
-
-        # --------------------------------------------------
-        # 11. Return the AI result
-        # --------------------------------------------------
-        return result
+        finally:
+            # Close the pool before asyncio.run() destroys
+            # the event loop.
+            await db.disconnect()
 
     return asyncio.run(run())
+
