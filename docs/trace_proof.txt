@@ -1,0 +1,117 @@
+##### QUERY: wifi keeps disconnecting on my laptop
+threshold used: 0.4
+
+========================================================================
+==== INCIDENT DETAILS ====
+========================================================================
+number      : INC0000000
+sys_id      : local-test
+query       : wifi keeps disconnecting on my laptop
+description : wifi keeps disconnecting on my laptop
+is_safe     : True
+
+========================================================================
+==== RETRIEVED CHUNKS & SCORES ====
+========================================================================
+[1] KB0000001 - "Fix WiFi disconnections"  score: 0.5058
+    Forget the WiFi network and reconnect. Update the wireless adapter driver. Restart the router if the problem continues.
+confidence  : 0.5058
+
+========================================================================
+==== FINAL STRUCTURED ANSWER ====
+========================================================================
+Suggested resolution (pending human approval):
+1. Forget the WiFi network and reconnect. [Article: KB0000001]
+2. Update the wireless adapter driver. [Article: KB0000001]
+3. Restart the router if the problem continues. [Article: KB0000001]
+
+Sources:
+- KB0000001: Fix WiFi disconnections
+========================================================================
+
+WRITE-BACK PAYLOAD
+{
+  "ai_suggested_response": "Suggested resolution (pending human approval):\n1. Forget the WiFi network and reconnect. [Article: KB0000001]\n2. Update the wireless adapter driver. [Article: KB0000001]\n3. Restart the router if the problem continues. [Article: KB0000001]\n\nSources:\n- KB0000001: Fix WiFi disconnections",
+  "ai_confidence": 0.5058,
+  "human_review_required": true,
+  "escalated": false,
+  "citations": [
+    "KB0000001"
+  ]
+}
+
+##### QUERY: I cannot print to the office printer
+threshold used: 0.4
+
+========================================================================
+==== INCIDENT DETAILS ====
+========================================================================
+number      : INC0000000
+sys_id      : local-test
+query       : I cannot print to the office printer
+description : I cannot print to the office printer
+is_safe     : True
+
+========================================================================
+==== RETRIEVED CHUNKS & SCORES ====
+========================================================================
+[1] KB0000004 - "Printer offline fix"  score: 0.6252
+    Check the printer is on the network. Remove and re-add the printer. Restart the print spooler service.
+confidence  : 0.6252
+
+========================================================================
+==== FINAL STRUCTURED ANSWER ====
+========================================================================
+Suggested resolution (pending human approval):
+1. Check the printer is on the network. [Article: KB0000004]
+2. Remove and re-add the printer. [Article: KB0000004]
+3. Restart the print spooler service. [Article: KB0000004]
+
+Sources:
+- KB0000004: Printer offline fix
+========================================================================
+
+WRITE-BACK PAYLOAD
+{
+  "ai_suggested_response": "Suggested resolution (pending human approval):\n1. Check the printer is on the network. [Article: KB0000004]\n2. Remove and re-add the printer. [Article: KB0000004]\n3. Restart the print spooler service. [Article: KB0000004]\n\nSources:\n- KB0000004: Printer offline fix",
+  "ai_confidence": 0.6252,
+  "human_review_required": true,
+  "escalated": false,
+  "citations": [
+    "KB0000004"
+  ]
+}
+
+##### QUERY: the coffee machine on floor 3 is broken
+threshold used: 0.4
+
+========================================================================
+==== INCIDENT DETAILS ====
+========================================================================
+number      : INC0000000
+sys_id      : local-test
+query       : the coffee machine on floor 3 is broken
+description : the coffee machine on floor 3 is broken
+is_safe     : True
+
+========================================================================
+==== RETRIEVED CHUNKS & SCORES ====
+========================================================================
+(no chunks above the similarity threshold)
+confidence  : 0.0
+
+========================================================================
+==== FINAL STRUCTURED ANSWER ====
+========================================================================
+HUMAN REVIEW REQUIRED for incident INC0000000: No approved knowledge base article matched with enough confidence. No resolution procedure was generated. Please escalate this incident to a service desk agent.
+========================================================================
+
+WRITE-BACK PAYLOAD
+{
+  "ai_suggested_response": "HUMAN REVIEW REQUIRED for incident INC0000000: No approved knowledge base article matched with enough confidence. No resolution procedure was generated. Please escalate this incident to a service desk agent.",
+  "ai_confidence": 0.0,
+  "human_review_required": true,
+  "escalated": true,
+  "citations": []
+}
+

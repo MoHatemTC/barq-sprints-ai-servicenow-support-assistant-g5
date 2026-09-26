@@ -52,7 +52,7 @@ class KB_event(BaseModel):
         description="The content/body of the article"
     )
 
-    operation: Literal["insert", "update", "delete"] = Field(
+    operation: Literal["insert", "update", "delete", "retire"] = Field(
         ...,
         description="Operation that happened to the article"
     )
@@ -60,22 +60,18 @@ class KB_event(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def validation(cls, data: Any) -> Any:
-
         if not isinstance(data, dict):
             return data
 
         unwrapped = {}
 
         for key, value in data.items():
-
             if isinstance(value, dict):
-
                 if key == "sys_updated_on":
                     unwrapped[key] = (
                         value.get("value")
                         or value.get("display_value", "")
                     )
-
                 else:
                     display_value = value.get("display_value")
 
@@ -84,7 +80,6 @@ class KB_event(BaseModel):
                         if display_value
                         else value.get("value", "")
                     )
-
             else:
                 unwrapped[key] = value
 

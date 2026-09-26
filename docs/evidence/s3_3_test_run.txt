@@ -1,0 +1,85 @@
+================================================================================
+Task S3.3 - Agent Tool Layer (searchKB, addworknote, suggestAnswer, requestHR)
+Execution Evidence & Verification Log
+Date: 2026-09-26 | Status: ALL TESTS PASSING (100% Offline)
+================================================================================
+
+1. Requirements-to-Test Mapping:
+--------------------------------------------------------------------------------
+- Tool Registry (Strictly 4 Tools, Zero Privilege):
+  * test_registry_exposes_strictly_four_tools            -> PASSED
+  * test_registry_security_rejects_forbidden_capabilities  -> PASSED
+  * test_langchain_tools_conversion                       -> PASSED
+  * test_src_agent_package_contract                       -> PASSED
+
+- searchKB (Non-terminal, Qdrant search, threshold & state recording):
+  * test_search_kb_happy_path                             -> PASSED
+  * test_search_kb_filters_out_retired_articles           -> PASSED
+  * test_search_kb_threshold_pruning                      -> PASSED
+  * test_search_kb_empty_query                            -> PASSED
+  * test_search_kb_handles_exception_cleanly              -> PASSED
+
+- addworknote (Non-terminal, validation, write-back port call, retry safety):
+  * test_add_worknote_happy_path                          -> PASSED
+  * test_add_worknote_empty_note_rejected                 -> PASSED
+  * test_add_worknote_exceeds_max_length                  -> PASSED
+  * test_add_worknote_port_failure_leaves_run_open        -> PASSED
+
+- suggestAnswer (Terminal, numbered list & citation check, confidence, port call):
+  * test_suggest_answer_happy_path                        -> PASSED
+  * test_suggest_answer_blocks_subsequent_calls           -> PASSED
+  * test_suggest_answer_rejects_non_numbered_procedure    -> PASSED
+  * test_suggest_answer_rejects_uncited_step              -> PASSED
+  * test_suggest_answer_rejects_hallucinated_source       -> PASSED
+  * test_suggest_answer_port_failure_leaves_run_open      -> PASSED
+
+- requestHR (Terminal, reason validation, escalation port call, state lock):
+  * test_request_hr_happy_path                            -> PASSED
+  * test_request_hr_blocks_subsequent_calls               -> PASSED
+  * test_request_hr_validation_empty_reason               -> PASSED
+  * test_request_hr_port_failure_leaves_run_open          -> PASSED
+
+- Confidence & Formatting:
+  * test_ai_confidence_formula                            -> PASSED
+  * test_validate_numbered_procedure_variations           -> PASSED
+
+- End-to-End Multi-Tool Workflow:
+  * test_full_agent_workflow                              -> PASSED
+
+--------------------------------------------------------------------------------
+2. Raw Pytest Execution Transcript:
+--------------------------------------------------------------------------------
+platform win32 -- Python 3.13.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\Barq_Internship\task1\barq-sprints-ai-servicenow-support-assistant-g5
+configfile: pyproject.toml
+plugins: anyio-4.15.1, langsmith-0.14.1
+collected 26 items
+
+tests/test_tools.py::test_registry_exposes_strictly_four_tools PASSED    [  3%]
+tests/test_tools.py::test_registry_security_rejects_forbidden_capabilities PASSED [  7%]
+tests/test_tools.py::test_langchain_tools_conversion PASSED              [ 11%]
+tests/test_tools.py::test_search_kb_happy_path PASSED                    [ 15%]
+tests/test_tools.py::test_search_kb_filters_out_retired_articles PASSED  [ 19%]
+tests/test_tools.py::test_search_kb_threshold_pruning PASSED             [ 23%]
+tests/test_tools.py::test_search_kb_empty_query PASSED                   [ 26%]
+tests/test_tools.py::test_search_kb_handles_exception_cleanly PASSED     [ 30%]
+tests/test_tools.py::test_add_worknote_happy_path PASSED                 [ 34%]
+tests/test_tools.py::test_add_worknote_empty_note_rejected PASSED        [ 38%]
+tests/test_tools.py::test_add_worknote_exceeds_max_length PASSED         [ 42%]
+tests/test_tools.py::test_add_worknote_port_failure_leaves_run_open PASSED [ 46%]
+tests/test_tools.py::test_suggest_answer_happy_path PASSED               [ 50%]
+tests/test_tools.py::test_suggest_answer_blocks_subsequent_calls PASSED  [ 53%]
+tests/test_tools.py::test_suggest_answer_rejects_non_numbered_procedure PASSED [ 57%]
+tests/test_tools.py::test_suggest_answer_rejects_uncited_step PASSED     [ 61%]
+tests/test_tools.py::test_suggest_answer_rejects_hallucinated_source PASSED [ 65%]
+tests/test_tools.py::test_suggest_answer_port_failure_leaves_run_open PASSED [ 69%]
+tests/test_tools.py::test_request_hr_happy_path PASSED                   [ 73%]
+tests/test_tools.py::test_request_hr_blocks_subsequent_calls PASSED      [ 76%]
+tests/test_tools.py::test_request_hr_validation_empty_reason PASSED      [ 80%]
+tests/test_tools.py::test_request_hr_port_failure_leaves_run_open PASSED [ 84%]
+tests/test_tools.py::test_ai_confidence_formula PASSED                   [ 88%]
+tests/test_tools.py::test_validate_numbered_procedure_variations PASSED  [ 92%]
+tests/test_tools.py::test_full_agent_workflow PASSED                     [ 96%]
+tests/test_tools.py::test_src_agent_package_contract PASSED              [100%]
+
+============================= 26 passed in 1.24s ==============================

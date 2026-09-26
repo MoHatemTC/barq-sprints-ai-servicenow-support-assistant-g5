@@ -6,7 +6,8 @@ class ServiceNowKBArticle(BaseModel):
     Pydantic schema for validating ServiceNow Knowledge Base (KB) articles.
     """
     sys_id: str = Field(..., description="ServiceNow unique identifier of the article")
-    article_id: str = Field(..., description="Article Number, e.g., KB0010039")
+    article_id: str = Field(..., description="Internal article ID (32-char)")
+    number: Optional[str] = Field(..., description="Article number, e.g., KB0010039")
     version: Optional[str] = Field(None, description="Article Version")
     short_description: str = Field(..., description="Short description of the article")
     author: Optional[str] = Field(None, description="Author of the article")

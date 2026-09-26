@@ -1,12 +1,14 @@
 # Environment variables / secrets
 .env
+scratch_*.py
+seed_*.py
+logs/
 
 # Virtual environment
 .venv/
 venv/
 env/
 .python-version
-uv.lock
 # Python cache
 __pycache__/
 *.py[cod]
@@ -27,3 +29,4 @@ Thumbs.db
 
 # Logs
 *.log
+outputs/
