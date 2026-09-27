@@ -1,1547 +1,546 @@
-# AI ServiceNow IT Incident Resolution Assistant Knowledge Base
-
-Document ID: doc_001  
-Source file: kbpdf.pdf  
-Source organization: Sprints for BARQ Systems  
-Content type: technical runbook and shared benchmark corpus  
-Coverage: ServiceNow integration, RAG ingestion, retrieval, reasoning, safety, evaluation, and worked examples  
-
-## RAG Ingestion Notes
-
-This document is the canonical knowledge-base corpus for the AI ServiceNow Support Assistant and the advanced Agentic Incident Resolution Platform. Preserve the section identifiers such as KB-01 through KB-32 and UC-01 through UC-08 because they are stable citation anchors.
-
-Use the nearest Markdown heading, section identifier, and page marker as context when creating a chunk. Keep code identifiers, API paths, field names, error codes, article numbers, version numbers, table values, and quoted payloads exactly as written. Do not merge unrelated sections merely because they occur on adjacent pages.
-
-The document contains explanatory prose, Markdown tables, code and JSON examples, benchmark incidents, policy constraints, and diagram descriptions. Tables are part of the knowledge and must remain attached to their surrounding heading. Diagram descriptions beginning with `> [Diagram p.N]` should be indexed as descriptive content and cited with their page number.
-
-The central safety rule is mandatory: the agent suggests and a human decides. No registered tool may resolve, close, or reassign an incident, and high-risk actions require recorded human approval.
-
-Source-page markers below identify the originating PDF page. The source PDF has 58 pages. Repeated running headers and page-number footers were removed from the extracted content. This sample corpus is English-only; Arabic/English OCR and RTL behavior require a separate bilingual test fixture and must not be inferred from this file.
-
-## Corpus Index
-
-Part 1 covers orientation and the ServiceNow platform layer. Part 2 covers the incident lifecycle and platform fields. Part 3 covers the event and webhook contracts. Part 4 covers knowledge ingestion, chunking, embeddings, and retrieval. Part 5 covers reasoning, safety, tools, and orchestration. Part 6 contains worked use cases. Part 7 covers evidence and evaluation. Part 8 contains troubleshooting and the final checklist.
-
 <!-- page: 1 -->
 
+BARQ
 
 
 
-> [Diagram p.1]
-Sprints
 
 
+I T   O P E R A T I O N S
 
-S M A R T O P S   P R O G R A M M E
+D E P A R T M E N T
 
-Project Knowledge Base
+IT Service Desk
 
-AI-Powered ServiceNow IT Incident Resolution Assistant - architecture, contracts, worked examples and the shared benchmark corpus
+Operations Manual
 
-
-| DOCUMENT TYPE       | Knowledge base · shared reference and ingestible corpus                                                                  |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------|
-| CLIENT / PARTNER    | BARQ Systems                                                                                                             |
-| DELIVERED BY        | Sprints (sprints.ai)                                                                                                     |
-| PROGRAMME           | AI Engineering -Agentic AI&RAGonITSM                                                                                     |
-| APPLIES TO          | AI ServiceNow Support Assistant (intermediate) and Agentic Incident Resolution Platform (advanced)                       |
-| AUDIENCE            | Interns, mentors and reviewers · both project levels                                                                     |
-| COMPANION DOCUMENTS | The two Product Requirements Documents, which remain the contract. Where this document and a PRD disagree, the PRD wins. |
-| VERSION             | 1.0 · September 2026                                                                                                     |
+FY2026  ·  Internal Document
 
 
-The one rule
+| APPLIES TO     | Service desk analysts, resolver groups, service owners and delivery managers                                                |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------|
+| COVERS         | Incident management, escalation, the knowledge base, problems and known errors, change, and the AI Suggested Response pilot |
+| SITES          | Dubai and Cairo · single queue, follow-the-sun                                                                              |
+| DOCUMENT OWNER | Nourhan Abdelrahman - Service Delivery Manager, IT Operations                                                               |
+| PUBLISHED      | 11 August 2026                                                                                                              |
+| NEXT REVIEW    | 10 August 2027                                                                                                              |
+| CLASSIFICATION | Internal. Not for distribution outside BARQ Systems or its contracted service partners.                                     |
 
-The agent suggests. A human decides. No registered tool may resolve, close or reassign an incident, and no highrisk action reaches ServiceNow without a recorded human approval. This is a structural constraint, not a line in a prompt.
-
-Prepared by Sprints for BARQ Systems.
 
 <!-- page: 2 -->
 
 Contents
 
-If page numbers show as placeholders, open in Word and press Ctrl+A then F9 to update the field.
-
 <!-- page: 3 -->
-
-How to use this knowledge base
-
-This document is the shared ground truth for the Sprints × BARQ Systems AI Engineering internship. Every team, at both levels, builds against what is written here.
-
-Two Product Requirements Documents define what each level must deliver: the AI ServiceNow Support Assistant at intermediate level and the Agentic Incident Resolution Platform at advanced level. Those documents are contracts. They tell you what will be accepted at Demo Day, and they deliberately do not tell you how to build it.
-
-This knowledge base is the other half. It carries the shared vocabulary, the data model, the exact payload contracts, the reference knowledge corpus, worked end-to-end examples and the benchmark set. Where a PRD says the retrieval tool shall return the top-k chunks with their similarity scores , this document shows you the JSON that comes back, the configuration that produced it, and the three ways teams usually get it wrong.
-
-It is also a corpus
-
-The system you are building retrieves knowledge articles and answers grounded questions over them. This document is written so it can be ingested by that same system. Every section carries a stable identifier such as KB-14 ; every reference article in Appendix A carries a machine-readable metadata block. Appendix C specifies exactly how to chunk and index this file. Point your ingestion pipeline at it and your agent can answer questions about its own architecture - which is a genuinely useful first smoke test of the pipeline you just wrote.
-
-Read it in this order
-
-
-| WHO                   | READ FIRST                                                                 | THEN                                                                            |
-|-----------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| Every intern, Week 0  | Parts 1 and 2 -orientation and the ServiceNow platform layer.              | Appendix A. Load the reference corpus into your instance before Sprint 1 ends.  |
-| Intermediate teams    | Parts 3, 4 and 5, skipping anything marked advanced only .                 | Use cases UC-01, UC-02, UC-03, UC-07 and UC-08 in Part 6.                       |
-| Advanced teams        | All of Parts 3 to 5, including the guardrail and state-machine sections.   | All eight use cases in Part 6, plus the evaluation contract in Part 7.          |
-| Mentors and reviewers | Part 7 -the benchmark set, the metric definitions and the trace checklist. | Part 8 for the troubleshooting table you will be asked the same questions from. |
-
-
-One rule that outranks everything else in this document
-
-The agent suggests. A human decides. At intermediate level no registered tool can resolve, close or reassign an incident. At advanced level a high-risk action reaches ServiceNow only after a recorded human approval. This is a structural constraint, not a line in a prompt. If your only defence against a bad write is a sentence telling the model not to do it, you have not built the constraint.
 
 <!-- page: 4 -->
 
-Conventions used here
-
-Section IDs. KB-01 to KB-32 and UC-01 to UC-08 . Cite them in stand-ups, pull requests and Demo Day. They are stable; they will not be renumbered.
-
-Level tags. Content marked Intermediate applies to the AI ServiceNow Support Assistant only. Content marked Advanced applies to the Agentic Incident Resolution Platform only. Untagged content applies to both.
-
-Field names. ServiceNow field labels appear in Title Case (AI Suggested Response); the underlying column names appear in code style ( u_ai_suggested_response ). Both are given the first time each field appears.
-
-Placeholder values. Anything shown as <like_this> is yours to fill in. Anything shown as a literal value is part of the contract and must match.
-
 <!-- page: 5 -->
 
-Part 1 · Orientation
+Document control
 
-What you are actually building KB-01
+This manual is a controlled document. The copy of record is the published version in the knowledge base; printed and downloaded copies are uncontrolled and may be superseded without notice. Check the edition and the review date on the cover before relying on any procedure in it.
 
-A service desk receives an incident: 'I cannot connect to the VPN since my password reset.' A Tier-1 agent opens it, reads it, and then starts searching. They search the knowledge base. They search closed incidents. Somewhere in that platform is an article that solves this exact problem, written eighteen months ago by someone who has since left. The agent may find it in ninety seconds or in nine minutes, and the difference is not skill - it is luck about the words they happened to type.
-
-That is the problem. It is not a modelling problem and it is not an automation problem. It is a retrieval problem wearing an ITSM costume. The knowledge exists, is written down, is correct, and is unreachable at the moment of failure because it can only be reached by keyword.
-
-So you are building a system that, the instant an eligible incident is created, retrieves the knowledge articles that actually bear on the reported symptom, drafts a resolution grounded in those articles, cites them, and writes the draft back onto the incident form for a human to approve, edit or reject. Nothing more. Both project levels solve exactly that.
-
-The system, end to end
-
-One event in, one grounded suggestion out. Nothing polls; nothing auto-resolves.
+Version history
 
 
+|   EDITION | DATE        | AUTHOR                           | SUMMARYOFCHANGE                                                                                              | APPROVED BY    |
+|-----------|-------------|----------------------------------|--------------------------------------------------------------------------------------------------------------|----------------|
+|       4.0 | 11 Aug 2026 | H. Moawad, Knowledge Manager     | Service catalogue refreshed against the FY2026 estate. Section 11 added for the AI Suggested Response pilot. | N. Abdelrahman |
+|       4.0 | 11 Aug 2026 | D. Halim, Problem Manager        | Known error register aligned to the problem records raised after MIR-2026- 03.                               | N. Abdelrahman |
+|       3.2 | 02 Apr 2026 | H. Moawad, Knowledge Manager     | KB0010 revised to version 2 following the 14 March order-processing outage. Version 1 retired.               | K. Selim       |
+|       3.2 | 02 Apr 2026 | O. Sabry, Service Desk Team Lead | Priority matrix corrected: P2 now requires a named service owner on the bridge.                              | K. Selim       |
+|       3.1 | 19 Jan 2026 | H. Moawad, Knowledge Manager     | Escalation matrix updated for the Identity &Access reorganisation.                                           | N. Abdelrahman |
+|       3.0 | 06 Oct 2025 | H. Moawad, Knowledge Manager     | Annual review. Manual restructured into twelve sections and the identifier index added.                      | N. Abdelrahman |
 
 
-> [Diagram p.5]
-### 1 - SERVICENOW PLATFORM
+Ownership and review
 
-> * **Incident raised**
->   * A requester reports a symptom. Category, service and text captured.
->   * **↓**
-> * **Business Rule**
->   * Fires on insert and on relevant update. Checks eligibility.
->   * **↓**
-> * **RESTMessageV2**
->   * Posts event_id, sys_id, number, event_type. Never the record.
->   * **↓** *(minimal event over HTTPS)*
-> * **Incident form**
->   * AI Suggested Response and Human Review Required render here.
->   * *(Receives `write-back` from Section 3: Write back)*
 
----
-
-### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR
-
-> *(Triggers from Section 1: RESTMessageV2 via `minimal event over HTTPS`)*
->
-> * **POST /events**
->   * Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.
->   * **↓**
-> * **Idempotency + claim**
->   * Persist the event key. A replay is discarded. Claim the incident.
->   * **↓**
-> * **202 Accepted**
->   * Returned before any model runs. ServiceNow is never blocked.
->   * **↓**
-> * **Dispatch**
->   * Intermediate: background task. Advanced: Redis and Celery.
->   * **↓** *(dispatched to the worker)*
-
----
-
-### 3 - REASONING — RETRIEVE, GROUND, DECIDE
-
-> *(Triggers from Section 2: Dispatch via `dispatched to the worker`)*
->
-> * **Retrieve**
->   * Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.
->   * **↓**
-> * **Reason**
->   * LangChain agent, or an explicit LangGraph state machine.
->   * **↓**
-> * **Ground + check**
->   * Numbered procedure, cited article. Score, risk and confidence gates.
->   * **↓**
-> * **Write back**
->   * Table API: suggestion, confidence, work note, Human Review Required.
->   * **↓** *(write-back ➔ sends output to Section 1: Incident form)*
-
----
-
-### 4 · Evidence — every run leaves a record
-
-* **Langfuse holds the trace:** retrieval, generation, prompt version, tokens, latency, cost, errors.
-* **PostgreSQL (advanced) holds:** executions, idempotency keys, approvals, failures and retry state.
-* **Benchmark harness:** re-scores the same ten incidents after every change, so quality is measured, not claimed.
-
+| Document owner        | Nourhan Abdelrahman - Service Delivery Manager, IT Operations                                                              |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Author and maintainer | Hesham Moawad - Knowledge Manager                                                                                          |
+| Classification        | Internal. Not for distribution outside BARQ Systems or its contracted service partners.                                    |
+| Review cycle          | Annual, or within 20 working days of any major incident report that names a procedure in this manual                       |
+| Current edition       | 4.0 · published 11 August 2026                                                                                             |
+| Next scheduled review | 10 August 2027                                                                                                             |
+| Feedback              | Raise a request against the Knowledge - content correction catalogue item, or comment on the article in the knowledge base |
+| External contribution | Section 11 was drafted with Sprints (sprints.ai) during the AI Suggested Response pilot                                    |
 
 
 <!-- page: 6 -->
 
-What it is not
+1. About this manual
 
-It is not a chatbot. Nobody converses with it. It reacts to an event and produces one artefact.
+1.1 Purpose and audience
 
-It is not an auto-resolver. It never closes a ticket. It never emails a requester. It writes a suggestion into a field and raises a flag.
+This manual is the working reference for everyone who handles an incident at BARQ Systems: service desk analysts on Tier 1, the resolver groups they escalate to, the service owners who accept those escalations, and the delivery managers who report on the result. It states what we have agreed to do, how quickly, and who decides when the agreed answer does not fit.
 
-It is not a general-purpose assistant. It answers from the corpus you indexed, or it says it cannot and hands off.
-
-It is not a demo of a framework. LangChain, LangGraph and Qdrant are means. Nobody at Demo Day will be impressed that you used them; they will ask what your top-3 hit rate was and how you measured it.
-
-The two levels, and why they differ KB-02
-
-Both levels attack the same business problem with the same event-driven trigger. The difference is engineering maturity , not the amount of AI. The advanced project is not 'the intermediate one plus more models'. It is the same idea built so it can be operated: durable queues, checkpointed state, permission classes, human approval as a first-class flow, guardrails against adversarial input, and evaluation wired into continuous integration so a regression fails a build rather than a customer.
-
-Two levels, one business problem
-
-The difference is engineering maturity, not the amount of Al.
+It is deliberately operational. It does not describe architecture, it does not justify tooling choices, and it does not replace vendor documentation. Where a procedure depends on a system whose behaviour we do not control, the procedure says so and names the team who owns the relationship.
 
 
+| Tier 1 analysts   | Sections 3, 4 and 6 are your working set. Section 7 shows what a well-handled ticket looks like end to end.                             |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| Resolver groups   | Sections 4, 5 and 8. Read the known error register before you accept an escalation - half of what reaches you is already documented.    |
+| Service owners    | Sections 5, 9 and 10. Your acceptance criteria for a change and your obligations during a major incident are here.                      |
+| Delivery managers | Sections 3, 9 and 12. The SLA definitions in 3.4 are the ones reported against in the monthly service review.                           |
+| New joiners       | Read Sections 1 to 4 in your first week. Do not read Section 6 end to end - it is a reference, and you will search it, not remember it. |
 
 
-> [Diagram p.6]
-| | **Intermediate**<br>AI ServiceNow Support Assistant | **Advanced**<br>Agentic Incident Resolution Platform |
-| :--- | :--- | :--- |
-| **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |
-| **Execution** | FastAPI background task | Redis queue + Celery workers |
-| **Orchestration** | LangChain agent, four tools | LangGraph, checkpointed nodes |
-| **Retrieval** | Dense top-k + metadata filters | Hybrid dense + sparse, reranked |
-| **State** | Idempotency store only | PostgreSQL: state, approvals, audit |
-| **Identity** | Least-privilege integration user | OAuth, least-privilege, ACL-governed |
-| **Safety** | Restricted toolset, human review | Permission classes, interrupts, guardrails |
-| **Evidence** | Langfuse traces + benchmark | Per-node traces, eval suite gating CI |
-| **Autonomy** | Suggests and escalates. Never resolves. | Low-risk writes only, after approval |
-| **Load** | ~30 hrs/week | ~35 hrs/week |
+1.2 How to find things
+
+Everything in this manual carries an identifier that is also searchable in the ticketing system. If you have the identifier, search there first -the record is live and this document is a snapshot.
 
 
+| PREFIX             | RECORD TYPE           | WHEREITLIVES                                                                                                                                                    |
+|--------------------|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| KB · KB0001        | Knowledge article     | Section 6 of this manual, and the published knowledge base. The manual carries the text as at the edition date; the knowledge base carries the current version. |
+| INC · INC0010023   | Incident              | The ticketing system. Section 7 reproduces a small number of closed incidents as worked examples.                                                               |
+| PRB · PRB0040012   | Problem               | The problem register. Open problems are summarised in Section 8.                                                                                                |
+| KE · KE0000034     | Known error           | The known error register in Section 8.2. Every known error names its workaround and its permanent fix, if one is planned.                                       |
+| CHG · CHG0030455   | Change                | The change calendar. Section 10 covers the procedure; the calendar is authoritative for dates.                                                                  |
+| RITM · RITM0010877 | Request item          | The service catalogue. Requests are not incidents - see 3.2 for the distinction and why it matters.                                                             |
+| MIR · MIR-2026-03  | Major incident report | Section 9. One report per declared major incident, published within ten working days.                                                                           |
 
-
-Figure 2 - Both levels are event-driven. Neither polls. Neither lets an agent close a ticket on its own.
-
-| Intermediate Al ServiceNow Support Assistant   | Intermediate Al ServiceNow Support Assistant   | Advanced Agentic Incident Resolution Platform   |
-|------------------------------------------------|------------------------------------------------|-------------------------------------------------|
-| Trigger                                        | Business Rule, then RESTMessageV2              | Business Rule, then RESTMessageV2               |
-| Execution                                      | FastAPI background task                        | Redis queue + Celery workers                    |
-| Orchestration                                  | LangChain agent, four tools                    | LangGraph, checkpointed nodes                   |
-| Retrieval                                      | Dense top-k + metadata filters                 | Hybrid dense + sparse, reranked                 |
-| State                                          | Idempotency store only                         | PostgreSQL: state, approvals, audit             |
-| Identity                                       | Least-privilege integration user               | OAuth, least-privilege, ACL-governed            |
-| Safety                                         | Restricted toolset, human review               | Permission classes, interrupts, guardrails      |
-| Evidence                                       | Langfuse traces + benchmark                    | Per-node traces, eval suite gating Cl           |
-| Autonomy                                       | Suggests and escalates. Never resolves.        | Low-risk writes only, after approval            |
-| Load                                           | ~30 hrs/week                                   | ~35 hrs/week                                    |
-
-
-Neither level polls ServiceNow. Ever.
-
-Polling - asking ServiceNow every thirty seconds whether anything new happened - was removed from both projects on purpose. It wastes API budget, it adds latency you cannot control, it hides the trigger logic in a scheduler instead of putting it in the platform where it belongs, and it makes the system impossible to reason about under load.
-
-If any component of your build contains a loop, a cron entry or a scheduled job that reads the incident table looking for work, you have failed a Must requirement (FR-06 intermediate, FR-05 advanced) regardless of how well the rest performs.
 
 <!-- page: 7 -->
 
-Glossary - ServiceNow KB-03
+Appendix E lists every identifier used in this manual against the section it appears in. If someone quotes you a number and you do not recognise it, start there.
 
+1.3 Conventions
 
-| TERM               | WHAT IT MEANS HERE                                                                                                                                                                                                                                                                                        |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| PDI                | Personal Developer Instance. A free, full ServiceNow instance issued to each developer account. Every team member should have one; the team nominates a single instance as the build instance. PDIs hibernate after ten days of inactivity and are reclaimed after inactivity beyond that -log in weekly. |
-| CSA                | Certified System Administrator. The ServiceNow administration baseline: users, groups, roles, tables, forms, lists, filters, the incident lifecycle, the knowledge base. Week 0 covers this content whether or not anyone sits the exam.                                                                  |
-| CAD                | Certified Application Developer. Application scopes, Studio, script includes, business rules, client scripts, REST integration. Week 0 covers the concepts; Sprint 1 uses them.                                                                                                                           |
-| Scoped application | A namespaced container for your customisations. Everything you build lives inside one, so it can be exported as an update set and installed elsewhere without colliding with the global namespace. Fields you add in a scope are prefixed- u_ai_status becomes x_<scope>_ai_status in a scoped app.       |
-| Business Rule      | Server-side script that runs when a record is inserted, updated, queried or deleted. This is your trigger. It runs inside ServiceNow, decides whether the incident is eligible, and fires the outbound call.                                                                                              |
-| RESTMessageV2      | The ServiceNow server-side API for making an outbound HTTP call. Your Business Rule uses it to POST the event to your FastAPI webhook.                                                                                                                                                                    |
-| Table API          | The inbound REST interface for reading and writing records: GET /api/now/table/incident/<sys_id> , PATCH to update. Your Python service calls this to read the incident and write the suggestion back.                                                                                                    |
-| Work note          | An internal comment on an incident, visible to agents but not to the requester. Your agent writes here. It must never write to Additional comments , which is customer-visible.                                                                                                                           |
-| sys_id             | The 32-character hexadecimal primary key of any record. Stable, opaque and the only safe way to refer to an incident. The human-readable number (INC0010023) is for people, not for lookups.                                                                                                              |
-| Build Agent        | ServiceNow's own AI-assisted development capability, available on a free PDI with a small monthly prompt allowance. You use it in Sprint 1 to extend the incident experience, and you record what it generated versus what you corrected.                                                                 |
-| AI Agent Studio    | ServiceNow's native platform for building in-platform AI agents. It requires a licensed Gen AI entitlement, so on a free PDI it is a design exercise : you design the equivalent native agent, name its tools and its escalation path, and then explain why the external implementation differs.          |
-| Update set         | The export format for platform customisations. Your scoped application must export cleanly as one. This is the handover artefact.                                                                                                                                                                         |
+Field labels appear in Title Case as they render on the form -Assignment group, Business service. Underlying column names appear in code style, as assignment_group , and only where a procedure requires you to type one.
 
+Times are Gulf Standard Time (UTC+04) unless a clock is named otherwise. Cairo-based staff should note that the service desk runs on GST, not on local time.
+
+Working hours means 08:00 to 18:00 GST, Sunday to Thursday. Extended hours and out of hours are defined in 2.1 and are not interchangeable.
+
+Must , should and may carry their ordinary contractual weight. A step marked Must has been agreed with a service owner and skipping it is a deviation to be recorded, not a judgement call.
 
 <!-- page: 8 -->
 
-Glossary - AI engineering KB-04
+2. The service desk
+
+2.1 Operating model
+
+The desk runs a follow-the-sun pattern across two locations with a single queue. An analyst in either location can pick up any incident; the shift pattern determines who is expected to, not who is permitted to.
 
 
-| TERM             | WHAT IT MEANS HERE                                                                                                                                                                                                                            |
-|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Chunk            | A slice of a knowledge article small enough to embed usefully and large enough to stand alone. Every chunk carries the identity of the article it came from -without that, a citation is impossible.                                          |
-| Embedding        | A dense vector representing the meaning of a chunk. Two chunks about VPN certificate expiry sit close together even if they share no words.                                                                                                   |
-| Dense retrieval  | Nearest-neighbour search over embeddings. Strong on paraphrase, weak on exact identifiers-a dense search often fails to find ERR_CERT_DATE_INVALID because that token has no meaning to it.                                                   |
-| Sparse retrieval | Term-weighted search (BM25 or a learned sparse encoder). Strong exactly where dense is weak: error codes, product names, hostnames. Advanced only.                                                                                            |
-| Hybrid retrieval | Running both and fusing the ranked lists at query time. Almost always beats either alone on ITSM corpora, because incidents contain both prose and identifiers. Advanced only.                                                                |
-| Reranking        | Taking the fused candidate set and reordering it with a stronger, slower model that scores each candidate against the query directly. Applied to twenty candidates to pick five. Advanced only.                                               |
-| Metadata filter  | A hard constraint applied at query time -published articles only, this service only, current version only. Filters are not ranking hints; they remove candidates entirely.                                                                    |
-| Grounding        | The requirement that every claim in the output traces to a retrieved chunk. A step in a procedure that does not appear in any retrieved chunk is a hallucination, however plausible it reads.                                                 |
-| Idempotency      | The property that handling the same event twice produces the same result as handling it once. Achieved with a persisted key, not with a prompt.                                                                                               |
-| Guardrail        | Deterministic code that runs before or after the model and can block it. Input guardrails screen for injection and redact secrets. Output guardrails validate schema, verify evidence and enforce the tool allowlist. Advanced only.          |
-| Trace            | The full record of one run in Langfuse: every step, its inputs, its outputs, the prompt version, tokens, latency and cost. The acceptance bar is that a mentor can reconstruct what happened from the trace alone, without running your code. |
-| Checkpoint       | Persisted graph state after each node, so an interrupted run resumes rather than restarts. Advanced only.                                                                                                                                     |
-| Interrupt        | A deliberate pause in the LangGraph execution that surfaces the run for human approval and resumes from the checkpoint once a decision is recorded. Advanced only.                                                                            |
-| Dead letter      | Where a job goes when its retries are exhausted. Its purpose is to be somewhere a human will actually look. Advanced only.                                                                                                                    |
+| COVERAGE       | DUBAI - HOURS(GST)   | DUBAI - ANALYSTS   | CAIRO - HOURS(GST)   | CAIRO - ANALYSTS   |
+|----------------|----------------------|--------------------|----------------------|--------------------|
+| Working hours  | 08:00 - 18:00        | 6                  | 09:00 - 19:00        | 5                  |
+| Extended hours | 18:00 - 22:00        | 2                  | -                    | -                  |
+| Out of hours   | on-call              | 1 + escalation     | on-call              | -                  |
+| Friday         | on-call              | 1                  | 10:00 - 16:00        | 2                  |
+| Saturday       | -                    | -                  | 10:00 - 16:00        | 2                  |
+
+
+Cairo covers Saturday; Dubai covers Friday
+
+The two locations do not observe the same weekend, and the rota is built around that rather than in spite of it. An incident raised on a Friday morning is a Cairo incident by default, and one raised on a Saturday is a Dubai on-call incident only if it is P1 or P2.
+
+2.2 Channels
+
+
+| CHANNEL             | HOURS              | CREATES             | NOTES                                                                                                                    |
+|---------------------|--------------------|---------------------|--------------------------------------------------------------------------------------------------------------------------|
+| Self-service portal | 24/7               | Incident or request | Preferred. The requester chooses the category, which is why category is unreliable and is re- checked at triage.         |
+| Telephone           | Working + extended | Incident            | Analyst raises the record while on the call. Never close a phone incident without a written summary in the journal.      |
+| Email to the desk   | 24/7               | Incident            | Parsed into an incident with category inquiry . Always re-categorise at triage; the parser cannot.                       |
+| Teams channel       | Working hours      | Nothing             | Triage and chase only. A conversation is not a ticket. If it turns into work, raise the record and post the number back. |
+| Monitoring alert    | 24/7               | Incident            | Raised automatically against the affected service with priority derived from the alert severity. See 3.3.                |
 
 
 <!-- page: 9 -->
 
-Part 2 · The ServiceNow layer
-
-The incident lifecycle and the fields that matter KB-05
-
-An incident moves through states. You only need to care about a handful, and you must never move it between them yourself.
+2.3 Roles
 
 
-| STATE       |   VALUE | WHAT IT MEANS FOR YOU                                                      |
-|-------------|---------|----------------------------------------------------------------------------|
-| New         |       1 | Just created. This is where your trigger normally fires.                   |
-| In Progress |       2 | An agent is working it. Your trigger may fire on a meaningful update here. |
-| On Hold     |       3 | Waiting on someone. Do not process; the incident is deliberately paused.   |
-| Resolved    |       6 | A fix has been applied. Never write here.                                  |
-| Closed      |       7 | Finished. Never write here.                                                |
-| Cancelled   |       8 | Not a real incident. Never process.                                        |
+| Tier 1 analyst         | Owns the incident from creation to resolution or handover. Applies documented knowledge, keeps the requester informed, and escalates on the clock rather than on frustration. An analyst may not close an incident they escalated without confirmation from the resolver group.   |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Team lead              | Owns the queue, not the tickets. Runs triage twice a day, rebalances load, and is the first authority on a priority dispute. Approves any P3 that an analyst wants to raise to P2.                                                                                                |
+| Resolver group         | Accepts escalations within its service scope. May reject an escalation once, with a written reason and a named alternative group. A second rejection goes to the service owner, not back to the desk.                                                                             |
+| Service owner          | Accountable for the service in Section 5. Approves emergency changes against it, joins the bridge for P1 and P2, and signs off the post-incident review.                                                                                                                          |
+| Major incident manager | A rostered role, not a job title. Takes command when a major incident is declared, and holds it until the review is published. During that period their instruction outranks this manual.                                                                                         |
+| Knowledge manager      | Owns Section 6. Publishes, revises and retires articles, and is the only role that may set an article to retired.                                                                                                                                                                 |
 
 
-Stock fields you will read
+2.4 Contact routes
+
+The full directory, including out-of-hours numbers, is in Appendix D. The routes below are the ones needed during an incident and are repeated there.
 
 
-| LABEL                       | COLUMN                      | WHY YOU NEED IT                                                                       |
-|-----------------------------|-----------------------------|---------------------------------------------------------------------------------------|
-| Number                      | number                      | Human-readable identifier. For logs, notes and conversation- never for lookups.       |
-| Short description           | short_description           | The one-line symptom. Carries most of the retrieval signal.                           |
-| Description                 | description                 | Free text from the requester. Noisy, sometimes long, occasionally hostile -see UC-05. |
-| Category / Subcategory      | category , subcategory      | Drives your metadata filter and part of your risk assessment.                         |
-| Business service            | business_service            | Which service is affected. The strongest filter you have.                             |
-| Priority / Urgency / Impact | priority , urgency , impact | Priority 1 is a hard risk signal at advanced level.                                   |
-| State                       | state                       | Eligibility gate. See the table above.                                                |
-| Assignment group            | assignment_group            | Whoownsit. Read only; never change it.                                                |
-| Work notes                  | work_notes                  | Internal journal. This is where you write.                                            |
-| Additional comments         | comments                    | Customer-visible journal. Never write here.                                           |
+| NEED                                | ROUTE                                         | WHEN                                                       |
+|-------------------------------------|-----------------------------------------------|------------------------------------------------------------|
+| Raise or chase an incident          | Portal, then phone                            | Any time. Chasing by Teams does not update the clock.      |
+| Declare a major incident            | Major incident bridge                         | P1 always. P2 when two or more services are affected.      |
+| Reach a resolver group out of hours | On-call rota, Appendix D                      | P1 and P2 only. P3 waits for working hours.                |
+| Emergency change approval           | Change manager, then service owner            | Both are required. Neither alone is sufficient - see 10.3. |
+| Knowledge correction                | Catalogue item Knowledge - content correction | Any time. Do not edit a published article directly.        |
 
 
 <!-- page: 10 -->
 
-The AI field model KB-06
+3. Incident management
 
-You extend the incident table with the AI fields inside a defined application scope. Nothing about this is optional - it is FR-02 at intermediate level and FR-01 at advanced. Create them in the scope, not globally, so the whole thing exports as one update set.
+3.1 The lifecycle
 
-Intermediate - five fields
-
-
-| LABEL                 | COLUMN                   | TYPE                                                           | WRITTEN BY   | PURPOSE                                                                                                                     |
-|-----------------------|--------------------------|----------------------------------------------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------|
-| AI Status             | u_ai_status              | Choice: pending , in_progress , suggested , escalated , failed | The service  | The claim. Set to in_progress by the webhook before dispatch -this is what makes a concurrent second run impossible.        |
-| AI Processed          | u_ai_processed           | True/False                                                     | The service  | Set once terminal. Read by the Business Rule as an eligibility condition, so a processed incident cannot re-trigger.        |
-| AI Confidence         | u_ai_confidence          | Decimal 0-1                                                    | The service  | Derived from retrieval scores. You must document the formula -FR-17 asks for it explicitly and mentors will ask atDemo Day. |
-| AI Suggested Response | u_ai_suggested_ response | Long text                                                      | The service  | The numbered, cited procedure. Never sent anywhere; only rendered on the form.                                              |
-| HumanReview Required  | u_human_review_ required | True/False                                                     | The service  | Set on every processed incident, whether the run succeeded or refused. There is no path where this stays false.             |
+An incident is an unplanned interruption to a service, or a reduction in its quality. It moves through six states. Only two of them stop the SLA clock, and knowing which two is most of what an analyst needs to understand about the process.
 
 
-Advanced - the fuller model, plus an audit table
+| STATE       |   VALUE | MEANS                                                                 | CLOCK   | WHOMAYSETIT                                |
+|-------------|---------|-----------------------------------------------------------------------|---------|--------------------------------------------|
+| New         |       1 | Created, not yet picked up.                                           | Running | Anyone. Set automatically on creation.     |
+| In Progress |       2 | An analyst or resolver group is working it.                           | Running | The assignee.                              |
+| On Hold     |       3 | Waiting on the requester, a supplier or a scheduled window.           | Paused  | The assignee, with a reason code. See 3.5. |
+| Resolved    |       6 | A fix has been applied and the requester has been told.               | Stopped | The assignee.                              |
+| Closed      |       7 | Resolved and either confirmed or auto-closed after five working days. | Stopped | Automatic, or the requester.               |
+| Cancelled   |       8 | Raised in error, duplicate, or not an incident.                       | Stopped | Team lead only.                            |
 
-The advanced scoped application ( AI Incident Orchestrator ) adds classification, model identity, agent version and timing on top of the five above, and writes an AI Execution Log record for every processing attempt including failures.
+
+3.2 Incident or request
+
+Something broken is an incident. Something wanted is a request. The distinction decides the SLA, the approval path and the reporting line, so it is settled at triage and not later.
 
 
-| ADDITIONAL FIELD    | TYPE                        | PURPOSE                                                                           |
-|---------------------|-----------------------------|-----------------------------------------------------------------------------------|
-| u_ai_classification | Choice                      | The category the classify node assigned, which may differ from the requester's.   |
-| u_ai_risk_level     | Choice: low , medium , high | Set by the determine_risk node, before retrieval.                                 |
-| u_ai_model          | String                      | Exact model identifier used for this run.                                         |
-| u_ai_agent_version  | String                      | Your agent's version. Without this you cannot attribute a regression to a change. |
+| INCIDENT                                                                                                                                                                                                                     | REQUEST                                                                                                                                                              |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ▪ 'I cannot connect to the VPN since my password reset.' ▪ 'Outlook says Disconnected and no mail has arrived since 08:00.' ▪ 'The shared drive that was mapped yesterday is gone.' ▪ 'The order service is returning 500s.' | ▪ 'Please order measecond monitor.' ▪ 'I need access to the finance folder.' ▪ 'When will myexpense claim be paid?' ▪ 'Can you install the design suiteonmy laptop?' |
+| Resolution targets in 3.4. No approval required to work it.                                                                                                                                                                  | Fulfilment targets are set per catalogue item. Most require an approval before any work begins.                                                                      |
 
+
+Two cases cause most of the argument. Access that used to work and has stopped is an incident -something broke. Access that never existed is a request, even when the person urgently needs it. And a question with no fault behind it is neither: answer it, log it as an inquiry, and do not let it consume an incident slot.
+
+3.3 Priority
+
+Priority is derived, not chosen. Impact and urgency are set at triage and the matrix does the rest. An analyst who wants a different priority changes the impact or the urgency and says why in the journal; they do not overwrite the derived value.
 
 <!-- page: 11 -->
 
 
-| ADDITIONAL FIELD                    | TYPE      | PURPOSE                                                                         |
-|-------------------------------------|-----------|---------------------------------------------------------------------------------|
-| u_ai_started_at / u_ai_completed_at | Date/Time | End-to-end latency measured platform-side, not just in your traces.             |
-| u_ai_failure_reason                 | String    | Why a run ended without a suggestion. Populated on refusal as well as on error. |
+|                       | URGENCY - 1 - HIGH   | URGENCY - 2 - MEDIUM   | URGENCY - 3 - LOW   |                          |
+|-----------------------|----------------------|------------------------|---------------------|--------------------------|
+| Impact 1 - Enterprise | P1                   | P1                     | P2                  | Whole service, or a site |
+| Impact 2 - Department | P1                   | P2                     | P3                  | A team or a floor        |
+| Impact 3 - Individual | P2                   | P3                     | P4                  | One person               |
 
 
+A monitoring alert sets impact from the affected service's criticality in Section 5, and urgency from the alert severity. An analyst may lower a derived P1 only with the team lead's agreement, recorded in the journal.
 
-| AI EXECUTION LOG COLUMN   | PURPOSE                                                                                                |
-|---------------------------|--------------------------------------------------------------------------------------------------------|
-| incident                  | Reference to the incident.                                                                             |
-| execution_id              | The run identifier. Matches the Langfuse trace ID -makethemthesamevalue and debugging becomes trivial. |
-| action                    | What was attempted: classify , retrieve , generate , write_back , escalate .                           |
-| agent / agent_version     | Which agent and which version.                                                                         |
-| timestamp                 | When.                                                                                                  |
-| status                    | success , blocked , failed , awaiting_approval .                                                       |
-| result / error            | Outcome payload or the error. One of these is always populated.                                        |
+3.4 Response and resolution targets
+
+The clock starts when the incident is created, not when it is picked up. It pauses on hold and stops on resolved. Targets are measured against working hours for P3 and P4, and against elapsed time for P1 and P2.
 
 
-The audit table is not logging
+| PRIORITY   | RESPONSE        | RESOLUTION     | UPDATE CADENCE     | CLOCK BASIS   |
+|------------|-----------------|----------------|--------------------|---------------|
+| P1         | 15 minutes      | 4 hours        | Every 30 minutes   | Elapsed, 24/7 |
+| P2         | 30 minutes      | 8 hours        | Every 2 hours      | Elapsed, 24/7 |
+| P3         | 4 working hours | 3 working days | Daily              | Working hours |
+| P4         | 1 working day   | 5 working days | On change of state | Working hours |
 
-A log line is for you, during development. An execution log record is for the risk owner who will ask, six months from now, what your system wrote to a customer's incident on a specific afternoon and on what basis. It must be written on failures too - an attempt that produced nothing is exactly the attempt someone will want to see.
 
-Eligibility - the decision made inside ServiceNow KB-07
+Response means a human has read the incident and written something in the journal that is specific to it. An autoacknowledgement is not a response and does not stop the response clock.
 
-Eligibility is decided by the Business Rule, before anything leaves the platform. Getting this wrong is the single most common Sprint 2 failure: teams emit events for incidents they should not have, then try to filter them out in Python, and end up with an event storm they cannot explain.
+Resolution means the service is working again for the requester, confirmed by the requester where they are reachable. A workaround counts as a resolution if the requester can work; the underlying fault then becomes a problem record under Section 8.
+
+Breach is recorded automatically and cannot be edited. If a target was missed for a reason outside our control, that reason belongs in the journal and in the monthly service review, not in an adjustment to the record.
+
+3.5 Holds, chasing and the no-contact rule
 
 
-| CONDITION                    | INTERMEDIATE   | ADVANCED   | WHY                                                                                                                                                            |
-|------------------------------|----------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| active == true               | Required       | Required   | Resolved, closed and cancelled incidents are finished. Nothing you do improves them.                                                                           |
-| AI enabled for this incident | Required       | Required   | A flag or a category allowlist. There must be a way for a human to say not this one .                                                                          |
-| u_ai_processed == false      | Required       | Required   | Prevents the write-back from re-triggering the rule that caused it. Without this you will build an infinite loop, and you will build it on your first attempt. |
+| REASON CODE         | MAXHOLD            | WHATMUSTHAPPENBEFOREANDAFTER                                                                                                                                                      |
+|---------------------|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| awaiting_user       | 5 working days     | Two chases at least one working day apart, both recorded. After the second chase with no reply, resolve with the no-contact resolution code and tell the requester how to reopen. |
+| awaiting_supplier   | Per contract       | The supplier reference goes in the journal. A hold with no supplier reference is not a supplier hold.                                                                             |
+| awaiting_change     | To the window      | The CHG number goes in the journal. The hold is released when the change closes, not when it is approved.                                                                         |
+| awaiting_parts      | 10 working days    | Expected date recorded and updated weekly. Beyond ten days, raise a request instead and resolve the incident.                                                                     |
+| scheduled_with_user | To the appointment | Date and time agreed with the requester in writing. Missing an agreed appointment is a breach even when the clock was paused.                                                     |
 
 
 <!-- page: 12 -->
 
+3.6 Journalling
 
-| CONDITION                     | INTERMEDIATE   | ADVANCED   | WHY                                                                                        |
-|-------------------------------|----------------|------------|--------------------------------------------------------------------------------------------|
-| Category in the supported set | Required       | Required   | You indexed a corpus. Incidents outside it cannot be answered and should not be attempted. |
-| u_ai_status != 'in_progress'  | Recommende d   | Required   | A run is already under way. Belt and braces alongside the idempotency key.                 |
-| Not human-locked              | -              | Required   | An agent has explicitly taken the incident away from automation. That decision wins.       |
-| State not On Hold             | Recommende d   | Required   | Something is deliberately waiting. Do not add noise to it.                                 |
+The journal is the record. Six months from now, an auditor, a service owner or a colleague picking the ticket up will have nothing else. Two fields, and they are not interchangeable.
 
 
-The loop you will build by accident
+| WORKNOTES·INTERNAL                                                                                                                                                          | ADDITIONALCOMMENTS· THEREQUESTER SEES THESE                                                                                                                                                                                   |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ▪ What you checked and what you found ▪ Commands run and their output ▪ Whyyou ruled a cause out ▪ Which article you applied, by number ▪ Whoyouspoke to and what they said | ▪ What you are doing, in the requester's language ▪ What you need from them, and by when ▪ What changed and whether they need to act ▪ Never: internal names, host names, colleagues' opinions, or the phrase 'as per the KB' |
 
-Your service writes AI Suggested Response back to the incident. That is an update. Your Business Rule fires on update. It evaluates eligibility. If u_ai_processed is still false, it emits another event. The webhook accepts it, dispatches it, the agent runs again, writes again, and fires the rule again. Within a minute you have consumed your model budget and filled the journal with identical suggestions.
 
-Three independent defences, and you want all three:
+Write the article number, every time
 
-Set `u_ai_processed = true` in the same write as the suggestion - one PATCH, not two. Two PATCHes leaves a window.
-
-Exclude AI-field-only changes from the trigger condition so an update touching nothing but your own fields does not qualify as a relevant update .
-
-Keep the idempotency key so even if an event escapes, the second one is discarded downstream.
-
-The Business Rule and the outbound event KB-08
-
-The rule runs after insert and update on incident . It builds a minimal payload and posts it. The reference shape below is deliberately close to what you will write - adapt the scope prefix, the endpoint and the secret handling to your own build.
+'Applied KB0001, cleared the cached credential, confirmed connection' takes four seconds longer to type than 'fixed' and is the difference between a knowledge base we can measure and one we cannot. Article usage is reported monthly in Section 12, and it is the only evidence we have for which articles deserve to survive the next review.
 
 <!-- page: 13 -->
 
-`event_id` is new on every emission. It identifies the event , not the incident. An incident legitimately produces several events over its life; each must be processed once.
+4. Escalation
 
-Nothing but identifiers crosses the boundary. No short description, no description, no requester name. The backend fetches what it is authorised to fetch, with its own credentials. This is FR-04 at advanced level and it is the difference between an integration and a data leak.
+4.1 When to escalate
 
-Run the rule `after`, not `before`. A before rule runs inside the database transaction; a slow or failing HTTP call there degrades the platform for every user.
+Escalate on the clock, not on frustration. An incident is escalated when the analyst has exhausted the documented knowledge for its category and the next response target is inside the next hour -whichever comes first. Escalating earlier is not a failure; holding a ticket past its target because you nearly have it is.
 
-Set a timeout. Five seconds is generous for a call that only has to return 202.
 
-Never `setBasicAuth` with an admin account here. The rule authenticates to your service, and your service authenticates back to ServiceNow separately - see KB-09.
+| PRIORITY   | ESCALATE IF UNRESOLVEDAFTER                        | TO                                           | ANDALSO                                                                          |
+|------------|----------------------------------------------------|----------------------------------------------|----------------------------------------------------------------------------------|
+| P1         | 15 minutes, or immediately if the cause is unknown | Resolver group and the major incident bridge | Service owner paged. Bridge stays open until the service is restored.            |
+| P2         | 1 hour                                             | Resolver group                               | Team lead informed. Service owner informed if two or more services are involved. |
+| P3         | 1 working day                                      | Resolver group                               | Nothing further unless the group rejects the escalation.                         |
+| P4         | 3 working days                                     | Resolver group, or convert to a request      | Check first that it is not a request in disguise - see 3.2.                      |
 
-Prefer async execution, and know why
 
-An after, async Business Rule runs on a scheduled worker just after the transaction commits, so a slow webhook cannot hold the user's form save open. The trade-off is that previous is null in async context, so you cannot call .changes() . Teams that need change detection usually run the rule after synchronous with a hard 5-second timeout, or move the change detection into a flag set by a small before rule. Pick one, and be able to defend it - this is a favourite Demo Day question.
+4.2 The escalation matrix
 
-Identity and least privilege KB-09
+Grouped by the service area that owns the escalation. The first line is the standing route; the second is who takes it if the first does not acknowledge inside the acknowledgement window.
 
-Every call your backend makes into ServiceNow authenticates as a dedicated integration user. Not your admin account. Not a shared account. Not the account you happen to be logged in with while developing.
+
+| AREA         | TRIGGER                              | FIRSTROUTE                       | IF NOACKIN 15MIN                      |
+|--------------|--------------------------------------|----------------------------------|---------------------------------------|
+| Network      | VPN, remote access, site links       | Network Operations               | NetOps duty lead                      |
+| Network      | Corporate Wi-Fi, roaming, coverage   | Network Operations               | NetOps duty lead                      |
+| Network      | Firewall or segmentation change      | Network Security                 | Head of Infrastructure                |
+| Identity     | Lockouts, password policy, directory | Identity &Access                 | IAM duty lead                         |
+| Identity     | MFA reset or device re-enrolment     | Identity &Access                 | IAM duty lead                         |
+| Identity     | Suspected compromise                 | Security Operations, immediately | CISO on-call - do not wait 15 minutes |
+| Applications | SAP availability or connectivity     | SAP Basis                        | SAP service owner                     |
+| Applications | Order processing and fulfilment      | Platform Engineering             | Head of Platform Engineering          |
+| Applications | Mail flow and collaboration          | Collaboration Services           | Collaboration duty lead               |
+| Endpoint     | Laptop, desktop, peripherals         | Endpoint Engineering             | Endpoint duty lead                    |
+| Endpoint     | Print and reprographics              | Print Services                   | Facilities duty manager               |
+
 
 <!-- page: 14 -->
 
+A rejected escalation comes back once, and once only
 
-|                     | INTERMEDIATE                                                                                                                               | ADVANCED                                                                                                                                                |
-|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Mechanism           | Basic authentication over HTTPS with a dedicated integration user, credentials from environment variables.                                 | OAuth 2.0 client credentials, tokens refreshed by the service, no long-lived password anywhere.                                                         |
-| Roles               | The minimum set that permits reading an incident and writing a work note. Typically itil is already too broad -start from nothing and add. | The same principle, plus explicit ACLs on the scoped application's tables. The team writes down the least-privilege reasoning as a deliverable (D-02).  |
-| Test that proves it | Attempt to close an incident with the integration credentials. It must fail with 403.                                                      | The same test, plus an attempt to read a table outside the allowlist, plus evidence that no admin credential exists in the repository or configuration. |
+A resolver group may return an escalation with a written reason and a named alternative group. The analyst routes it to that group. If the second group also rejects it, the incident goes to the service owner listed in Section 5 -not back to the desk, and not around the loop again. Two rejections is a routing problem, and routing problems are owned above the desk.
+
+4.3 The desk card
+
+The card below is laminated at every desk position and pinned in the Cairo operations room. It is reproduced here because it is the version people actually follow, and because it is reissued whenever 4.1 or 4.2 changes.
 
 
-The four checks a mentor will run on your credentials
 
-git log -p | grep -iE "password|secret|token" across your whole history - not just the current tree. A secret that was committed and later removed is still a leaked secret.
 
-Open a Langfuse trace and search it for the instance URL, the integration password and any requester email address. None may appear (NFR-04 / NFR-06).
+> [Diagram p.14]
+### Two columns, one figure, one footnote
 
-Read .env.example . It must list every variable with a placeholder, and .env itself must be in .gitignore .
+The webhook returns 202 Accepted before retrieval or generation has run. This is not an optimisation; it is the contract.
 
-Ask what the integration user can do. If the answer is 'I think it has itil' , that is a fail. The answer is a list of tables and operations.
+ServiceNow's outbound call is synchronous and holds a worker thread while it waits. Retrieval plus generation takes seconds to tens of seconds. A webhook that waited would exhaust the platform's outbound capacity under any realistic burst, slow the instance for every user, and time out anyway.
+
+202 means the service has taken responsibility for the event. That promise is only real because the idempotency key was persisted before the reply was sent.
+
+Answering 202 and then failing to store the key means the event can be replayed into a second suggestion, which is the exact failure the status code was meant to rule out.¹
+
+---
+
+### Order of operations
+
+> **Sequential Steps:**
+> * **Step 1:** authenticate
+> * **Step 2:** validate
+> * **Step 3:** claim key
+> * **Step 4:** claim incident
+> * **Step 5:** dispatch
+> * **Step 6:** return 202
+>
+> **Diagram Connections:**
+> `authenticate` ◀ `validate` ◀ `claim key` ◀ `claim incident` ◀ `dispatch` ◀ `return 202`
+
+Only the fourth step writes to ServiceNow on the request path.
+
+
+
+See KB-12 for the atomic claim statement.
+
+The escalation and acceptance card, issue 4. Reissued with every edition of this manual.
 
 <!-- page: 15 -->
 
-Part 3 · The event contract
+5. Service catalogue and supported estate
 
-The event payload KB-10
+5.1 How to read this catalogue
 
-This is a contract between two teams' code. Fix it in Sprint 2 and do not change it afterwards without telling everyone.
+Each service carries a criticality, a service owner, a support window and the resolver group that owns incidents against it. Criticality feeds the impact column of the priority matrix in 3.3, so changing it is a governance decision and not a desk decision.
 
+Support windows are stated in Gulf Standard Time and follow the desk pattern in 2.1 1 . A service marked 24/7 is covered by the on-call rota out of hours for P1 and P2 only; P3 and P4 against a 24/7 service still wait for working hours 2 .
 
-| FIELD      | TYPE           | REQUIRED   | NOTES                                                                                                                                                  |
-|------------|----------------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| event_id   | string, 32 hex | yes        | Unique per emission. This is the idempotency key. Never derive it from sys_id , or a legitimate second event on the same incident is silently dropped. |
-| sys_id     | string, 32 hex | yes        | The incident to load. Validate the shape before using it -see UC- 05.                                                                                  |
-| number     | string         | yes        | For logs and notes only.                                                                                                                               |
-| event_type | enum           | yes        | incident.created or incident.updated . Reject anything else with 422.                                                                                  |
-| emitted_at | string         | no         | Platform-side timestamp. Useful for measuring true end-to-end latency.                                                                                 |
+5.2 The catalogue
 
 
-What must never be in this payload
+| SERVICE          | CRITICALITY   | OWNERSHIPANDWINDOW   | OWNERSHIPANDWINDOW   | NOTES                                                                                                               |
+|------------------|---------------|----------------------|----------------------|---------------------------------------------------------------------------------------------------------------------|
+| order-processing | Tier 1        | FIELD                | VALUE                | Revenue-bearing. Any P1 goes straight to the bridge. Remediation is change- controlled - see KB0010 and CHG0030455. |
+| order-processing | Tier 1        | Owner                | K. Selim             | Revenue-bearing. Any P1 goes straight to the bridge. Remediation is change- controlled - see KB0010 and CHG0030455. |
+| order-processing | Tier 1        | Group                | Platform Eng         | Revenue-bearing. Any P1 goes straight to the bridge. Remediation is change- controlled - see KB0010 and CHG0030455. |
+| order-processing | Tier 1        | Window               | 24/7                 | Revenue-bearing. Any P1 goes straight to the bridge. Remediation is change- controlled - see KB0010 and CHG0030455. |
+| identity         | Tier 1        | FIELD                | VALUE                | Underpins every other service. A lockout here presents as a fault in three or four services at once - see 7.4.      |
+| identity         | Tier 1        | Owner                | N. Abdelrahman       | Underpins every other service. A lockout here presents as a fault in three or four services at once - see 7.4.      |
+| identity         | Tier 1        | Group                | Identity & Access    | Underpins every other service. A lockout here presents as a fault in three or four services at once - see 7.4.      |
+| identity         | Tier 1        | Window               | 24/7                 | Underpins every other service. A lockout here presents as a fault in three or four services at once - see 7.4.      |
+| sap-erp          | Tier 1        | FIELD                | VALUE                | Not reachable from the internet. Confirm VPN before troubleshooting anything else. KE0000034 applies.               |
+| sap-erp          | Tier 1        | Owner                | K. Selim             | Not reachable from the internet. Confirm VPN before troubleshooting anything else. KE0000034 applies.               |
+| sap-erp          | Tier 1        | Group                | SAP Basis            | Not reachable from the internet. Confirm VPN before troubleshooting anything else. KE0000034 applies.               |
+| sap-erp          | Tier 1        | Window               | 06:00 - 22:00        | Not reachable from the internet. Confirm VPN before troubleshooting anything else. KE0000034 applies.               |
+| corporate-email  | Tier 2        | FIELD                | VALUE                | Distinguish a single-user fault from a service event before applying any per-user fix. KB0002.                      |
+| corporate-email  | Tier 2        | Owner                | O. Sabry             | Distinguish a single-user fault from a service event before applying any per-user fix. KB0002.                      |
+| corporate-email  | Tier 2        | Group                | Collaboration        | Distinguish a single-user fault from a service event before applying any per-user fix. KB0002.                      |
+| corporate-email  | Tier 2        | Window               | 24/7                 | Distinguish a single-user fault from a service event before applying any per-user fix. KB0002.                      |
+| corporate-vpn    | Tier 2        | FIELD                | VALUE                | Highest article usage on the desk. KB0001 alone accounts for roughly one in twenty incidents.                       |
+| corporate-vpn    | Tier 2        | Owner                | L. Haddad            | Highest article usage on the desk. KB0001 alone accounts for roughly one in twenty incidents.                       |
+| corporate-vpn    | Tier 2        | Group                | Network Ops          | Highest article usage on the desk. KB0001 alone accounts for roughly one in twenty incidents.                       |
+| corporate-vpn    | Tier 2        | Window               | 24/7                 | Highest article usage on the desk. KB0001 alone accounts for roughly one in twenty incidents.                       |
 
-Short description, description, requester identity, work notes, attachments, or anything else from the record. If your payload grew because it was easier than fetching, you have moved authorisation from ServiceNow's ACLs into your own JSON, and nobody is checking it.
 
 <!-- page: 16 -->
-
-The webhook contract KB-11
-
-One event, one run
-
-The webhook answers first and reasons afterwards. A replay is answered too — and then dropped.
 
 
 
 
 > [Diagram p.16]
-### Participants / Lifelines
-
-* **ServiceNow**
-* **Webhook**
-* **Store**
-* **Worker**
-
----
-
-### Sequence Flow
-
-#### FIRST EVENT
-
-> * **ServiceNow** → **Webhook**: `POST /events`
->   * *Parameters:* `event_id, sys_id, number, event_type`
->
-> * **Webhook** → **Store**: `put(event_id)`
->   * *Note:* `new key stored`
->
-> * **Webhook** → **ServiceNow**: `PATCH ai_status = in_progress`
->   * *Note:* `the incident is claimed`
->
-> * **Webhook** → **ServiceNow**: `202 Accepted`
->   * *Note:* `under one second, no model called`
->
-> * **Webhook** → **Worker**: `dispatch(event)`
->   * *Note:* `background task or queued job`
->
-> * **Worker** → **ServiceNow**: `PATCH suggestion + human_review`
->   * *Note:* `write-back after retrieval and generation`
-
----
-
-#### REPLAY OF THE SAME EVENT
-
-> * **ServiceNow** → **Webhook**: `POST /events`
->   * *Note:* `identical event_id`
->
-> * **Webhook** --dashed--> **Store**: `put(event_id) — already present`
+| Service | Tier | Owner | Group | Window | Notes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `file-services` | **Tier 2** | L. Haddad | Infrastructure | Working | Permission changes never happen from an incident. Raise the access request — 3.2 and KB0003. |
+| `corporate-wifi` | **Tier 3** | L. Haddad | Network Ops | Working | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021. |
+| `endpoint` | **Tier 3** | D. Halim | Endpoint Eng | Working | Post-update degradation is expected for 24 hours. Do not act inside that window — KB0007. |
+| `print-services` | **Tier 4** | O. Sabry | Print Services | Working | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |
 
 
 
-Outcome of the replay
 
-202 Accepted is returned again — the caller must not see an error — but nothing is dispatched and no second suggestion is written.
+| file-services   |        | FIELD   | VALUE          | Permission changes never happen from an incident. Raise the access request - 3.2 and KB0003.             |
+|-----------------|--------|---------|----------------|----------------------------------------------------------------------------------------------------------|
+| file-services   |        | Owner   | L. Haddad      | Permission changes never happen from an incident. Raise the access request - 3.2 and KB0003.             |
+| file-services   |        | Group   | Infrastructure | Permission changes never happen from an incident. Raise the access request - 3.2 and KB0003.             |
+| file-services   |        | Window  | Working        | Permission changes never happen from an incident. Raise the access request - 3.2 and KB0003.             |
+| corporate-wifi  | Tier 3 | FIELD   | VALUE          | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021.       |
+| corporate-wifi  | Tier 3 | Owner   | L. Haddad      | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021.       |
+| corporate-wifi  | Tier 3 | Group   | Network Ops    | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021.       |
+| corporate-wifi  | Tier 3 | Window  | Working        | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021.       |
+| endpoint        | Tier 3 | FIELD   | VALUE          | Post-update degradation is expected for 24 hours. Do not act inside that window - KB0007.                |
+| endpoint        | Tier 3 | Owner   | D. Halim       | Post-update degradation is expected for 24 hours. Do not act inside that window - KB0007.                |
+| endpoint        | Tier 3 | Group   | Endpoint Eng   | Post-update degradation is expected for 24 hours. Do not act inside that window - KB0007.                |
+| endpoint        | Tier 3 | Window  | Working        | Post-update degradation is expected for 24 hours. Do not act inside that window - KB0007.                |
+| print-services  | Tier 4 | FIELD   | VALUE          | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |
+| print-services  | Tier 4 | Owner   | O. Sabry       | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |
+| print-services  | Tier 4 | Group   | Print Services | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |
+| print-services  | Tier 4 | Window  | Working        | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |
 
 
-Figure 3 - The webhook answers before it reasons. A replay is answered too - and then dropped.
-
-| STATUS                   | WHEN                                                                                        | BODY                                                     |
-|--------------------------|---------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| 202 Accepted             | The event authenticated, validated, and was either dispatched or recognised as a duplicate. | {"status":"accepted","event_ id":"..."}                  |
-| 401 Unauthorized         | Missing or invalid signature / credential.                                                  | Generic. Do not explain which part failed.               |
-| 422 Unprocessable Entity | Authenticated, but the payload failed Pydantic validation.                                  | Field-level errors are fine here -the caller is trusted. |
-| 429 Too Many Requests    | Optional rate limit. Advanced.                                                              | With Retry-After .                                       |
-| 5xx                      | Your service is broken. ServiceNow will log it; nothing retries automatically.              | Generic.                                                 |
+5.3 Criticality definitions
 
 
-The order of operations is the requirement
+| TIER   | MEANING                                             | CONSEQUENCES                                                                                       |
+|--------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| Tier 1 | Revenue-bearing, or underpins every other service.  | Impact 1 by default. Emergency change route available. Service owner joins every P1 and P2 bridge. |
+| Tier 2 | Enterprise-wide productivity.                       | Impact 1 when the whole service is down, Impact 2 when a department is affected.                   |
+| Tier 3 | Departmental or site-level productivity.            | Impact 2 at most, unless a site is entirely without the service.                                   |
+| Tier 4 | Convenience. A documented manual workaround exists. | Impact 3 unless several teams are blocked simultaneously.                                          |
 
-Authenticate the caller. Constant-time comparison of an HMAC over the raw body, or a shared bearer token at minimum. Reject with 401.
-
-Validate against the Pydantic model. Reject with 422.
-
-Check and persist the idempotency key. If it already exists, return 202 and stop - do not dispatch, do not error.
 
 <!-- page: 17 -->
 
-Claim the incident : PATCH u_ai_status = in_progress . This is a write into ServiceNow and it is the one write that happens on the request path.
+6. Knowledge base articles
 
-Dispatch : a FastAPI background task at intermediate level, a Redis-queued Celery job at advanced.
+Nine published articles and one retired revision, reproduced as at edition 4.0. The knowledge base is authoritative; this section is a snapshot for offline and audit use.
 
-Return 202. Only now.
+6.1 Article index
 
-Why the webhook answers before the work is done
+The table below crosses two pages. It is the fastest route from a reported symptom to an article number, and it is the one part of this section worth skimming end to end.
 
-This is the single most-asked Demo Day question, so have the answer ready. ServiceNow's outbound call is synchronous and holds a worker thread. Retrieval plus generation takes seconds to tens of seconds. If your webhook waited, then a burst of incidents would exhaust ServiceNow's outbound capacity, slow the platform for every user, and time out anyway.
 
-202 Accepted means I have taken responsibility for this event . That responsibility is only real because the idempotency key was persisted before you replied. Answering 202 without persisting the key first means you have promised something you cannot keep.
+| ARTICLE   | REPORTEDAS                                               | SERVICE           | CATEGORY   | OWNER            |
+|-----------|----------------------------------------------------------|-------------------|------------|------------------|
+| KB0001    | 'VPN says authentication failed since my password reset' | corporate-vpn     | network    | Network Ops      |
+| KB0002    | 'Outlook is Disconnected and no mail is arriving'        | corporate- email  | software   | Collaboration    |
+| KB0003    | 'My mapped drive has disappeared since I logged in'      | file-services     | network    | Infrastructure   |
+| KB0004    | 'Jobs queue up and nothing comes out of the printer'     | print-services    | hardware   | Print Services   |
+| KB0005    | 'I amlocked out and nothing letsme sign in'              | identity          | inquiry    | Identity &Access |
+| KB0006    | 'I changed myphone and MFAnolonger works'                | identity          | inquiry    | Identity &Access |
+| KB0007    | 'My laptop has been slow since the update'               | endpoint          | hardware   | Endpoint Eng     |
+| KB0008    | 'SAP times out with RFC_ERROR_COMMUNICATION'             | sap-erp           | software   | SAP Basis        |
+| KB0009    | 'Wi -Fi keeps dropping on the 5 GHz network'             | corporate-wifi    | network    | Network Ops      |
+| KB0010 v2 | 'Order service is returning 500s under load'             | order- processing | software   | Platform Eng     |
+| KB0010 v1 | Retired 02 Apr 2026 - do not apply. See 6.12.            | order- processing | software   | Platform Eng     |
 
-Idempotency in practice KB-12
 
-Idempotency is a property of a store, not of a prompt. One table, one unique constraint, one atomic insert.
+6.2 Symptom finder
+
+Where the reported words do not match an article title, work from the pattern instead.
+
+Started after a change
+
+A password reset, a phone replacement, a Windows update or a new starter's first login. Check KB0001, KB0005, KB0006 and KB0007 before anything else.
+
+Several services at once
+
+Almost always identity, not the services themselves. Go to KB0005 first and confirm the account state before troubleshooting any individual application.
+
+Only in one place
+
+A location-bound fault is infrastructure. KB0009 for wireless; otherwise raise to Network Operations with the location and the times.
 
 <!-- page: 18 -->
 
-Do not check-then-insert. Two events arriving in the same millisecond both find nothing and both proceed. ON CONFLICT DO NOTHING ... RETURNING makes the claim atomic.
+6.3 KB0005 -the archived scan
 
-A duplicate returns 202, not 409. The caller did nothing wrong and must not be taught that duplicates are errors.
+Articles predating the 2025 migration exist as scans of the printed originals, signed off by the reviewer of the day. The scan is retained for audit; the published text in 6.8 is what you follow.
 
-Retention is configurable (NFR-06 intermediate). A window of days is fine; document the number and put it in the config file rather than in the code.
 
-Intermediate teams may use SQLite or a small PostgreSQL instance for this alone - the PRD makes PostgreSQL optional at that level, but you need durable storage of some kind. An in-memory Python set does not survive a restart, and a restart is exactly when replays happen.
 
-<!-- page: 19 -->
 
-Part 4 · Retrieval
+> [Diagram p.18]
+# RUNBOOK — ACCOUNT LOCKOUT
 
-The retrieval pipeline
+KB0005 - version 4 - Identity
 
-Build time runs once per corpus change. Query time runs once per incident.
+### SYMPTOM
+The user cannot sign in to any corporate system. Errors mention a locked or disabled account. Often follows a password change, and often presents as several services failing at once.
 
+### CAUSE
+The lockout policy triggers after a threshold of failed attempts. A cached credential on any device can retry an old password silently and lock the account repeatedly.
 
+### RESOLUTION
+1. Verify the user's identity. This step is mandatory.
+2. Unlock the account in the Identity console.
+3. Sign out of the corporate mail profile on the mobile device.
+4. Clear cached credentials on the laptop, including VPN.
+5. Confirm access to two different services before closing.
 
+### ESCALATION
+Repeated lockouts with no identifiable source go to the Identity team. Never disable the lockout policy for an individual user.
 
-> [Diagram p.19]
-### BUILD TIME - ONE COMMAND, REPEATABLE
+| REVIEWED BY: H. Moawad <br> DATE: 13/04/2026 |
+| :--- |
 
-> * **Load**
->   * Pull published knowledge articles from the KB.
->   * $\rightarrow$
-> * **Chunk**
->   * Fixed size with overlap. Article identity kept.
->   * $\rightarrow$
-> * **Embed**
->   * Dense vectors. Sparse too, at advanced level.
->   * $\rightarrow$
-> * **Index**
->   * Persisted Qdrant collection with payload metadata.
 
----
 
-### QUERY TIME - ONCE PER INCIDENT
+6.4 KB0001 -VPN authentication fails after a password change
 
-> * **Query**
->   * Short description plus the symptom text. No credentials, no PII.
->   * $\rightarrow$
-> * **Filter**
->   * state = published, category, service, current version only.
->   * $\rightarrow$
-> * **Search**
->   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.
->   * $\rightarrow$
-> * **Rerank**
->   * Advanced only. Reorder the fused candidates before anything reaches the model.
 
-**Output:** top-k chunks, each with a similarity score and the article number it came from.
 
----
 
-> **Note:** Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure.
+> [Diagram p.18]
+| KB0001 | VPN AUTHENTICATION FAILS AFTER A PASSWORD CHANGE | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 2 |
+| **Service** | `corporate-vpn` | **Category** | network |
+| **Owner** | Network Operations | **Author** | L. Haddad |
+| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 1,284 · **Related** PRB0040012, INC0010023 |
 
 
 
-The knowledge article format KB-13
 
-Appendix A carries ten reference articles. They are written in the shape below, and your ingestion pipeline must preserve every metadata field on every chunk derived from them. Use exactly these ten so that your benchmark numbers can be compared with every other team's.
+| KB0001   | VPN AUTHENTICATION FAILS AFTER APASSWORDCHANGE   | VPN AUTHENTICATION FAILS AFTER APASSWORDCHANGE   | VPN AUTHENTICATION FAILS AFTER APASSWORDCHANGE   |
+|----------|--------------------------------------------------|--------------------------------------------------|--------------------------------------------------|
+| State    | Published                                        | Version                                          | 2                                                |
+| Service  | corporate-vpn                                    | Category                                         | network                                          |
+| Owner    | Network Operations                               | Author                                           | L. Haddad                                        |
+| Reviewed | 11 Apr 2026                                      | Uses,12mo                                        | 1,284 · Related PRB0040012, INC0010023           |
 
-
-
-
-> [Diagram p.19]
-```yaml
----
-article_number: KB0001
-title: VPN authentication fails after a password change
-category: network
-service: corporate-vpn
-state: published        # published | draft | retired
-version: 2
-security_level: internal    # internal | restricted
-updated: 2026-04-11
----
-```
-
-## Symptom
-...
-## Cause
-...
-## Resolution
-1. ...
-## Escalation
-...
-
-
-
-<!-- page: 20 -->
-
-
-| METADATA FIELD   | USED FOR                                         | CONSEQUENCE OF LOSING IT                                                                            |
-|------------------|--------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| article_number   | Citation. The generated procedure names it.      | You cannot cite. FR-13 fails and no suggestion is defensible.                                       |
-| title            | Citation and display.                            | The agent cites a number nobody recognises.                                                         |
-| category         | Filter, matched against the incident's category. | Storage answers get returned for network incidents.                                                 |
-| service          | Filter. The single strongest one you have.       | Retrieval quality drops sharply on a mixed corpus.                                                  |
-| state            | Hard filter -published only, by default (FR-11). | Draft or retired procedures reach a live incident. This is the failure that gets a pilot cancelled. |
-| version          | Filter to the current version; also cited.       | You cannot prove which revision a suggestion came from.                                             |
-| security_level   | Filter. Advanced.                                | Restricted content reaches a run that had no right to it.                                           |
-
-
-Chunking KB-14
-
-Chunking is a configuration with a measurable effect, so treat it as one: put the values in the config file, change one at a time, and re-run the benchmark after each change.
-
-
-| PARAMETER       | STARTING VALUE                           | WHAT MOVING IT DOES                                                                                                                                                               |
-|-----------------|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| chunk_size      | 700 characters                           | Larger chunks carry more context but dilute the embedding, so a specific symptom matches less sharply. Smaller chunks match sharply but arrive without the surrounding procedure. |
-| chunk_overlap   | 120 characters                           | Stops a resolution step being cut in half at a boundary. Below about 10% of chunk size, procedures start breaking mid-step.                                                       |
-| split_on        | Markdown headings first, then paragraphs | Splitting on headings keeps Symptom, Cause and Resolution intact. Naive fixed-width splitting on these articles measurably hurts -test it once so you can report the number.      |
-| min_chunk_chars | 80                                       | Discards fragments like a lone heading, which otherwise return high similarity and carry no information.                                                                          |
-
-
-A chunk, fully formed
-
-<!-- page: 21 -->
-
-Re-running ingestion must not duplicate anything
-
-NFR-10 at intermediate level requires that re-running ingestion over an unchanged corpus produces no duplicate chunks. Derive the point ID deterministically - for example a UUID5 over article_number + version + chunk_index - and upsert. A random UUID means every ingestion run doubles your collection, your retrieval quality quietly degrades, and the cause is invisible until someone counts the points.
-
-The Qdrant collection KB-15
-
-
-|                 | INTERMEDIATE                                                       | ADVANCED                                                                  |
-|-----------------|--------------------------------------------------------------------|---------------------------------------------------------------------------|
-| Vectors         | One dense vector per point.                                        | Namedvectors: one dense, one sparse, in the same collection.              |
-| Search          | query_points with a dense vector and a metadata filter.            | Dense and sparse prefetch, fused at query time, then reranked.            |
-| Payload indexes | On category , service , state .                                    | The same, plus version and security_level .                               |
-| Persistence     | A Docker volume. The collection must survive docker compose down . | The same. Ingestion is one commandandis reproducible from scratch (D-05). |
-
-
-<!-- page: 22 -->
-
-Reading a retrieval result KB-16
-
-Incident INC0010023, short description 'Cannot connect to VPN since password reset this morning' , category network , service corporate-vpn . Dense-only, top-k 5, published filter applied:
-
-
-|   RANK | ARTICLE   | SECTION    |   SCORE | READ                                                                                      |
-|--------|-----------|------------|---------|-------------------------------------------------------------------------------------------|
-|      1 | KB0001    | Resolution |   0.847 | Correct article, correct section. This is what a good run looks like.                     |
-|      2 | KB0001    | Cause      |   0.812 | Same article, adjacent section. Expected and useful.                                      |
-|      3 | KB0005    | Symptom    |   0.694 | Account lockout. Plausible neighbour -password changes cause both. Not wrong to retrieve. |
-|      4 | KB0009    | Resolution |   0.611 | Wi-Fi on 5 GHz. Category-adjacent noise. Below where it matters.                          |
-|      5 | KB0003    | Symptom    |   0.585 | Shared drive mapping. Noise.                                                              |
-
-
-Top-3 hit rate is your headline metric (FR-20, D-06). Here the expected article is at rank 1, so this incident scores a hit.
-
-Absolute scores are not comparable across embedding models. A 0.847 from one model and a 0.847 from another mean nothing to each other. Your threshold is calibrated for your model and must be recalibrated if you change it.
-
-The gap between rank 1 and rank 3 is more informative than rank 1 alone. A run where the top five all sit between 0.60 and 0.63 is a run with no clear evidence, even though nothing is technically below threshold.
-
-Where dense-only visibly loses - and hybrid wins
-
-Now INC0010031: 'SAP GUI: connection timed out, error RFC_ERROR_COMMUNICATION' . The error token carries almost all the diagnostic signal and almost none of the semantic signal.
-
-
-| CONFIGURATION   |   RANK OF KB0008 | WHY                                                                                                                                             |
-|-----------------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| Dense only      |                4 | RFC_ERROR_COMMUNICATION is close to meaningless in embedding space; the model matches on timeout and connection , which half the corpus shares. |
-
-
-<!-- page: 23 -->
-
-
-| CONFIGURATION       |   RANK OF KB0008 | WHY                                                                                                                                       |
-|---------------------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| Hybrid (RRF fusion) |                2 | Sparse retrieval matches the literal token, which appears in exactly one article.                                                         |
-| Hybrid + rerank     |                1 | The reranker scores the query against each candidate directly and promotes the one that contains both the token and the matching symptom. |
-
-
-Measure this yourself - do not quote it
-
-The numbers above are illustrative of the shape of the effect, not a result you may cite. NFR-08 at advanced level requires that hybrid-plus-rerank outperform the dense-only baseline on your evaluation dataset, by a margin recorded in your evaluation report . That means keeping the dense-only path switchable and running all three configurations over the same benchmark. A team that cannot switch the feature off cannot prove it helped.
-
-The score threshold and the refusal path KB-17
-
-The threshold decides whether a fix is drafted at all. Below it, the system must refuse - set Human Review Required, write an explicit hand-off note, and stop (FR-15).
-
-Run the ten benchmark incidents and record the top score for each. These are your true positives.
-
-Run at least three deliberately out-of-scope incidents - payroll, facilities, a request for a new laptop. Record their top scores. These are your true negatives.
-
-Set the threshold between the two clusters. If they overlap, your retrieval is the problem and no threshold will fix it.
-
-Write the number, the date and the embedding model into the config file, and re-derive it whenever the model or the corpus changes.
-
-What a refusal looks like on the incident
-
-
-| Work note (internal):                                                                                                                                                                    | Work note (internal):                                                                                                                                                                    |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| AI assistant: no matching knowledge article found.                                                                                                                                       | AI assistant: no matching knowledge article found.                                                                                                                                       |
-| Searched the published knowledge base for: "printer in meeting room 4 makes a grinding noise" (category: hardware). Best match scored 0.31 against a threshold of 0.55, so no resolution | Searched the published knowledge base for: "printer in meeting room 4 makes a grinding noise" (category: hardware). Best match scored 0.31 against a threshold of 0.55, so no resolution |
-| Flagged for human Fields written:                                                                                                                                                        | review. Run ID: 7c1f...e402 u_ai_status = escalated u_ai_processed = true u_human_review_required = true u_ai_confidence = 0.31 u_ai_suggested_response = (empty)                        |
-
-
-<!-- page: 24 -->
-
-A refusal is a successful run
-
-It is traced, it is logged, it is counted in your metrics, and it leaves the incident in a clean state with a human flagged. The failure mode is not refusing too often - it is a system that answers everything, because every wrong answer it produces is now carrying your citation format and your confidence score, which is precisely what makes it dangerous.
-
-<!-- page: 25 -->
-
-Part 5 · Reasoning, safety and orchestration
-
-The tool registry KB-18
-
-What the agent can do is defined by what you register, not by what you tell it. This is FR-12 at intermediate level and FR-16 at advanced.
-
-
-| TOOL                   | CLASS          | LEVEL    | CONTRACT                                                                              |
-|------------------------|----------------|----------|---------------------------------------------------------------------------------------|
-| get_incident           | read           | both     | Fetch one incident by sys_id . Returns the fields listed in KB- 05 and nothing else.  |
-| search_knowledge       | read           | both     | Query plus optional filters. Returns top-k chunks with scores and article references. |
-| add_work_note          | low-risk write | both     | Append an internal note. Cannot write to comments .                                   |
-| request_human_revie w  | low-risk write | both     | Set HumanReview Required and record the reason. The escape hatch, always available.   |
-| update_ai_fields       | low-risk write | both     | Write the suggestion and confidence. Scoped to the AI fields only.                    |
-| get_similar_inciden ts | read           | advanced | Optional. Historical resolved incidents as additional evidence.                       |
-| propose_resolution     | high-risk      | advanced | Requires approval. Even then it proposes; it does not close.                          |
-
-
-
-| CLASS          | RULE                                                                                                                                                                                                  |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| read           | Executes freely. Still traced, still counted.                                                                                                                                                         |
-| low-risk write | Executes freely, but only into the AI fields and the internal work-note journal. Nothing customer- visible.                                                                                           |
-| high-risk      | Advanced only. Never executes without a recorded human approval, obtained through a LangGraph interrupt (FR-17). Blocked server-side by the allowlist -the model is never in a position to bypass it. |
-
-
-Tools that must not exist
-
-There is no resolve_incident , no close_incident , no reassign_incident , no email_requester , no run_command and no update_any_field . Not disabled - absent. A mentor will read your tool registry and count. If a dangerous capability is present but guarded by a prompt instruction, that is a fail at both levels.
-
-<!-- page: 26 -->
-
-The generation contract KB-19
-
-The system prompt is a specification, not an incantation. It states the role, the grounding rule, the output shape and the refusal condition, and it does not ask the model politely to be safe.
-
-You are an IT service desk assistant. You draft resolution procedures for incidents, for a human agent to review before use. GROUNDING - Use ONLY the retrieved knowledge articles supplied below. - Every step you write must appear in, or follow directly from, a retrieved chunk. Do not add commands, paths, registry keys, URLs or version numbers that are not present in the retrieved content. - If the retrieved content does not resolve the incident, say so and stop. Do not produce a partial or speculative procedure. OUTPUT - A numbered procedure, each step a single action a Tier-1 agent can perform. - End with: Source: <article_number> - <title> (v<version>), section <section>. - If more than one article contributed, cite each one. - No preamble, no apology, no restatement of the incident. LIMITS - You cannot resolve, close or reassign this incident and must not imply that you have. - You never address the requester. You are writing to a support agent. RETRIEVED CONTENT {{ chunks }} INCIDENT number: {{ number }} short_description: {{ short_description }} description: {{ description }}
-
-Version this prompt and send the version to Langfuse with every run (FR-18 / FR-19). Without it you cannot attribute a quality change to a prompt change.
-
-Put the retrieved content before the incident text. The incident text is untrusted input - see UC-05 - and belongs as far from the instructions as you can put it.
-
-Never interpolate the incident description into an instruction sentence. It goes into a clearly labelled data block, always.
-
-The expected output shape
-
-Confirm with the user that they changed their password within the last 24 hours.
-
-Ask the user to sign out of the VPN client completely, including the system tray icon.
-
-Clear the cached credential for the VPN profile.
-
-Reconnect using the new password.
-
-If authentication still fails, check whether the account is locked in the identity console before escalating.
-
-<!-- page: 27 -->
-
-Confidence KB-20
-
-FR-17 at intermediate level asks for an AI Confidence value and for the documented formula that produced it . The formula matters more than the number: an undocumented confidence score is a number that looks like evidence and is not.
-
-Strength alone is not confidence. Five chunks from five different articles all scoring 0.70 is a weaker signal than two chunks from one article scoring 0.70, because the second case shows agreement.
-
-Margin catches the flat-distribution failure where nothing is below threshold and nothing is clearly right.
-
-Be able to name a case where your formula is wrong. Every reasonable formula has one. Knowing yours is the difference between a heuristic and a superstition.
-
-Guardrails KB-21
-
-Advanced only - FR-18, D-07. Guardrails are deterministic code, positioned so the model cannot route around them.
-
-
-| STAGE   | CHECK                                                                                                 | ACTION ON FAILURE                                                                               |
-|---------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| Input   | Prompt-injection screening of short_description and description against a pattern and classifier set. | Strip or neutralise, mark the run as injection_suspected , and force the human path.            |
-| Input   | Credential and personal-data redaction -passwords, tokens, keys, national IDs, card numbers.          | Redact before the text reaches the model and before it reaches the trace.                       |
-| Input   | Length and encoding bounds.                                                                           | Truncate at a documented limit; reject non- UTF-8.                                              |
-| Output  | Schema validation of the generated object.                                                            | One retry with the validation error appended; then escalate.                                    |
-| Output  | Evidence verification -every step matched back to a retrieved chunk.                                  | Drop unverifiable steps. If more than a configured fraction is dropped, refuse the whole draft. |
-
-
-<!-- page: 28 -->
-
-
-| STAGE   | CHECK                                                                 | ACTION ON FAILURE                                     |
-|---------|-----------------------------------------------------------------------|-------------------------------------------------------|
-| Output  | Tool allowlist, enforced server-side at call time.                    | Block, log, trace, escalate. Never log and continue . |
-| Output  | Secret scan of the generated text before it is written to ServiceNow. | Block the write outright.                             |
-
-
-Your red-team set is a deliverable
-
-D-07 asks for an adversarial test set covering injection, sensitive data and disallowed actions, with the recorded results . Ten to fifteen cases is enough if they are genuinely varied. Run them in CI. A guardrail with no test proving it fires is an assertion, and assertions do not survive Demo Day questioning.
-
-The LangGraph state machine KB-22
-
-Advanced only - FR-11, FR-12, FR-13, FR-17.
-
-The LangGraph state machine (advanced)
-
-Explicit nodes, explicit edges, checkpointed state. An interrupted run resumes; it does not restart.
-
-
-
-
-> [Diagram p.28]
-> ### Workflow Diagram Overview
-> 
-> The diagram illustrates an incident processing graph flow consisting of sequential execution steps on the main left pipeline, branching logic based on risk and confidence, and right-hand side handling states (actions, interrupts, escalations, and dead letters).
-
----
-
-### Sequential Main Pipeline (Left Column)
-
-* **`load`**
-  * **Description:** Fetch the incident by sys_id
-  * **Next Step:** `validate`
-
-* **`validate`**
-  * **Description:** Schema, required fields, eligibility re-check
-  * **Next Step:** `classify`
-
-* **`classify`**
-  * **Description:** Category, service, symptom type
-  * **Next Step:** `determine_risk`
-
-* **`determine_risk`**
-  * **Description:** Risk assessed BEFORE retrieval
-  * **Next Step:** `retrieve`
-  * **Branch Connection:** Points to **`interrupt`** (via orange arrow for high risk or low confidence assessment)
-
-* **`retrieve`**
-  * **Description:** Hybrid search, filters, rerank
-  * **Next Step:** `diagnose`
-
-* **`diagnose`**
-  * **Description:** Reason over the retrieved evidence
-  * **Next Step:** `generate`
-
-* **`generate`**
-  * **Description:** Draft the numbered procedure
-  * **Next Step:** `verify_evidence`
-
-* **`verify_evidence`**
-  * **Description:** Every step traced to a chunk
-  * **Next Step:** `safety_check`
-
-* **`safety_check`**
-  * **Description:** Output schema, tool allowlist, redaction
-  * **Next Step:** `confidence_check`
-
-* **`confidence_check`**
-  * **Description:** Compare against the configured floor
-  * **Branch Connections:**
-    * Points to **`act`** (via green arrow)
-    * Points to **`escalate`** (via cyan arrow)
-
----
-
-### Handling & Execution States (Right Column)
-
-* **`act`**
-  * **Description:** Low-risk write only. Suggestion and work note go back through the Table API.
-  * **Source:** Triggered from **`confidence_check`**
-
-* **`interrupt`**
-  * **Description:** High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.
-  * **Source:** Triggered from **`determine_risk`**
-  * **Next Connection:** Flows into **`resume`** (via dashed blue arrow)
-
-* **`resume`**
-  * **Description:** Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.
-  * **Source:** Follows from **`interrupt`**
-
-* **`escalate`**
-  * **Description:** No safe action available. Human Review Required is set and the run ends with a written reason.
-  * **Source:** Triggered from **`confidence_check`**
-
-* **`dead_letter`**
-  * **Description:** Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks.
-
-
-
-Checkpoint after every node.
-
-Kill a worker between generate and verify_evidence, restart it, and the run continues at verify_evidence. That demo is part of Sprint 4.
-
-Figure 5 - The graph is the design document. If a behaviour is not a node or an edge, it is not in the system.
-
-<!-- page: 29 -->
-
-
-| NODE             | READS                             | WRITES TO STATE                 | CAN END THE RUN                           |
-|------------------|-----------------------------------|---------------------------------|-------------------------------------------|
-| load             | sys_id                            | incident record                 | yes -notfound, or ineligible on re- check |
-| validate         | incident                          | validation verdict              | yes -required fields missing              |
-| classify         | incident text                     | category, service, symptom type | no                                        |
-| determine_risk   | classification, priority, service | risk level                      | yes -high risk routes to thehuman path    |
-| retrieve         | query, filters                    | chunks with scores              | yes -nothing above threshold              |
-| diagnose         | chunks                            | diagnosis                       | no                                        |
-| generate         | chunks, diagnosis                 | draft procedure                 | no                                        |
-| verify_evidence  | draft, chunks                     | per-step verdicts               | yes -too much unverifiable                |
-| safety_check     | draft                             | safety verdict                  | yes -blocked                              |
-| confidence_check | scores, verdicts                  | confidence                      | yes -belowfloor raises an interrupt       |
-
-
-Why risk is determined before retrieval
-
-Because retrieval and generation cost money, latency and exposure. If a Priority 1 incident on a production payments service is going to a human regardless of what the knowledge base says, there is no reason to have spent a model call finding out. Determining risk early is a design decision you will be asked to justify - the answer is that it keeps the expensive path off the incidents that were never eligible for automation.
-
-Checkpointing, demonstrated
-
-NFR-03 requires that a worker killed mid-execution recovers on retry from its checkpoint without duplicating a write or leaving an incident inconsistent - and that you show it live. See UC-06 for the exact procedure.
-
-<!-- page: 30 -->
-
-The decision ladder
-
-Three gates stand between a retrieved chunk and a written suggestion. Any one of them can stop the run.
-
-
-
-
-> [Diagram p.30]
-> **GATE 1**  
-> ### Evidence  
-> Did any chunk clear the score threshold?  
->  
-> ➔  
->  
-> **GATE 2**  
-> ### Risk  
-> Is this a high-risk category, service or action?  
->  
-> ➔  
->  
-> **GATE 3**  
-> ### Confidence  
-> Is the derived confidence above the floor?  
-
----
-
-### OUTCOMES
-
-* **Suggest**  
-  All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.
-
-* **Escalate to a human**  
-  Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.
-
-* **Refuse and hand off**  
-  No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here.
-
-
-
-<!-- page: 31 -->
-
-Part 6 · Worked use cases
-
-Eight scenarios, each traced from trigger to artefact. These are the runs your mentors will ask you to reproduce live, so build against them from Sprint 2 onward rather than discovering them in Sprint 4.
-
-Every use case follows the same shape: what happens, what the system must do, what evidence it must leave behind, and the mistakes that make it fail. The incident numbers are the ones used in the benchmark set in Appendix B, so a use case and a benchmark row refer to the same thing.
-
-The happy path - a VPN failure resolved from the knowledge base UC-01
-
-APPLIES TO Both levels
-
-INC0010023. A finance user raises: 'Cannot connect to VPN since password reset this morning. Client says authentication failed.' Category network , service corporate-vpn , priority 3. This is the run you demo first, and the one everything else is a deviation from.
-
-What must happen
-
-
-|   # | STEP                                                                                                                                     | EVIDENCE IT LEFT                                                                                  |
-|-----|------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-|   1 | Business Rule fires on insert. Eligibility passes: active, AI- enabled, unprocessed, category supported.                                 | gs.info line in the ServiceNow system log with the incident number and the response code.         |
-|   2 | RESTMessageV2 posts the minimal event. Four identifiers, nothing else.                                                                   | The outbound request body, viewable in the log. A mentor will check the description is not in it. |
-|   3 | Webhook authenticates, validates, claims event_id , PATCHes u_ai_status = in_progress , returns 202 in under a second.                   | 202 in the service log; AI Status visibly in_progress on the form before the suggestion appears.  |
-|   4 | Background task or Celery worker loads the incident through the Table API as the integration user.                                       | Langfuse span for the load, with latency.                                                         |
-|   5 | Retrieval: query built from short description plus description, filtered to published articles in network / corporate-vpn .              | Retrieval span listing the top-k chunks with scores- KB0001 Resolution at rank 1 (see KB-16).     |
-|   6 | Threshold cleared. Generation produces a numbered procedure citing KB0001 v2, section Resolution.                                        | Generation span with prompt version, token counts and the output.                                 |
-|   7 | Write-back: one PATCH setting suggestion, confidence, u_ai_processed = true , u_human_review_required = true , u_ai_status = suggested . | The form. And exactly one PATCH -nottwo.                                                          |
-|   8 | A service desk agent opens the incident, reads the cited procedure, and approves, edits or rejects it.                                   | Nothing automatic. The human is the last step, always.                                            |
-
-
-<!-- page: 32 -->
-
-What the agent must see on the form
-
-
-| AI Status:                                                                                                       | suggested                                                                                                        |
-|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| AI Confidence:                                                                                                   | 0.79                                                                                                             |
-| Human Review Required:                                                                                           | true                                                                                                             |
-| AI Suggested Response:                                                                                           | AI Suggested Response:                                                                                           |
-| 1. Confirm with the user that they changed their password within the last 24 hours.                              | 1. Confirm with the user that they changed their password within the last 24 hours.                              |
-| 2. Ask the user to sign out of the VPN client completely, including the system tray icon.                        | 2. Ask the user to sign out of the VPN client completely, including the system tray icon.                        |
-| 3. Clear the cached credential for the VPN profile.                                                              | 3. Clear the cached credential for the VPN profile.                                                              |
-| 4. Reconnect using the new password.                                                                             | 4. Reconnect using the new password.                                                                             |
-| 5. If authentication still fails, check whether the account is locked in the identity console before escalating. | 5. If authentication still fails, check whether the account is locked in the identity console before escalating. |
-| Source: KB0001 - VPN authentication fails after a password change (v2), section Resolution.                      | Source: KB0001 - VPN authentication fails after a password change (v2), section Resolution.                      |
-
-
-Where this goes wrong
-
-
-| SYMPTOM                                                                | CAUSE                                                       | FIX                                                                                             |
-|------------------------------------------------------------------------|-------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| Suggestion appears, then a second identical one appears seconds later. | The write-back re-triggered the Business Rule.              | KB-07. Set u_ai_processed in the same PATCH and exclude AI-field-only updates from the trigger. |
-| Procedure contains a step that is nowhere in KB0001.                   | Model filled a gap. Grounding is a prompt instruction only. | KB-19 plus, at advanced level, evidence verification (KB-21).                                   |
-| Citation says KB0001 but no version.                                   | Version dropped during chunking.                            | KB-13. Every chunk carries the full payload.                                                    |
-| Suggestion is correct but appears in Additional comments .             | Wrote to comments instead of work_notes .                   | KB-05. This is customer-visible. It is a serious failure, not a cosmetic one.                   |
-| 202 takes eight seconds.                                               | Retrieval is happening on the request thread.               | KB-11. Dispatch first, reason later.                                                            |
-
-
-Nothing in the knowledge base - the refusal UC-02
-
-APPLIES TO Both levels
-
-INC0010047. 'The printer in meeting room 4 makes a grinding noise when it feeds paper.' Category hardware . Your corpus contains a printer article - KB0004, about stuck print queues - and nothing at all about mechanical faults. The correct behaviour is to refuse.
-
-What must happen
-
-The event is emitted and accepted normally. Eligibility passed hardware is a supported category, and it should be.
-
-<!-- page: 33 -->
-
-Retrieval runs. KB0004 comes back at rank 1 with a score of about 0.31, because both texts mention a printer and nothing else matches.
-
-The threshold gate (KB-17) rejects it. No generation call is made. This is the point most teams miss: refusing after paying for a model call is not refusing, it is failing quietly and expensively.
-
-A hand-off work note is written in the shape shown in KB-17, naming what was searched, the best score and the threshold.
-
-u_ai_status = escalated , u_ai_processed = true , u_human_review_required = true , u_ai_confidence = 0.31 , suggestion field left empty.
-
-A Langfuse trace exists for the run, showing the retrieval span and an explicit refusal outcome - not an error, and not an empty success.
-
-This is a required Demo Day artefact
-
-D-07 at intermediate level asks for traces from at least ten complete runs including one deliberate no-answer case . Do not manufacture it in the last week by deleting articles. Keep an out-of-scope incident in your benchmark from Sprint 3 and run it every time.
-
-Where this goes wrong
-
-The model is asked anyway and produces a confident procedure for a mechanical fault out of thin air. This is the most dangerous failure in the whole project, because it is the one that looks most like success.
-
-The refusal is silent. No note, no field change, nothing on the form. The agent has no idea the system saw the incident. Refusal without communication is indistinguishable from a broken integration.
-
-The run is recorded as an error. It is not. A 500 in your metrics for a correct refusal will destroy your reliability numbers and hide the real errors underneath.
-
-Confidence is left null. Write it. 0.31 is a real measurement and it is exactly what the reviewing agent needs in order to trust the refusal.
-
-The same event twice - replay and duplicate UC-03
-
-APPLIES TO Both levels
-
-The same event is delivered twice. This happens for ordinary reasons: a network retry, a Business Rule firing on both insert and a near-simultaneous update, or someone re-running a test. Your system must handle it without producing two suggestions.
-
-Three variants, three correct behaviours
-
-
-| VARIANT                 | WHAT ARRIVES                                                   | CORRECT BEHAVIOUR                                                                                                                   |
-|-------------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| True replay             | Identical event_id .                                           | 202 Accepted, discarded, nothing dispatched, nothing written. One trace or a log line -notanerror.                                  |
-| Newevent, same incident | Different event_id , same sys_id , incident genuinely updated. | Process it. This is legitimate. If your key is derived from sys_id you will wrongly drop it -see KB-10.                             |
-| Concurrent duplicate    | Two identical events in the same millisecond.                  | Exactly one wins. The atomic ON CONFLICT DO NOTHING ... RETURNING in KB-12 is what makes this true; a read-then-write check is not. |
-
-
-<!-- page: 34 -->
-
-How to demonstrate it
-
-A high-risk incident stops for a human UC-04
-
-APPLIES TO Advanced only
-
-INC0010052. 'Order service returning 500s, connection pool exhausted.' Priority 1, business service orderprocessing , category software . KB0010 covers exactly this and scores 0.88. Everything about the retrieval is excellent - and the run must still stop.
-
-What must happen
-
-classify assigns category software , service order-processing .
-
-determine_risk runs before retrieval and returns high , on two independent signals: priority 1, and a business service on the high-risk list.
-
-The high-risk edge routes away from the automated path (FR-13). Whether you retrieve anyway to give the approver evidence is your design decision - document it either way.
-
-An interrupt is raised. The graph state is checkpointed. The run is now paused , not failed, not finished.
-
-The approval payload presents: the incident, the retrieved evidence with scores, the draft procedure, the risk verdict and the confidence. Everything the approver needs to decide, in one place.
-
-A row is written to the approvals table in PostgreSQL and an AI Execution Log record is written with status awaiting_approval .
-
-A human approves or rejects. The decision is persisted first .
-
-resume continues from the checkpoint. On approval the suggestion is written; on rejection the run ends with escalated and the recorded reason.
-
-The approval must be recorded before the action, not after
-
-If your service writes to ServiceNow and then records the approval, then a crash between the two leaves a write that nobody authorised and no record that anyone did. Persist the decision, then act on it. NFR-05 requires that every blocked run is auditable end to end, and 'we wrote it and then the database went down' is not an audit trail.
-
-<!-- page: 35 -->
-
-What counts as high risk
-
-
-| SIGNAL           | EXAMPLE                                                                   | WHY                                                                                                   |
-|------------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| Priority         | P1, or P2 on a customer-facing service.                                   | Blast radius. A wrong suggestion on a P1 costs more than the time it saved.                           |
-| Business service | Payments, identity, production databases.                                 | Some services are never candidates for automation regardless of how good the answer looks.            |
-| Action class     | The procedure would restart a service, change a permission or touch data. | Read-only fixes and destructive fixes are not the same category of suggestion.                        |
-| Uncertainty      | Confidence below the floor, or evidence spread across unrelated articles. | Low confidence on a low-risk incident is a refusal; low confidence on anything else is an escalation. |
-
-
-Prompt injection in the incident description UC-05
-
-APPLIES TO Advanced required, intermediate should understand it
-
-A requester - or someone who has compromised a requester's account - raises an incident whose description contains instructions aimed at your agent rather than a description of a fault.
-
-Why this fails safely, in layers
-
-
-| LAYER                | WHAT STOPS IT                                                                                                                                                                                                                                    |
-|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 · Tool registry    | There is no tool that can resolve an incident, and no tool that can read environment variables. The most persuasive instruction in the world cannot call a function that was never registered. This layer alone stops the attack at both levels. |
-| 2 · Input guardrail  | Injection screening flags the imperative pattern, the role-switch marker and the request for configuration. The run is marked injection_suspected and forced onto the human path. Advanced.                                                      |
-| 3 · Prompt structure | The description sits inside a clearly delimited data block at the end of the prompt, after the retrieved content, never interpolated into an instruction sentence (KB-19).                                                                       |
-
-
-<!-- page: 36 -->
-
-
-| LAYER                | WHAT STOPS IT                                                                                                                                                                             |
-|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 4 · Output guardrail | Evidence verification finds no retrieved chunk supporting 'set resolution code', and the secret scanner blocks any generated text resembling a credential before it is written. Advanced. |
-| 5 · Least privilege  | Even a successful call would fail: the integration user has no permission to close an incident. Attempt it and ServiceNow returns 403 (KB-09).                                            |
-
-
-The correct outcome
-
-The genuine symptom - a laptop that will not wake - is still handled. Do not discard the incident; an injection attempt does not mean there is no real fault underneath.
-
-A work note records that the description contained content flagged as an instruction attempt, without reproducing the injected text verbatim in a place a future run might re-read.
-
-u_human_review_required = true , and at advanced level u_ai_failure_reason = injection_suspected .
-
-The trace records the guardrail decision. This case belongs in your red-team set (D-07) with its result recorded.
-
-The worker dies mid-run UC-06
-
-APPLIES TO Advanced only
-
-A Celery worker is killed between generate and verify_evidence . NFR-03 requires the run to recover on retry from its checkpoint, without duplicating a write and without leaving the incident inconsistent demonstrated live at Demo Day.
-
-The demonstration, step by step
-
-<!-- page: 37 -->
-
-What each part of the stack must contribute
-
-
-| COMPONENT              | CONTRIBUTION                                                                                                                                                                                                     |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Redis / Celery         | acks_late = True so the message is only acknowledged after the task completes. Without it, the job vanishes when the worker dies and there is nothing to recover.                                                |
-| LangGraph checkpointer | State persisted after every node, keyed by execution ID. The resumed run reads the checkpoint and skips completed nodes.                                                                                         |
-| PostgreSQL             | Holds both the checkpoints and the execution record, so the state survives a full stack restart.                                                                                                                 |
-| Idempotent writes      | The write-back must be safe to attempt twice, because a crash after the ServiceNow PATCH but before the acknowledgement is a real scenario. Check the field state before writing, or make the write conditional. |
-
-
-The inconsistent state you must not leave
-
-An incident stuck at u_ai_status = in_progress forever, because the run that claimed it died and nothing ever released the claim. Give the claim a timeout: a run older than a configured window is reclaimable. Say what your window is and why. This is the follow-up question after the crash demo, and it catches most teams.
-
-Ambiguous and multi-service incidents UC-07
-
-APPLIES TO Both levels
-
-INC0010064. 'Nothing works this morning - can't get email, shared drive is gone, and Teams keeps asking me to sign in.' Three symptoms, three services, one incident. Retrieval returns chunks from KB0002, KB0003 and KB0005 with similar middling scores.
-
-The judgement call, and how to make it defensible
-
-
-| OPTION                                                 | WHEN IT IS RIGHT                                                   | RISK                                                                                                                                              |
-|--------------------------------------------------------|--------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| Answer the strongest single symptom                    | One symptom clearly dominates the scores and the others are noise. | You solve a third of the incident and the agent has to work out that the other two thirds are unaddressed.                                        |
-| Answer all three, cited separately                     | Each symptom has strong, distinct evidence.                        | A long procedure that mixes three unrelated fixes is harder to review than three short ones.                                                      |
-| Refuse and hand off, naming what you saw - recommended | Scores are flat and middling, which is exactly this case.          | None, and it is the honest answer. Flat scores across unrelated articles is precisely the signal your confidence formula (KB-20) exists to catch. |
-
-
-Whichever you choose, the work note must say what the system observed - that it detected three distinct symptoms across three services and could not attribute them to one cause. That single sentence is worth more to the reviewing agent than a partial procedure would be, because it tells them the pattern is simultaneous multi-service failure , which is itself a diagnosis.
-
-<!-- page: 38 -->
-
-The pattern behind this incident
-
-Simultaneous authentication failures across email, file shares and collaboration tools usually mean one thing: the account is locked, or a credential expired. That is KB0005. Whether your system can reach that conclusion from three symptoms is a fair measure of how good your retrieval and reasoning actually are - and it makes a strong Demo Day moment if it can.
-
-A retired article must never reach a live incident UC-08
-
-APPLIES TO Both levels
-
-KB0010 exists in two versions. Version 1 is retired and instructs the agent to restart the application server directly. Version 2 is published and instructs them to raise a change request instead, because the direct restart caused an outage in March. Both are in your corpus. Only one may ever be retrieved.
-
-What must happen
-
-The metadata filter state == 'published' is applied at query time, as a hard filter, by default (FR-11).
-
-Version 1 is never a candidate. Not ranked low - not present.
-
-The suggestion cites KB0010 (v2) . The version in the citation is what lets a reviewer confirm which revision was used.
-
-If a team also filters on version , the filter must track the current version rather than a hard-coded number, or the next revision silently disappears from retrieval.
-
-How to prove it in ten seconds
-
-Why this use case exists
-
-Every knowledge base contains procedures that were correct once and are now dangerous. Retrieval that ignores lifecycle state will find them, because they are well written and semantically perfect matches. The filter is not a refinement; it is the thing standing between your system and confidently recommending the exact action that caused the last outage.
-
-<!-- page: 39 -->
-
-Part 7 · Evidence and evaluation
-
-The shared benchmark set KB-23
-
-Ten evaluation incidents with their expected source articles, plus three negative controls that must be refused. Every team runs the same set, so numbers are comparable across teams and across the two levels. Appendix B carries the machine-readable version; Appendix A carries the articles.
-
-
-| INCIDENT   | SHORT DESCRIPTION                                       | CATEGORY   | EXPECTED ARTICLE   | TESTS                                  |
-|------------|---------------------------------------------------------|------------|--------------------|----------------------------------------|
-| INC0010023 | Cannot connect to VPN since password reset this morning | network    | KB0001             | The happy path (UC-01)                 |
-| INC0010024 | Outlook stuck on Disconnected, no mail since 08:00      | software   | KB0002             | Service-wide outage vs single user     |
-| INC0010025 | Shared drive S: missing after I logged in today         | network    | KB0003             | Mapping vs permissions ambiguity       |
-| INC0010026 | Print jobs queue up and nothing comes out               | hardware   | KB0004             | Straightforward procedural match       |
-| INC0010027 | Account locked, cannot sign in anywhere                 | inquiry    | KB0005             | Identity path, adjacent to KB0001      |
-| INC0010028 | Replaced myphone, MFA no longer works                   | inquiry    | KB0006             | High-risk identity change              |
-| INC0010029 | Laptop very slow since the update last night            | hardware   | KB0007             | Vague symptom, weak retrieval signal   |
-| INC0010031 | SAP GUI: connection timed out, RFC_ERROR_COMMUNICATION  | software   | KB0008             | Error token -dense vs hybrid (KB-16)   |
-| INC0010033 | Wi-Fi keeps dropping on the 5 GHz network               | network    | KB0009             | Near-duplicate wording across articles |
-| INC0010052 | Order service returning 500s, connection pool exhausted | software   | KB0010 v2          | High risk + retired-version filter     |
-| INC0010047 | Printer in meeting room 4 makes a grinding noise        | hardware   | -none-             | Must refuse (UC-02)                    |
-| INC0010048 | When will myexpense claim from March be paid?           | inquiry    | -none-             | Must refuse -outof domain              |
-| INC0010049 | Please order measecond monitor for mydesk               | inquiry    | -none-             | Must refuse -arequest, not an incident |
-
-
-<!-- page: 40 -->
-
-The negative controls are not optional
-
-Three of the thirteen rows have no correct answer. A system evaluated only on incidents it can solve will be tuned until it always answers, which is the exact failure mode the threshold exists to prevent. Report hit rate on the ten and refusal rate on the three, separately. A team reporting 10/10 without saying what happened to the negative controls has reported half a result.
-
-Metrics, defined KB-24
-
-
-| METRIC                  | DEFINITION                                                                                                                                                                                                      | WHERE REQUIRED            |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------|
-| Top-3 hit rate          | Proportion of the ten answerable incidents where the expected article appears in the top three retrieved results. Article-level, not chunk-level -three chunks from the right article is a hit, not three hits. | FR-20, D-06 · both levels |
-| Refusal correctness     | Proportion of the three negative controls correctly refused, and of the ten answerable incidents not refused. Report both directions.                                                                           | FR-15 · both levels       |
-| Faithfulness            | Proportion of generated steps supported by at least one retrieved chunk. Scored by an LLM judge with the chunks in context.                                                                                     | FR-20 · advanced          |
-| Context relevance       | Proportion of retrieved chunks actually relevant to the query. Low relevance with a high hit rate means top-k is too large.                                                                                     | FR-20 · advanced          |
-| Hallucination rate      | Proportion of runs containing at least one unsupported claim. The inverse of faithfulness at run level rather than step level.                                                                                  | FR-20 · advanced          |
-| Classification accuracy | Agreement between the classify node's category and the ground- truth category.                                                                                                                                  | FR-20 · advanced          |
-| Escalation correctness  | Proportion of runs where escalating (or not) was the right call, judged against the expected outcome column.                                                                                                    | FR-20 · advanced          |
-| Tool-selection accuracy | Proportion of tool calls that were the right tool for the step.                                                                                                                                                 | FR-20 · advanced          |
-| p95 end-to-end latency  | Event accepted to incident updated, at the 95th percentile, measured from traces.                                                                                                                               | NFR-01/02 · both levels   |
-
-
-The report that satisfies D-06 and D-08
-
-<!-- page: 41 -->
-
-The interpretation is the part that is marked. A table of numbers with no reading of what they mean is a log file, not a report. Say which incidents moved, why you think they moved, and what you would change next.
-
-The trace checklist KB-25
-
-NFR-08 (intermediate) and NFR-07 (advanced) set the same bar in different words: a mentor must be able to reconstruct any run from its trace alone, without executing your code. Open one of your traces and check.
-
-
-| PRESENT IN THE TRACE?                                   | INTERMEDIATE    | ADVANCED   |
-|---------------------------------------------------------|-----------------|------------|
-| Event ID and incident number                            | required        | required   |
-| Prompt version                                          | required        | required   |
-| Retrieval query as sent, plus every filter applied      | required        | required   |
-| Every retrieved chunk with its score and article number | required        | required   |
-| Generation input and output                             | required        | required   |
-| Token counts and latency                                | required        | required   |
-| Cost                                                    | recommended     | required   |
-| A span per graph node                                   | -               | required   |
-| Every tool call with its arguments and result           | recommended     | required   |
-| Risk verdict, safety verdict, confidence                | confidence only | all three  |
-| Guardrail decisions, including ones that passed         | -               | required   |
-| Errors with stack context                               | required        | required   |
-| Nosecrets, no credentials, no requester PII             | required        | required   |
-
-
-Definition of done, by sprint KB-26
-
-Condensed from both PRDs. The full wording, and the requirement traceability, live in your own level's document - this is the checklist, not the contract.
-
-<!-- page: 42 -->
-
-
-| SPRINT                   | INTERMEDIATE                                                                                                                                                                                   | ADVANCED                                                                                                                                                                                |
-|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 · Platform             | An incident moves through its lifecycle live; the AI fields render on the form; the integration user can read an incident and write a work note, and can do nothing else.                      | The scoped app exports cleanly as an update set; an execution log record can be written by the OAuth identity; no admin credential exists anywhere in the repository or configuration.  |
-| 2 · Event integration    | An eligible incident produces a 202 in the service log within a second; the same event fired twice produces exactly one downstream execution; an ineligible incident produces no event at all. | 202 within 500 msat p95; the same event twice produces exactly one execution; a job that keeps failing lands in the dead-letter path rather than looping.                               |
-| 3 · Retrieval& reasoning | A live incident goes from creation to a cited suggestion with no human step in between; a deliberately out-of-scope incident produces a hand-off note and no fix.                              | A live incident runs the full graph to a cited draft; a high-risk incident stops at the risk node; killing the process mid-run and retrying resumes from the checkpoint.                |
-| 4 · Trust& hardening     | A mentor can reconstruct any run from its trace alone; the benchmark report exists with numbers in it; the stack starts on a clean machine with no undocumented steps.                         | No high-risk action reaches ServiceNow without a recorded approval; a deliberately regressed prompt fails the CI evaluation gate; a killed worker recovers without duplicating a write. |
-
-
-<!-- page: 43 -->
-
-Part 8 · Operating guide
-
-Configuration reference KB-27
-
-NFR-06 (intermediate) requires that chunk size, overlap, top-k, score threshold, model names and the idempotency window live in one configuration file. Not scattered through the code, and not hard-coded next to the call that uses them.
-
-
-| ENVIRONMENT VARIABLE                          | PURPOSE                                                   |
-|-----------------------------------------------|-----------------------------------------------------------|
-| SN_INSTANCE_URL                               | Your PDI base URL.                                        |
-| SN_INTEGRATION_USER / SN_INTEGRATION_PASSWORD | Intermediate. The dedicated non-admin account from KB-09. |
-
-
-<!-- page: 44 -->
-
-
-| ENVIRONMENT VARIABLE                                      | PURPOSE                                                     |
-|-----------------------------------------------------------|-------------------------------------------------------------|
-| SN_OAUTH_CLIENT_ID / SN_OAUTH_CLIENT_SECRET               | Advanced.                                                   |
-| WEBHOOK_SECRET                                            | Shared with the Business Rule; used for the HMACsignature.  |
-| QDRANT_URL / QDRANT_API_KEY                               | Vector store.                                               |
-| LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY / LANGFUSE_HOST | Observability.                                              |
-| DATABASE_URL                                              | PostgreSQL. Optional at intermediate; required at advanced. |
-| REDIS_URL                                                 | Advanced only.                                              |
-| LLM_API_KEY / LLM_MODEL / EMBEDDING_MODEL                 | Model access, supplied by Sprints.                          |
-
-
-The local stack KB-28
-
-NFR-07 (intermediate) and NFR-10 (advanced): the whole stack comes up on a clean machine from one Docker Compose command plus the README, with no undocumented manual steps. A mentor will test this by cloning your repository onto a machine that has never seen it.
-
-
-| SERVICE   | INTERMEDIATE   | ADVANCED   | NOTES                                                                      |
-|-----------|----------------|------------|----------------------------------------------------------------------------|
-| api       | yes            | yes        | FastAPI. The webhook and, at intermediate level, the background execution. |
-| qdrant    | yes            | yes        | Persisted to a named volume. The collection must survive a restart.        |
-| langfuse  | yes            | yes        | Self-hosted or cloud. Either is fine; say which in the README.             |
-| postgres  | optional       | yes        | Idempotency at minimum; the full state store at advanced.                  |
-| redis     | -              | yes        | Broker for Celery.                                                         |
-| worker    | -              | yes        | Celery worker. This is the container you kill in UC-06.                    |
-
-
-The README your reviewer expects
-
-Prerequisites, with versions.
-
-cp .env.example .env and a table explaining every variable.
-
-docker compose up -d .
-
-One command to ingest the corpus.
-
-One command to run the benchmark.
-
-One command to run the tests.
-
-<!-- page: 45 -->
-
-The ServiceNow side: which update set to import, which system properties to set, how to point the Business Rule at your endpoint.
-
-The architecture diagram (D-09 / D-10).
-
-Troubleshooting KB-29
-
-
-| SYMPTOM                                          | LIKELY CAUSE                                                                   | WHAT TO DO                                                                                                                                                 |
-|--------------------------------------------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Business Rule never fires.                       | Condition too narrow, rule inactive, or when set to before on a query.         | Add a gs.info as the first line of the rule. If it does not appear, the rule is not running; if it does, your eligibility logic is rejecting the incident. |
-| Rule fires, no request reaches the service.      | Instance cannot reach your endpoint.                                           | A PDI cannot call localhost . Expose the service with a tunnel and put the public URL in a system property, never hard-coded in the rule.                  |
-| 401 on every event.                              | Signature computed over a re- serialised body.                                 | HMACthe raw bytes on both sides. Any re-serialisation reorders keys and changes the digest.                                                                |
-| 422 on every event.                              | Field name or type mismatch.                                                   | Log the raw body and diff it against KB-10. Usually event_type casing or a null emitted_at .                                                               |
-| Endless loop of suggestions.                     | The write-back re-triggers the rule.                                           | KB-07. All three defences.                                                                                                                                 |
-| Two suggestions from one incident.               | Insert and update both fired, or the idempotency check is read-then- write.    | KB-12. Atomic claim.                                                                                                                                       |
-| Retrieval returns nothing.                       | Filter mismatch- Network vs network , or the collection is empty.              | Run the query with no filter. If results appear, the filter is wrong; if not, re-check ingestion actually wrote points.                                    |
-| Retrieval returns everything at a similar score. | Chunks too large, or the query is the whole description including boilerplate. | KB-14. Reduce chunk size; build the query from the short description plus the meaningful part of the description.                                          |
-| Collection doubles after every ingest.           | Random point IDs.                                                              | KB-14. Deterministic IDs and upsert.                                                                                                                       |
-| Suggestion contains invented commands.           | Grounding enforced only in the prompt.                                         | KB-19, and at advanced level evidence verification (KB- 21).                                                                                               |
-| Confidence is always 1.0 or always 0.0.          | Formula reads a score that is not normalised, or an empty hit list.            | KB-20. Print the inputs to the formula for one run and check them by hand.                                                                                 |
-| Langfuse traces are empty or missing.            | Client not flushed before the process exits.                                   | Flush explicitly at the end of the task. Short-lived workers exit before the background flush runs.                                                        |
-| Secrets visible in a trace.                      | Whole request or whole incident logged as a span input.                        | Redact at the boundary, before the trace call. NFR-04 / NFR-06.                                                                                            |
-| u_ai_status stuck at in_progress .               | The run that claimed it died.                                                  | UC-06. Implement a claim timeout and state the window.                                                                                                     |
-
-
-<!-- page: 46 -->
-
-
-| SYMPTOM                     | LIKELY CAUSE                                            | WHAT TO DO                                                                              |
-|-----------------------------|---------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| Celery job retried forever. | No retry limit, or a non-retryable error being retried. | Bounded retries with exponential backoff, then dead- letter. FR-10.                     |
-| PDI unreachable.            | Hibernated.                                             | Log in to wake it. Log in weekly. Nominate one person to keep the build instance alive. |
-
-
-Frequently asked KB-30
-
-Can we poll ServiceNow just for the demo, if the webhook is flaky?
-
-No. It is a Must requirement at both levels and it is the first thing a reviewer looks for. If your webhook is flaky, fix the webhook - the usual cause is the endpoint not being reachable from the instance, which is a tunnel problem, not an architecture problem.
-
-Can the agent resolve an incident if it is very confident?
-
-No. There is no confidence level at which the agent gains a capability it does not have. At advanced level a highrisk action can execute after a recorded human approval - that is a human decision, not a model decision.
-
-Our top-3 hit rate is 6/10. Is that a fail?
-
-The intermediate goal is 8 of 10. Six is a signal to work on retrieval, not a reason to enlarge the corpus or reword the incidents. Start by checking chunking (KB-14), then filters (KB-13), then top-k. Report honestly - a team that reports 6/10 with a clear diagnosis of why scores better than a team that reports 10/10 with no method.
-
-Can we use a different vector database or a different framework?
-
-No. Qdrant, PostgreSQL, Redis and Langfuse are locked across both levels, and Langfuse specifically rather than LangSmith. The stack is fixed so that teams can help each other, mentors can review consistently, and BARQ can read one architecture rather than thirty.
-
-Do we need Kubernetes?
-
-No. It is explicitly excluded at both levels. Docker Compose locally and, at advanced level, a GitHub Actions pipeline that builds a deployable image.
-
-How much of the knowledge base do we have to write ourselves?
-
-Appendix A is the shared corpus and every team uses it, so benchmark numbers are comparable. You may add articles of your own on top, but the ten reference articles must be present and unmodified, and your benchmark must be reported against them.
-
-What if BARQ supplies real runbooks?
-
-Then you index those in addition, keep the reference corpus for benchmarking, and report both sets of numbers. Real content is more valuable and messier - which is the point. The dependency is tracked on the Sprints side; do not block on it.
-
-<!-- page: 47 -->
-
-Who is allowed to approve a suggestion in our demo?
-
-Any human on the team, acting in the service desk agent role in ServiceNow. What matters is that the approval is a genuine interaction with the platform and that it is recorded - not that a real BARQ agent performs it.
-
-<!-- page: 48 -->
-
-Appendix A · The reference knowledge corpus
-
-Ten articles. Every team indexes exactly these, unmodified, so that benchmark numbers mean the same thing everywhere. Load them into your PDI knowledge base and into your Qdrant collection.
-
-Each article below is given in the format specified in KB-13. The metadata block is part of the article: preserve every field on every chunk you derive from it. KB0010 is deliberately supplied in two versions - v1 retired, v2 published - to exercise the lifecycle filter (UC-08).
-
-KB0001 - VPN authentication fails after a password change
 
 Symptom. The user can reach the internet but the VPN client reports an authentication failure. It began after a password reset. The client may report 'invalid credentials' even when the new password is entered correctly.
 
@@ -1555,19 +554,41 @@ Ask the user to sign out of the VPN client completely, including the system tray
 
 Clear the cached credential for the VPN profile from the credential store.
 
+<!-- page: 19 -->
+
 Reconnect using the new password.
 
 If authentication still fails, check whether the account is locked in the identity console before escalating.
 
 Escalation. If the account is not locked and the new password works elsewhere, escalate to the Network team with the client log.
 
-KB0002 - Outlook shows Disconnected and no mail is delivered
+6.5 KB0002 -Outlook shows Disconnected and no mail is delivered
 
-<!-- page: 49 -->
+
+
+
+> [Diagram p.19]
+| KB0002 | OUTLOOK SHOWS DISCONNECTED AND NO MAIL IS DELIVERED | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 3 |
+| **Service** | `corporate-email` | **Category** | software |
+| **Owner** | Collaboration Services | **Author** | O. Sabry |
+| **Reviewed** | 02 Feb 2026 | **Uses, 12 mo** | 947 · **Related** INC0010024 |
+
+
+
+
+| KB0002   | OUTLOOKSHOWSDISCONNECTEDANDNO MAIL IS DELIVERED   | OUTLOOKSHOWSDISCONNECTEDANDNO MAIL IS DELIVERED   | OUTLOOKSHOWSDISCONNECTEDANDNO MAIL IS DELIVERED   |
+|----------|---------------------------------------------------|---------------------------------------------------|---------------------------------------------------|
+| State    | Published                                         | Version                                           | 3                                                 |
+| Service  | corporate-email                                   | Category                                          | software                                          |
+| Owner    | Collaboration Services                            | Author                                            | O. Sabry                                          |
+| Reviewed | 02 Feb 2026                                       | Uses,12mo                                         | 947 · Related INC0010024                          |
+
 
 Symptom. The mail client displays Disconnected or Trying to connect. No new mail arrives. Webmail may still work, or may not.
 
-Cause. Two distinct causes present identically: a single-user profile or cached-mode corruption, and a servicewide mail outage. Distinguishing them is the first step, not an afterthought.
+Cause. Two distinct causes present identically: a single-user profile or cached-mode corruption, and a service-wide mail outage. Distinguishing them is the first step, not an afterthought.
 
 Resolution.
 
@@ -1583,7 +604,31 @@ Confirm mail flow before closing.
 
 Escalation. If multiple users are affected, raise a major incident against the corporate-email service. Do not resolve individual incidents until the service event is closed.
 
-KB0003 - Mapped shared drive is missing after sign-in
+6.6 KB0003 -Mapped shared drive is missing after sign-in
+
+
+
+
+> [Diagram p.19]
+# KB0003 | MAPPED SHARED DRIVE IS MISSING AFTER SIGN-IN
+
+| | | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 2 |
+| **Service** | `file-services` | **Category** | network |
+| **Owner** | Infrastructure | **Author** | L. Haddad |
+| **Reviewed** | 19 Jan 2026 | **Uses, 12 mo** | 612 · **Related** INC0010025 |
+
+
+
+
+| KB0003   | MAPPEDSHAREDDRIVEIS MISSING AFTER SIGN-IN   | MAPPEDSHAREDDRIVEIS MISSING AFTER SIGN-IN   | MAPPEDSHAREDDRIVEIS MISSING AFTER SIGN-IN   |
+|----------|---------------------------------------------|---------------------------------------------|---------------------------------------------|
+| State    | Published                                   | Version                                     | 2                                           |
+| Service  | file-services                               | Category                                    | network                                     |
+| Owner    | Infrastructure                              | Author                                      | L. Haddad                                   |
+| Reviewed | 19 Jan 2026                                 | Uses,12mo                                   | 612 · Related INC0010025                    |
+
 
 Symptom. A previously available network drive letter is absent after signing in. Other drives may still be present. Browsing to the server path directly may work.
 
@@ -1592,6 +637,8 @@ Cause. The mapping script runs before the network is ready, or the user has been
 Resolution.
 
 Ask the user to browse to the server path directly. If it opens, the share and the permissions are fine and the fault is in the mapping.
+
+<!-- page: 20 -->
 
 If the path opens, re-run the mapping script, or remap the drive with reconnect-at-sign-in enabled.
 
@@ -1603,9 +650,29 @@ Confirm the drive is present after a fresh sign-in before closing.
 
 Escalation. Permission changes go through the access request process and are never applied directly from an incident.
 
-<!-- page: 50 -->
+6.7 KB0004 -Print jobs queue but nothing prints
 
-KB0004 - Print jobs queue but nothing prints
+
+
+
+> [Diagram p.20]
+| KB0004 | PRINT JOBS QUEUE BUT NOTHING PRINTS | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 1 |
+| **Service** | `print-services` | **Category** | hardware |
+| **Owner** | Print Services | **Author** | O. Sabry |
+| **Reviewed** | 06 Oct 2025 | **Uses, 12 mo** | 1,530 · **Related** INC0010026, INC0010047 |
+
+
+
+
+| KB0004   | PRINT JOBS QUEUE BUTNOTHINGPRINTS   | PRINT JOBS QUEUE BUTNOTHINGPRINTS   | PRINT JOBS QUEUE BUTNOTHINGPRINTS      |
+|----------|-------------------------------------|-------------------------------------|----------------------------------------|
+| State    | Published                           | Version                             | 1                                      |
+| Service  | print-services                      | Category                            | hardware                               |
+| Owner    | Print Services                      | Author                              | O. Sabry                               |
+| Reviewed | 06 Oct 2025                         | Uses,12mo                           | 1,530 · Related INC0010026, INC0010047 |
+
 
 Symptom. Documents accumulate in the print queue. The printer shows ready and reports no error. Cancelling a job leaves it stuck as Deleting.
 
@@ -1623,13 +690,35 @@ Start the print spooler service again.
 
 Print a test page and confirm it completes.
 
-Escalation. If the queue stalls again within an hour, or several users on the same printer are affected, escalate to Print Services - the fault is likely on the print server rather than the client.
+Escalation. If the queue stalls again within an hour, or several users on the same printer are affected, escalate to Print Services -the fault is likely on the print server rather than the client.
 
-KB0005 - Account is locked after repeated failed sign-ins
+6.8 KB0005 -Account is locked after repeated failed sign-ins
+
+
+
+
+> [Diagram p.20]
+| KB0005 | ACCOUNT IS LOCKED AFTER REPEATED FAILED SIGN-INS | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 4 |
+| **Service** | identity | **Category** | inquiry |
+| **Owner** | Identity & Access | **Author** | H. Moawad |
+| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 2,109 · **Related** PRB0040012, INC0010027 |
+
+
+
+
+| KB0005   | ACCOUNTISLOCKED AFTER REPEATED FAILED SIGN-INS   | ACCOUNTISLOCKED AFTER REPEATED FAILED SIGN-INS   | ACCOUNTISLOCKED AFTER REPEATED FAILED SIGN-INS   |
+|----------|--------------------------------------------------|--------------------------------------------------|--------------------------------------------------|
+| State    | Published                                        | Version                                          | 4                                                |
+| Service  | identity                                         | Category                                         | inquiry                                          |
+| Owner    | Identity &Access                                 | Author                                           | H. Moawad                                        |
+| Reviewed | 11 Apr 2026                                      | Uses,12mo                                        | 2,109 · Related PRB0040012, INC0010027           |
+
 
 Symptom. The user cannot sign in to any corporate system. Errors mention a locked or disabled account. Often follows a password change, and often presents as several services failing at once.
 
-Cause. The lockout policy triggers after a threshold of failed attempts. A cached credential on any device - a phone mail profile, a VPN client, a mapped drive - can retry an old password silently and lock the account repeatedly, including immediately after each unlock.
+Cause. The lockout policy triggers after a threshold of failed attempts. A cached credential on any device -a phone mail profile, a VPN client, a mapped drive -can retry an old password silently and lock the account repeatedly, including immediately after each unlock.
 
 Resolution.
 
@@ -1637,7 +726,7 @@ Verify the user's identity following the identity verification procedure. This s
 
 Unlock the account in the identity console.
 
-<!-- page: 51 -->
+<!-- page: 21 -->
 
 Ask the user to sign out of the corporate mail profile on their mobile device, which is the most common source of a silent retry.
 
@@ -1649,7 +738,29 @@ If the account locks again within minutes, a device is still retrying an old cre
 
 Escalation. Repeated lockouts with no identifiable source go to the Identity team. Never disable the lockout policy for an individual user.
 
-KB0006 - Multi-factor authentication after a lost or replaced device
+6.9 KB0006 -Multi-factor authentication after a lost or replaced device
+
+
+
+
+> [Diagram p.21]
+| KB0006 | MULTI-FACTOR AUTHENTICATION AFTER A LOST OR REPLACED DEVICE | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 3 |
+| **Service** | `identity` | **Category** | inquiry |
+| **Owner** | Identity & Access | **Author** | H. Moawad |
+| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 438 · **Related** RITM0010877, INC0010028 |
+
+
+
+
+| KB0006   | MULTI-FACTOR AUTHENTICATIONAFTERALOSTORREPLACEDDEVICE   | MULTI-FACTOR AUTHENTICATIONAFTERALOSTORREPLACEDDEVICE   | MULTI-FACTOR AUTHENTICATIONAFTERALOSTORREPLACEDDEVICE   |
+|----------|---------------------------------------------------------|---------------------------------------------------------|---------------------------------------------------------|
+| State    | Published                                               | Version                                                 | 3                                                       |
+| Service  | identity                                                | Category                                                | inquiry                                                 |
+| Owner    | Identity &Access                                        | Author                                                  | H. Moawad                                               |
+| Reviewed | 11 Apr 2026                                             | Uses,12mo                                               | 438 · Related RITM0010877, INC0010028                   |
+
 
 Symptom. The user has a new phone, or has lost the previous one, and can no longer approve sign-in prompts or generate codes.
 
@@ -1669,17 +780,39 @@ Confirm a successful sign-in with the new factor before closing.
 
 Escalation. An MFA reset is a high-risk identity action. It always requires the approval step, and any suspicion of compromise goes to Security immediately.
 
-KB0007 - Laptop performance degrades after a system update
+6.10 KB0007 -Laptop performance degrades after a system update
 
-<!-- page: 52 -->
+
+
+
+> [Diagram p.21]
+| KB0007 | LAPTOP PERFORMANCE DEGRADES AFTER A SYSTEM UPDATE | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 2 |
+| **Service** | endpoint | **Category** | hardware |
+| **Owner** | Endpoint Engineering | **Author** | D. Halim |
+| **Reviewed** | 19 Jan 2026 | **Uses, 12 mo** | 776 · **Related** INC0010029 |
+
+
+
+
+| KB0007   | LAPTOPPERFORMANCEDEGRADESAFTER A SYSTEMUPDATE   | LAPTOPPERFORMANCEDEGRADESAFTER A SYSTEMUPDATE   | LAPTOPPERFORMANCEDEGRADESAFTER A SYSTEMUPDATE   |
+|----------|-------------------------------------------------|-------------------------------------------------|-------------------------------------------------|
+| State    | Published                                       | Version                                         | 2                                               |
+| Service  | endpoint                                        | Category                                        | hardware                                        |
+| Owner    | Endpoint Engineering                            | Author                                          | D. Halim                                        |
+| Reviewed | 19 Jan 2026                                     | Uses,12mo                                       | 776 · Related INC0010029                        |
+
 
 Symptom. The machine is noticeably slower after an update. Fans run constantly, applications are slow to launch, and the problem persists across restarts.
+
+<!-- page: 22 -->
 
 Cause. Post-update indexing and driver reinstallation run at high priority for a period after installation. If the degradation persists beyond that period, a driver mismatch is the usual cause.
 
 Resolution.
 
-Ask when the update was installed. Within 24 hours, background indexing is expected - tell the user and check back rather than making changes.
+Ask when the update was installed. Within 24 hours, background indexing is expected -tell the user and check back rather than making changes.
 
 Check resource usage and identify the dominant process.
 
@@ -1691,7 +824,29 @@ Restart and confirm the machine returns to normal responsiveness.
 
 Escalation. If performance is still degraded 48 hours after the update with no dominant process, escalate to Endpoint Engineering with a performance capture.
 
-KB0008 - SAP GUI connection times out with RFC_ERROR_COMMUNICATION
+6.11 KB0008 -SAP GUI connection times out with RFC_ERROR_COMMUNICATION
+
+
+
+
+> [Diagram p.22]
+| **KB0008** | **SAP GUI CONNECTION TIMES OUT WITH RFC_ERROR_COMMUNICATION** | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 1 |
+| **Service** | sap-erp | **Category** | software |
+| **Owner** | SAP Basis | **Author** | K. Selim |
+| **Reviewed** | 06 Oct 2025 | **Uses, 12 mo** | 203 · **Related** KE0000034, INC0010031 |
+
+
+
+
+| KB0008   | SAP GUI CONNECTION TIMESOUTWITHRFC_ERROR_COMMUNICATION   | SAP GUI CONNECTION TIMESOUTWITHRFC_ERROR_COMMUNICATION   | SAP GUI CONNECTION TIMESOUTWITHRFC_ERROR_COMMUNICATION   |
+|----------|----------------------------------------------------------|----------------------------------------------------------|----------------------------------------------------------|
+| State    | Published                                                | Version                                                  | 1                                                        |
+| Service  | sap-erp                                                  | Category                                                 | software                                                 |
+| Owner    | SAP Basis                                                | Author                                                   | K. Selim                                                 |
+| Reviewed | 06 Oct 2025                                              | Uses,12mo                                                | 203 · Related KE0000034, INC0010031                      |
+
 
 Symptom. The SAP GUI client fails to connect and reports RFC_ERROR_COMMUNICATION or a connection timeout. Other applications work normally.
 
@@ -1709,11 +864,33 @@ Reconnect and confirm sign-in reaches the logon screen.
 
 If the timeout persists from a known-good network, check whether the message server is reachable on its port before escalating.
 
-<!-- page: 53 -->
-
 Escalation. A confirmed reachability failure from the corporate network goes to the SAP Basis team with the exact error text and the connection entry used.
 
-KB0009 - Wi-Fi drops repeatedly on the 5 GHz corporate network
+6.12 KB0009 -Wi-Fi drops repeatedly on the 5 GHz corporate network
+
+
+
+
+> [Diagram p.22]
+| KB0009 | WI-FI DROPS REPEATEDLY ON THE 5 GHZ CORPORATE NETWORK | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Published | **Version** | 2 |
+| **Service** | `corporate-wifi` | **Category** | network |
+| **Owner** | Network Operations | **Author** | L. Haddad |
+| **Reviewed** | 02 Feb 2026 | **Uses, 12 mo** | 1,041 · **Related** PRB0040021, INC0010033 |
+
+
+
+
+| KB0009   | WI-FIDROPSREPEATEDLYONTHE5GHZCORPORATENETWORK   | WI-FIDROPSREPEATEDLYONTHE5GHZCORPORATENETWORK   | WI-FIDROPSREPEATEDLYONTHE5GHZCORPORATENETWORK   |
+|----------|-------------------------------------------------|-------------------------------------------------|-------------------------------------------------|
+| State    | Published                                       | Version                                         | 2                                               |
+| Service  | corporate-wifi                                  | Category                                        | network                                         |
+| Owner    | Network Operations                              | Author                                          | L. Haddad                                       |
+| Reviewed | 02 Feb 2026                                     | Uses,12mo                                       | 1,041 · Related PRB0040021, INC0010033          |
+
+
+<!-- page: 23 -->
 
 Symptom. The connection drops every few minutes and reconnects on its own. It is worse in some parts of the building and while moving between areas.
 
@@ -1733,7 +910,29 @@ Confirm a stable connection for at least fifteen minutes before closing.
 
 Escalation. Drops affecting several users in the same area are an infrastructure fault. Escalate to Network with the location and the approximate times.
 
-KB0010 v1 - Order service connection pool exhaustion  (RETIRED)
+6.13 KB0010 -Order service connection pool exhaustion
+
+This article exists in two revisions and both are reproduced, because the retired one is still quoted from memory and its procedure is now harmful.
+
+Version 1 -retired 02 April 2026
+
+
+
+
+> [Diagram p.23]
+| KB0010 | ORDER SERVICE CONNECTION POOL EXHAUSTION - **RETIRED** | | |
+| :--- | :--- | :--- | :--- |
+| **State** | Retired | **Version** | 1 |
+| **Retired on** | 02 Apr 2026 | **Reason** | Step 1 caused a 40-minute outage on 14 Mar 2026. See MIR-2026-03. |
+
+
+
+
+| KB0010     | ORDER SERVICE CONNECTIONPOOL EXHAUSTION · **RETIRED**   | ORDER SERVICE CONNECTIONPOOL EXHAUSTION · **RETIRED**   | ORDER SERVICE CONNECTIONPOOL EXHAUSTION · **RETIRED**             |
+|------------|---------------------------------------------------------|---------------------------------------------------------|-------------------------------------------------------------------|
+| State      | Retired                                                 | Version                                                 | 1                                                                 |
+| Retired on | 02 Apr 2026                                             | Reason                                                  | Step 1 caused a 40-minute outage on 14 Mar 2026. See MIR-2026-03. |
+
 
 Symptom. The order service returns HTTP 500 and logs report that the database connection pool is exhausted.
 
@@ -1743,17 +942,25 @@ Resolution.
 
 Restart the order service application server to clear the pool.
 
-<!-- page: 54 -->
-
 Confirm the service returns 200 and monitor for recurrence.
 
 Escalation. If it recurs within the hour, escalate to Platform Engineering.
 
-Why this version is retired
+Why this revision is dangerous, not merely outdated
 
-The direct restart in step 1 dropped in-flight orders and caused a 40-minute outage on 14 March 2026. The procedure is not merely outdated - it is actively harmful, and it is beautifully written, which is exactly why an unfiltered retrieval will find it and recommend it. This is the article UC-08 exists to keep out of a live incident.
+The restart in step 1 dropped in-flight orders and caused the outage recorded in MIR-2026-03. The procedure is well written and reads convincingly, which is exactly why it kept being applied after the fault it addresses had changed. If you find this text anywhere -a saved copy, a wiki page, a team chat pin -replace it with the link to version 2 and tell the knowledge manager where you found it.
 
-KB0010 v2 - Order service connection pool exhaustion  (PUBLISHED)
+Version 2 -published 02 April 2026
+
+
+| KB0010   | ORDER SERVICE CONNECTIONPOOL EXHAUSTION   | ORDER SERVICE CONNECTIONPOOL EXHAUSTION   | ORDER SERVICE CONNECTIONPOOL EXHAUSTION         |
+|----------|-------------------------------------------|-------------------------------------------|-------------------------------------------------|
+| State    | Published                                 | Version                                   | 2                                               |
+| Service  | order-processing                          | Owner                                     | Platform Engineering · K. Selim                 |
+| Reviewed | 02 Apr 2026                               | Related                                   | MIR-2026-03, PRB0040018, CHG0030455, INC0010052 |
+
+
+<!-- page: 24 -->
 
 Symptom. The order service returns HTTP 500 under load. Application logs report that the database connection pool is exhausted and that connection acquisition timed out.
 
@@ -1767,7 +974,7 @@ Confirm pool saturation from the service metrics dashboard rather than from the 
 
 Notify the Order Processing service owner. This service has a change-controlled remediation path.
 
-Raise an emergency change request for the pool drain procedure, which recycles connections without dropping in-flight work.
+Raise an emergency change against CHG0030455 for the pool drain procedure, which recycles connections without dropping in-flight work.
 
 Apply the drain procedure only once the change is approved.
 
@@ -1775,96 +982,1086 @@ Monitor pool utilisation for thirty minutes after the drain.
 
 Escalation. Any incident on order-processing at Priority 1 goes to the service owner immediately and is never remediated from the service desk alone.
 
-<!-- page: 55 -->
+<!-- page: 25 -->
 
-Appendix B · The benchmark set, machine-readable
+7. Worked incident records
 
-Save this as benchmark/incidents.json . Your harness loads it, creates or looks up each incident, runs retrieval, and reports the metrics defined in KB-24. Three entries have expected_article: null and must_refuse: true - those are the negative controls.
+Four closed incidents, reproduced with their journals intact. They are here because they are ordinary, not because they are interesting -they show what a well-handled ticket looks like when nothing dramatic happens.
 
-<!-- page: 56 -->
+7.1 What the record looks like
 
-Appendix C · Ingesting this document
-
-This knowledge base is written to be machine-readable by the system it describes. Point your pipeline at it and your agent can answer questions about its own architecture - which is a fast, honest smoke test of the pipeline you just built.
-
-Why bother
-
-Because it exercises the whole path with content you already understand. If your agent cannot answer 'what status code does the webhook return for a duplicate event?' from a document that states the answer plainly in KB-11, then the problem is in your pipeline, not in the corpus - and you have found that out in Week 2 rather than in Sprint 4.
-
-How to chunk it
+The form below is a live incident mid-flight. Every field an analyst is expected to maintain is visible on it, and the fields written by the AI Suggested Response pilot are grouped in the middle band -see Section 11 for what they mean and how far to trust them.
 
 
-| RULE                                | DETAIL                                                                                                                                                                                            |
-|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Split on section IDs                | Each KB-nn and UC-nn section is a natural unit. Split there first, then apply your normal size limit inside a long section.                                                                       |
-| Keep tables whole                   | A table split across chunks is worse than useless -half a decision table reads as a complete one. If a table exceeds your chunk size, emit it as a single oversized chunk and note the exception. |
-| Keep code blocks whole              | The same reasoning. A truncated payload schema is a wrong payload schema.                                                                                                                         |
-| Carry the section ID in the payload | So the agent can cite KB-11 the way it cites KB0001 . This is the whole point.                                                                                                                    |
-| Tag the level                       | Sections marked advanced only get level: advanced in the payload, so an intermediate team can filter them out and see how a filter changes retrieval on a corpus they know well.                  |
 
 
-Suggested payload for a chunk of this document
+> [Diagram p.25]
+### Incident INC0010023
+**Platform:** ServiceNow  
+**Actions:** `[Save]` `[Resolve]` `[Delete]`
 
-Ten questions to test it with
+---
 
-What status code does the webhook return when it receives a duplicate event?
+#### Record Details
 
-Which fields are allowed in the outbound event payload?
+| Field | Value | Field | Value |
+| :--- | :--- | :--- | :--- |
+| **Number** | INC0010023 | **Caller** | Mariam Fouad |
+| **Category** | Network | **Subcategory** | VPN |
+| **Business service** | corporate-vpn | **State** | In Progress |
+| **Impact** | 3 - Low | **Urgency** | 2 - Medium |
+| **Priority** | 3 - Moderate | **Assignment group** | Service Desk Tier 1 |
 
-<!-- page: 57 -->
+**Short description**  
+> Cannot connect to VPN since password reset this morning
 
-Why does the webhook return before retrieval has run?
+---
 
-What happens when no retrieved chunk clears the score threshold?
+#### AI Insights
 
-Which tools may write to the incident, and which class is each?
+| AI Status | AI Confidence | Human Review Required |
+| :--- | :--- | :--- |
+| **suggested** | **0.79** | **true** |
 
-Why is risk determined before retrieval at advanced level?
+**AI Suggested Response:**
+1. Confirm with the user that they changed their password within the last 24 hours.
+2. Ask the user to sign out of the VPN client completely, including the tray icon.
+3. Clear the cached credential for the VPN profile.
+4. Reconnect using the new password.
 
-What are the three defences against the write-back loop?
-
-Which article must never be retrieved, and why?
-
-How is AI Confidence calculated, and what does the margin term catch?
-
-What must never appear in a Langfuse trace?
-
-Every one of these is answerable from a single section of this document, so a correct answer with a correct section_id citation is a genuine pass and a wrong citation tells you exactly which part of the pipeline to look at.
-
-Appendix D · Demo Day checklist
-
-Print this. Walk it before you present, not during.
-
-
-|    | CHECK                                                                                           | LEVEL    |
-|----|-------------------------------------------------------------------------------------------------|----------|
-| ☐  | An incident created live produces a cited suggestion on the form with no human step in between. | both     |
-| ☐  | An out-of-scope incident produces a hand-off note and no drafted fix.                           | both     |
-| ☐  | The same event fired twice produces exactly one suggestion.                                     | both     |
-| ☐  | An ineligible incident produces no event at all.                                                | both     |
-| ☐  | No component polls. You can point at the code and the architecture and prove it.                | both     |
-| ☐  | The integration user cannot close an incident. You can show the 403.                            | both     |
-| ☐  | Benchmark numbers are on screen, with the configuration that produced them.                     | both     |
-| ☐  | A Langfuse trace is open, and a mentor can read the run from it without your help.              | both     |
-| ☐  | No secret appears in any trace, log or commit in your history.                                  | both     |
-| ☐  | The stack starts on a clean machine from the README and one command.                            | both     |
-| ☐  | You can explain why the webhook answers before the work is done.                                | both     |
-| ☐  | You can state how AI Confidence is calculated and name a case where it is wrong.                | both     |
-| ☐  | A high-risk incident stops and waits for an approval that is recorded before the action.        | advanced |
-| ☐  | A guardrail block is demonstrated live, from your red-team set.                                 | advanced |
+*Source: KB0001 - VPN authentication fails after a password change (v2).*
 
 
-<!-- page: 58 -->
+
+INC0010023 with a drafted suggestion awaiting review. Human Review Required is set; nothing has been sent to the requester.
+
+7.2 INC0010023 -VPN authentication failure after a password reset
 
 
-|    | CHECK                                                                             | LEVEL    |
-|----|-----------------------------------------------------------------------------------|----------|
-| ☐  | A worker killed mid-run recovers from its checkpoint without duplicating a write. | advanced |
-| ☐  | A deliberately regressed prompt fails the CI evaluation gate.                     | advanced |
-| ☐  | Baseline vs hybrid vs reranked numbers exist, on the same evaluation set.         | advanced |
-| ☐  | You can say what each permission class blocks, and why.                           | advanced |
+| Number           | INC0010023                    | Opened   | 08 Sep 2026 09:14 GST                |
+|------------------|-------------------------------|----------|--------------------------------------|
+| Caller           | Mariam Fouad, Finance         | Channel  | Self-service portal                  |
+| Category         | Network · VPN                 | Service  | corporate-vpn                        |
+| Impact / Urgency | 3 - Individual / 2 - Medium   | Priority | P3 - Moderate                        |
+| Assignment group | Service Desk Tier 1           | Assignee | O. Sabry                             |
+| Article applied  | KB0001 v2                     | Closed   | 08 Sep 2026 10:02 GST                |
+| Resolution code  | Resolved by knowledge article | Breach   | None · 48 min against a 3-day target |
 
 
-The question behind every question
 
-Mentors and BARQ engineers are not checking whether your system works on the incident you chose. They are checking whether you know what it does when it is wrong. Have the failure cases ready and lead with them - a team that opens with its refusal case and its crash recovery has already answered half the panel.
+| TIME   | TYPE      | ENTRY                                                                                                                                                 |
+|--------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 09:14  | System    | Incident created from the portal. Category set by requester to Network.                                                                               |
+| 09:14  | System    | AI Suggested Response drafted. Confidence 0.79. Source KB0001 v2, section Resolution. HumanReview Required set.                                       |
+| 09:21  | Work note | Picked up. Read the drafted suggestion; it matches the reported symptom. Confirmed with the caller by phone that the password was reset this morning. |
+
+
+<!-- page: 26 -->
+
+
+| TIME   | TYPE      | ENTRY                                                                                                                                  |
+|--------|-----------|----------------------------------------------------------------------------------------------------------------------------------------|
+| 09:26  | Work note | Applied KB0001 v2. Caller signed out of the VPN client including the tray icon, cleared the cached credential for the profile.         |
+| 09:34  | Comment   | Hello Mariam - please try connecting again now with your new password and letme know how you get on.                                   |
+| 09:48  | Work note | Caller reports the connection now succeeds. Asked her to reconnect a second time to confirm the cached credential did not return.      |
+| 09:57  | Work note | Second connection successful. Checked the account is not locked in the identity console - it is not, so no follow-on to KB0005 needed. |
+| 10:02  | Comment   | Glad that worked. I have resolved this. If it recurs after your next password change, reopen this ticket and quote KB0001.             |
+
+
+Why this one is worth reading twice
+
+The analyst read the drafted suggestion, verified the premise with the caller before applying it, and then checked the adjacent failure mode -a locked account -before closing. The whole thing took 48 minutes against a three-day target, and the journal is legible to someone who was not there.
+
+7.3 INC0010047 -a fault with no article behind it
+
+
+| Number           | INC0010047                      | Opened   | 08 Sep 2026 11:32 GST   |
+|------------------|---------------------------------|----------|-------------------------|
+| Caller           | Facilities - meeting room 4     | Channel  | Telephone               |
+| Category         | Hardware · Printer              | Service  | print-services          |
+| Impact / Urgency | 3 - Individual / 3 - Low        | Priority | P4 - Low                |
+| Assignment group | Service Desk Tier 1 →Facilities | Assignee | Facilities duty manager |
+| Article applied  | None - no relevant article      | Closed   | 09 Sep 2026 14:20 GST   |
+| Resolution code  | Referred to Facilities          | Breach   | None                    |
+
+
+
+| TIME   | TYPE      | ENTRY                                                                                                                                                                             |
+|--------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 11:32  | System    | Incident created from a telephone call.                                                                                                                                           |
+| 11:33  | System    | AI Suggested Response: no matching knowledge article found. Best match KB0004 scored 0.31 against a threshold of 0.55. No resolution drafted. Flagged for human review.           |
+| 11:40  | Work note | Grinding noise on paper feed. This is a mechanical fault, not a queue fault, so KB0004 does not apply - the pilot was right to decline.                                           |
+| 11:44  | Work note | Checked with the caller that jobs are not merely queued. The device makes the noise with the queue empty.                                                                         |
+| 11:51  | Comment   | Thanks for reporting this. The noise you describe is a mechanical fault on the device itself, which Facilities handle rather than IT. I have passed it to them with your details. |
+| 11:52  | Work note | Referred to Facilities duty manager. Advised the room be marked out of use for printing until inspected.                                                                          |
+
+
+<!-- page: 27 -->
+
+
+| TIME   | TYPE      | ENTRY                                                                                          |
+|--------|-----------|------------------------------------------------------------------------------------------------|
+| 14:20  | Work note | Facilities confirm the feed roller has been replaced. Caller confirms normal printing. Closed. |
+
+
+This is the intended outcome when the knowledge base holds nothing relevant. The pilot declined to draft rather than producing a plausible printer procedure, the analyst confirmed the distinction between a mechanical fault and a queue fault, and the incident left IT within twenty minutes.
+
+7.4 INC0010064 -three symptoms, one cause
+
+
+| Number           | INC0010064                    | Opened   | 09 Sep 2026 08:04 GST   |
+|------------------|-------------------------------|----------|-------------------------|
+| Caller           | Ahmed Zaki, Procurement       | Channel  | Telephone               |
+| Category         | Inquiry →Identity             | Service  | identity                |
+| Impact / Urgency | 3 - Individual / 1 - High     | Priority | P2 - High               |
+| Assignment group | Service Desk Tier 1           | Assignee | O. Sabry                |
+| Article applied  | KB0005 v4                     | Closed   | 09 Sep 2026 09:11 GST   |
+| Resolution code  | Resolved by knowledge article | Related  | PRB0040012              |
+
+
+
+| TIME   | TYPE      | ENTRY                                                                                                                                                                      |
+|--------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 08:04  | Work note | Caller reports no email, shared drive gone, and Teams repeatedly asking him to sign in. Three services, one morning.                                                       |
+| 08:06  | System    | AI Suggested Response: three distinct symptoms detected across three services, no single article covers all three. No resolution drafted. Flagged for human review.        |
+| 08:09  | Work note | Simultaneous failures across email, file shares and collaboration is the KB0005 pattern, not three separate faults. Checked the identity console: account locked at 07:52. |
+| 08:14  | Work note | Verified identity per procedure. Unlocked the account.                                                                                                                     |
+| 08:16  | Work note | Account locked again within two minutes. A device is retrying an old credential. Lockout source shows the mobile mail profile.                                             |
+| 08:31  | Work note | Caller signed out of the corporate mail profile on his phone and re-entered the new password. Cleared cached credentials on the laptop including VPN.                      |
+| 08:44  | Work note | Unlocked a second time. No further lockouts after 15 minutes of observation.                                                                                               |
+| 09:05  | Work note | Confirmed access to email and the shared drive. Third lockout in six weeks for this caller - linked to PRB0040012.                                                         |
+| 09:11  | Comment   | All three problems had the same cause: your account had locked, which blocks everything at once. It is unlocked and your phone is no longer retrying the old password.     |
+
+
+'Simultaneous failures across unrelated services are almost never several faults. They are one fault, one layer down.'
+
+<!-- page: 28 -->
+
+7.5 INC0010052 -escalated without being touched
+
+
+| Number           | INC0010052                    | Opened   | 08 Sep 2026 15:47 GST                 |
+|------------------|-------------------------------|----------|---------------------------------------|
+| Caller           | Monitoring - order-processing | Channel  | Alert                                 |
+| Category         | Software · Application        | Service  | order-processing                      |
+| Impact / Urgency | 1 - Enterprise / 1 - High     | Priority | P1 - Critical                         |
+| Assignment group | Platform Engineering          | Assignee | K. Selim                              |
+| Article applied  | KB0010 v2                     | Related  | PRB0040018, CHG0030455                |
+| Resolution code  | Resolved by change            | Breach   | None · 2h 41m against a 4-hour target |
+
+
+
+| TIME   | TYPE      | ENTRY                                                                                                                                                                     |
+|--------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 15:47  | System    | Incident raised from a monitoring alert. Pool saturation on order-processing. Priority derived P1 from Tier 1 criticality and alert severity.                             |
+| 15:47  | System    | AI Suggested Response: risk assessed as high before retrieval - Priority 1 on a Tier 1 service. No action taken. Escalated for human decision with the evidence attached. |
+| 15:49  | Work note | Major incident bridge opened. Service owner paged.                                                                                                                        |
+| 15:52  | Work note | Pool saturation confirmed on the metrics dashboard, not from the error text alone. Matches KB0010 v2 symptom exactly.                                                     |
+| 15:58  | Work note | Restart explicitly ruled out per KB0010 v2 step 1 and MIR-2026-03. Raising emergency change against CHG0030455 for the drain procedure.                                   |
+| 16:24  | Work note | Emergency change approved by change manager and service owner. Approval record attached - see 10.4.                                                                       |
+| 16:41  | Work note | Drain procedure applied. Pool utilisation falling. No orders dropped.                                                                                                     |
+| 17:15  | Work note | Thirty minutes of stable utilisation observed. Bridge stood down.                                                                                                         |
+| 18:28  | Work note | Resolved. Linked to PRB0040018, which remains open pending the permanent fix.                                                                                             |
+
+
+<!-- page: 29 -->
+
+8. Problems and known errors
+
+8.1 The difference, and why it matters at the desk
+
+A problem is the underlying cause of one or more incidents. A known error is a problem whose cause is understood and whose workaround is documented, but whose permanent fix has not yet shipped. The desk cares about the distinction for one reason: a known error has a workaround you may apply today, and a problem does not.
+
+
+|             | PROBLEM                                 | KNOWNERROR                                               |
+|-------------|-----------------------------------------|----------------------------------------------------------|
+| Cause       | Under investigation                     | Understood and recorded                                  |
+| Workaround  | May not exist                           | Documented, and safe to apply                            |
+| At the desk | Link the incident and escalate normally | Apply the workaround, link the incident, do not escalate |
+
+
+8.2 Open problem register
+
+
+| PROBLEM    | DESCRIPTION                                                                                                                                                            | RAISED      |   INCIDENTS | OWNERANDSTATUS                                                 |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|-------------|----------------------------------------------------------------|
+| PRB0040012 | Repeat account lockouts traced to cached credentials on mobile mail profiles. Affects roughly forty users a month, concentrated after the quarterly password rotation. | 12 Feb 2026 |          63 | Identity &Access. Awaiting the modern-auth rollout, Q4.        |
+| PRB0040018 | Connection pool exhaustion on order-processing under sustained load. Root cause is a long-running query path holding connections beyond their lifetime.                | 15 Mar 2026 |           9 | Platform Engineering. Fix in test; target Q4.                  |
+| PRB0040021 | Wireless drops on the 5 GHz corporate SSID while roaming between access points on floors 3 and 4.                                                                      | 08 Jan 2026 |          41 | Network Operations. Controller firmware scheduled, CHG0030588. |
+| PRB0040026 | Post-update endpoint degradation persisting beyond the expected 24- hour indexing window on a specific laptop model.                                                   | 22 Jun 2026 |          17 | Endpoint Engineering. Vendor case open.                        |
+| PRB0040029 | Print queues stalling on the third- floor device within an hour of a spooler restart.                                                                                  | 30 Jul 2026 |          12 | Print Services. Under investigation.                           |
+
+
+8.3 Known error register
+
+Every entry here has a workaround you may apply without escalating. Link the incident to the known error so the count stays accurate -the counts are what fund the permanent fixes.
+
+<!-- page: 30 -->
+
+
+| KNOWNERROR   | SYMPTOM                                                                                 | WORKAROUND                                                                                                                      | PERMANENT FIX                                          |
+|--------------|-----------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| KE0000034    | SAP GUI times out with RFC_ERROR_COMMUNICATION from a known-good network.               | The saved connection entry names a decommissioned application server. Change it to the message server and group. KB0008 step 3. | Connection profiles republished by SAP Basis. No date. |
+| KE0000041    | Mapped drive absent at sign-in although the server path opens when browsed directly.    | Re-run the mapping script, or remap with reconnect-at-sign-in enabled. KB0003 step 2.                                           | Login script rewrite, CHG0030602.                      |
+| KE0000047    | Account re-locks within minutes of an unlock, with no user action.                      | Identify the lockout source before the second unlock. Sign the mobile mail profile out first. KB0005 steps 3 and 6.             | Modern-auth rollout under PRB0040012.                  |
+| KE0000052    | Wireless drops while walking between floors 3 and 4.                                    | None for roaming users. For stationary users, disable adapter power saving. KB0009 step 2.                                      | Controller firmware, CHG0030588.                       |
+| KE0000055    | Print queue stalls again within an hour of a spooler restart on the third-floor device. | Restart the queue on the print server rather than the client. Escalate on the second recurrence in a day.                       | Under investigation, PRB0040029.                       |
+
+
+<!-- page: 31 -->
+
+9. Major incident report MIR-2026-03
+
+Order processing unavailable, 14 March 2026, 40 minutes. Published 27 March 2026. This report is reproduced in full because three of its actions changed procedures that appear elsewhere in this manual.
+
+9.1 Summary
+
+
+| Report           | MIR-2026-03                     | Declared       | 14 Mar 2026 13:12 GST       |
+|------------------|---------------------------------|----------------|-----------------------------|
+| Service          | order-processing · Tier 1       | Restored       | 14 Mar 2026 13:52 GST       |
+| Duration         | 40 minutes, full unavailability | Incident       | INC0009884                  |
+| Incident manager | N. Abdelrahman                  | Service owner  | K. Selim                    |
+| Orders affected  | 312 in flight, 47 unrecoverable | Classification | Self-inflicted · procedural |
+| Report author    | D. Halim, Problem Manager       | Signed off     | 27 Mar 2026, K. Selim       |
+
+
+9.2 What happened
+
+The trigger. At 12:58 the order service began returning HTTP 500 under normal midday load. Connection pool saturation was reported in the application log within a minute, and monitoring raised INC0009884 at 13:02 as a P1.
+
+The response. The analyst on the bridge searched the knowledge base, found KB0010, and applied it. Step 1 of that article, as it stood, instructed a restart of the application server.
+
+The consequence. The restart cleared the pool as documented and simultaneously dropped every inflight order. The service returned 200 within ninety seconds, so the restart looked successful on every signal the bridge was watching.
+
+9.3 Timeline
+
+
+| TIME   | ACTOR      | EVENT                                                                   |
+|--------|------------|-------------------------------------------------------------------------|
+| 12:58  | System     | Order service begins returning HTTP 500 under load.                     |
+| 12:59  | System     | Pool saturation logged. Alert raised.                                   |
+| 13:02  | Monitoring | INC0009884 created. P1 derived from Tier 1 criticality.                 |
+| 13:04  | Tier 1     | Bridge opened. Service owner paged.                                     |
+| 13:07  | Tier 1     | KB0010 located and read. Step 1 applied - application server restarted. |
+| 13:09  | System     | Service returns 200. Pool utilisation normal. Bridge stands down.       |
+
+
+The discovery. Fulfilment noticed missing orders at 13:31. The bridge was reconvened, the gap was quantified at 47 unrecoverable orders, and manual recovery began.
+
+Restoration. The service itself was never unavailable after 13:04. The forty minutes recorded above is the window in which orders were being accepted and lost, which is the number that matters commercially and the one this report uses.
+
+The article was not wrong when it was written.
+
+KB0010 v1 was published in 2023 against an earlier deployment where the service drained gracefully on shutdown. That behaviour changed with the 2025 platform migration and the article was never revisited.
+
+<!-- page: 32 -->
+
+
+| TIME   | ACTOR        | EVENT                                                                                |
+|--------|--------------|--------------------------------------------------------------------------------------|
+| 13:12  | Incident mgr | Major incident declared retrospectively for the pool event.                          |
+| 13:31  | Fulfilment   | Missing orders reported. Bridge reconvened.                                          |
+| 13:44  | Platform Eng | Gap quantified: 312 in flight at restart, 47 unrecoverable.                          |
+| 13:52  | Incident mgr | Manual recovery complete for the 265 recoverable orders. Service confirmed restored. |
+| 14:20  | Knowledge    | KB0010 v1 set to retired pending revision.                                           |
+| 16:00  | Change       | CHG0030455 raised for a drain procedure that does not drop in-flight work.           |
+
+
+9.4 The bridge whiteboard
+
+The photograph below was taken in the Dubai operations room at 13:40, while the recovery was being scoped. It is included because the two boxed items on it became actions 1 and 4 below, and because it records the reasoning as it was at the time rather than as it was reconstructed afterwards.
+
+
+
+
+> [Diagram p.32]
+# Whiteboard — sprint 2 planning
+
+### EVENT FLOW
+
+> * BR -> RESTMsg -> /events
+> * 202 FIRST!! then work
+> * idem key = event_id NOT sys_id
+> * claim: PATCH ai_status
+> * before dispatch
+
+> #### NOTHING POLLS
+> if there is a loop reading the incident table -> FAIL
+
+---
+
+### OPEN Qs
+
+* - async BR? previous is null
+* - who owns the PDI
+* - threshold: 0.55 ??
+* - retire v1 of KB0010
+
+**DONE = 202 in <1s**
+
+
+
+9.5 Root cause
+
+Immediate cause. A restart of the order service application server dropped in-flight orders.
+
+Contributing cause. The knowledge article instructing that restart was correct for a deployment that no longer existed, and had not been reviewed since the 2025 migration.
+
+Contributing cause. No review was triggered by the migration itself. Articles are reviewed on a calendar cycle, and the migration changed behaviour that several articles depended on.
+
+Contributing cause. The bridge's success signals -HTTP 200 and normal pool utilisation -did not include order continuity, so the loss was invisible for 22 minutes.
+
+<!-- page: 33 -->
+
+'The article was well written, correct when published, and dangerous by the time it was applied. That is the ordinary shape of this failure, not an unusual one.'
+
+9.6 Actions
+
+
+|   # | ACTION                                                                                                                                                                                | OWNER          | DUE         | STATUS   |
+|-----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|-------------|----------|
+|   1 | Revise KB0010. Version 1 retired, version 2 published with the restart explicitly ruled out and a change-controlled drain path substituted.                                           | H. Moawad      | 02 Apr 2026 | Closed   |
+|   2 | Build and test the pool drain procedure that recycles connections without dropping in-flight work. Register it as a pre-approved emergency change.                                    | K. Selim       | 02 Apr 2026 | Closed   |
+|   3 | Raise PRB0040018 for the underlying connection- lifetime defect and track the permanent fix separately from the workaround.                                                           | D. Halim       | 20 Mar 2026 | Closed   |
+|   4 | Add a migration-triggered review to the knowledge lifecycle: any platform migration triggers a review of every article naming the affected service, regardless of the calendar cycle. | H. Moawad      | 30 Apr 2026 | Closed   |
+|   5 | Add order continuity to the P1 restoration checklist for order-processing , so that a service returning 200 is not by itself treated as restored.                                     | N. Abdelrahman | 30 Apr 2026 | Closed   |
+|   6 | Search the estate for saved copies of KB0010 v1 outside the knowledge base - wikis, chat pins, personal notes - and replace them.                                                     | O. Sabry       | 31 May 2026 | Open     |
+
+
+Action 6 is still open, and it is the one that matters
+
+Every other action changed a system. Action 6 is about the copies people kept, and there is no reliable way to close it. If you find KB0010 v1 anywhere -a saved PDF, a pinned message, a page in a team wiki -replace it with a link to version 2 and tell the knowledge manager where it was.
+
+<!-- page: 34 -->
+
+10. Change management
+
+10.1 What the desk needs to know
+
+Most of change management happens elsewhere. Three parts of it reach the desk: recognising when a fix requires a change rather than an incident action, holding an incident correctly against a change window, and knowing which changes are pre-approved so you do not wait for an approval that is not needed.
+
+
+| TYPE      | USEWHEN                                                                   | APPROVAL                               | LEAD TIME             |
+|-----------|---------------------------------------------------------------------------|----------------------------------------|-----------------------|
+| Standard  | The change is pre-approved and its procedure is documented and unchanged. | None required                          | None - proceed        |
+| Normal    | Planned work with an assessable risk and a rollback.                      | CAB, weekly                            | 5 working days        |
+| Emergency | Required to restore or protect a Tier 1 or Tier 2 service now.            | Change manager and service owner, both | Immediate             |
+| Latent    | A change already applied under emergency conditions, recorded afterwards. | Retrospective, at the next CAB         | Within 2 working days |
+
+
+10.2 Pre-approved standard changes
+
+
+| CHANGE     | PROCEDURE                                                                                   | WHOMAYAPPLYIT                                      | RECORDSTO LINK           |
+|------------|---------------------------------------------------------------------------------------------|----------------------------------------------------|--------------------------|
+| CHG0030401 | Print spooler restart and queue clear on a client workstation. KB0004.                      | Tier 1 analyst                                     | The incident             |
+| CHG0030418 | Cached credential clear for the VPN profile. KB0001.                                        | Tier 1 analyst                                     | The incident             |
+| CHG0030422 | Account unlock following identity verification. KB0005.                                     | Tier 1 analyst, IAM                                | The incident, PRB0040012 |
+| CHG0030455 | Order service pool drain. Recycles connections without dropping in- flight work. KB0010 v2. | Platform Engineering only after emergency approval | The incident, PRB0040018 |
+| CHG0030470 | Wireless adapter driver update on a single endpoint. KB0009.                                | Endpoint Engineering                               | The incident, PRB0040021 |
+
+
+CHG0030455 is pre-approved as a procedure, not as an action
+
+The drain procedure itself needs no re-assessment -that is what pre-approval buys. Executing it against a live Tier 1 service still requires the change manager and the service owner to approve, on the record, before it runs. Pre-approval removes the design review, not the authorisation.
+
+10.3 Emergency approval
+
+The engineer proposing the action states the service, the procedure, the expected effect and the rollback, in the incident journal.
+
+Edition 4.0
+
+<!-- page: 35 -->
+
+The change manager confirms the procedure matches a documented one and that the rollback is real.
+
+The service owner confirms the business impact is acceptable now rather than at the next window.
+
+Both approvals are recorded before the action runs. An action taken first and approved afterwards is a latent change and is reported as a deviation.
+
+The approval record is attached to the incident and referenced in the change.
+
+10.4 Approval record -CHG0030455 against INC0010052
+
+The record below is the one referenced from the journal in 7.5. It is reproduced as the form is completed and stored: the evidence, the risk verdict and the approval on a single sheet.
+
+APPROVED
+
+
+
+
+> [Diagram p.35]
+### HIGH-RISK ACTION — APPROVAL RECORD
+
+| Field | Value |
+| :--- | :--- |
+| **Incident** | INC0010052 |
+| **Execution ID** | 7c1f8a02e4021bd9 |
+| **Risk level** | HIGH |
+| **Requested action** | propose_resolution |
+| **Evidence** | KB0010 v2, section Resolution, score 0.88 |
+
+#### Approver decision
+- [x] Approved
+- [ ] Approved with edits
+- [ ] Rejected
+
+| Field | Value |
+| :--- | :--- |
+| **Approver** | N. Abdelrahman |
+| **Role** | Service Delivery Manager |
+| **Date** | 08 / 09 / 2026 |
+| **Time** | 09:41 |
+
+---
+**[STAMP]**  
+**APPROVED**  
+08 SEP 2026
+
+
+
+<!-- page: 36 -->
+
+11. The AI Suggested Response pilot
+
+A pilot service that drafts a candidate resolution on eligible incidents, cites the article it came from, and flags the incident for human review. It never resolves, closes or reassigns anything. This section is what the desk needs in order to work alongside it.
+
+11.1 What it does, and what it may not do
+
+When an eligible incident is created, the pilot reads it, searches the published knowledge base, and -if it finds evidence strong enough -writes a numbered procedure into AI Suggested Response together with the article it came from. It then sets Human Review Required and stops. An analyst reads the draft and applies it, edits it or discards it. Nothing reaches the requester unless a person puts it there.
+
+
+| ITMAY                                                                                                                                                                                                                             | ITMAYNOT                                                                                                                                                                                                                                           |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ▪ Read an incident and its category ▪ Search published articles only ▪ Write a draft into AI Suggested Response ▪ Write an internal work note ▪ Set Human Review Required and a confidence value ▪ Decline to answer, and say why | ▪ Resolve, close or cancel an incident ▪ Reassign it to another group ▪ Write to Additional comments, ever ▪ Email or otherwise contact the requester ▪ Read a draft or retired article ▪ Act on a Priority 1 or a Tier 1 service without approval |
+| These capabilities exist in the service.                                                                                                                                                                                          | These capabilities do not exist in the service. They are absent, not disabled - there is no setting that enables them.                                                                                                                             |
+
+
+<!-- page: 37 -->
+
+11.2 How a suggestion is produced
+
+The system, end to end
+
+One event in, one grounded suggestion out. Nothing polls; nothing auto-resolves.
+
+
+
+
+> [Diagram p.37]
+> ### 1 - TICKETING SYSTEM
+>
+> * **Incident raised**
+>   * *Description*: A requester reports a symptom. Category, service and text captured.
+>   * ➔ **Business Rule**
+>
+> * **Business Rule**
+>   * *Description*: Fires on insert and on relevant update. Checks eligibility.
+>   * ➔ **RESTMessageV2**
+>
+> * **RESTMessageV2**
+>   * *Description*: Posts event_id, sys_id, number, event_type. Never the record.
+>   * ➔ **Incident form**
+>   * ➔ *(minimal event over HTTPS)* ➔ **POST /events** (Section 2)
+>
+> * **Incident form**
+>   * *Description*: AI Suggested Response and Human Review Required render here.
+>   *  *(write-back)*  **Write back** (Section 3)
+
+---
+
+> ### 2 - PILOT SERVICE — THE FRONT DOOR
+>
+> * **POST /events**
+>   * *Description*: Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.
+>   * ➔ **Idempotency + claim**
+>
+> * **Idempotency + claim**
+>   * *Description*: Persist the event key. A replay is discarded. Claim the incident.
+>   * ➔ **202 Accepted**
+>
+> * **202 Accepted**
+>   * *Description*: Returned before any model runs. ServiceNow is never blocked.
+>   * ➔ **Dispatch**
+>
+> * **Dispatch**
+>   * *Description*: Queued to a worker. The desk is never blocked by it.
+>   * ➔ *(dispatched to the worker)* ➔ **Retrieve** (Section 3)
+
+---
+
+> ### 3 - REASONING — RETRIEVE, GROUND, DECIDE
+>
+> * **Retrieve**
+>   * *Description*: Published articles only, filtered by service and category.
+>   * ➔ **Reason**
+>
+> * **Reason**
+>   * *Description*: Reason over the retrieved articles. Nothing else.
+>   * ➔ **Ground + check**
+>
+> * **Ground + check**
+>   * *Description*: Numbered procedure, cited article. Score, risk and confidence gates.
+>   * ➔ **Write back**
+>
+> * **Write back**
+>   * *Description*: Table API: suggestion, confidence, work note, Human Review Required.
+>   * ➔ *(write-back)* ➔ **Incident form** (Section 1)
+
+---
+
+> ### 4 · Evidence — every run leaves a record
+>
+> * The run log holds every step: what was searched, what was found, what was drafted and what was blocked.
+> * The execution record holds the attempt itself — including attempts that produced nothing at all.
+> * Acceptance is measured monthly: drafts applied or edited, against drafts written. See Section 12.
+
+
+
+The pilot end to end. The teal path is the write-back onto the incident form; a person always stands between the draft and the requester.
+
+Nothing polls the ticketing system. A business rule on the incident table emits an event when an incident becomes eligible, and the pilot responds to that event. If the pilot is unavailable, incidents are created and worked exactly as they were before it existed -the desk is never blocked by it.
+
+<!-- page: 38 -->
+
+One event, one run
+
+The webhook answers first and reasons afterwards. A replay is answered too — and then dropped.
+
+
+
+
+> [Diagram p.38]
+### Participants
+* **Ticketing system**
+* **Pilot API**
+* **Store**
+* **Worker**
+
+---
+
+### FIRST EVENT
+
+> * **Ticketing system** → **Pilot API**: `POST /events`
+>   * `event_id, sys_id, number, event_type`
+> * **Pilot API** → **Store**: `put(event_id)`
+>   * `new key stored`
+> * **Pilot API** → **Ticketing system**: `PATCH ai_status = in_progress`
+>   * `the incident is claimed`
+> * **Pilot API** → **Ticketing system**: `202 Accepted`
+>   * `under one second, no model called`
+> * **Pilot API** → **Worker**: `dispatch(event)`
+>   * `queued to a worker`
+> * **Worker** → **Ticketing system**: `PATCH suggestion + human_review`
+>   * `write-back after retrieval and generation`
+
+---
+
+### REPLAY OF THE SAME EVENT
+
+> * **Ticketing system** → **Pilot API**: `POST /events`
+>   * `identical event_id`
+> * **Pilot API** → **Store**: `put(event_id) — already present`
+
+---
+
+### Outcome of the replay
+> **202 Accepted** is returned again — the caller must not see an error — but nothing is dispatched and no second suggestion is written.
+
+
+
+The event exchange. The pilot acknowledges within a second and reasons afterwards, so a slow answer never delays a form save.
+
+11.3 Eligibility
+
+Not every incident is offered to the pilot. The checks below are applied inside the ticketing system before any event leaves it.
+
+
+| LAYER            | CHECK                                     | WHY                                                                                                       |
+|------------------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| Ticketing system | Incident is active                        | Resolved and closed incidents are finished; nothing the pilot writes improves them.                       |
+| Ticketing system | Category is in the supported set          | The corpus covers network, software, hardware and inquiry. Anything else would produce a refusal at best. |
+| Ticketing system | Not already processed                     | Prevents the write-back re-triggering the rule that caused it.                                            |
+| Ticketing system | Not an AI-field-only update               | Stops an unrelated field change from re-running the pilot.                                                |
+| Pilot service    | The event is authentic                    | Signed. An unsigned event is rejected without being read.                                                 |
+| Pilot service    | The event has not been seen before        | A retried delivery produces no second suggestion.                                                         |
+| Pilot service    | The incident is still eligible on re-read | An incident an analyst has taken over is left alone.                                                      |
+| Desk override    | AI assistance unticked on the incident    | Any analyst may exclude an individual incident. That decision is final and is never overridden.           |
+| Desk override    | The incident is on hold                   | Something is deliberately waiting. The pilot does not add noise to it.                                    |
+
+
+<!-- page: 39 -->
+
+11.4 Three gates, and what each outcome means to you
+
+The decision ladder
+
+Three gates stand between a retrieved chunk and a written suggestion. Any one of them can stop the run.
+
+
+
+
+> [Diagram p.39]
+> **GATE 1: Evidence**
+> * Did any chunk clear the score threshold?
+>
+> ➔ **GATE 2: Risk**
+> * Is this a high-risk category, service or action?
+>
+> ➔ **GATE 3: Confidence**
+> * Is the derived confidence above the floor?
+
+### OUTCOMES
+
+* **Suggest**
+  * All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.
+
+* **Escalate to a human**
+  * Risk is high, or confidence sits below the floor. No draft is written. A work note records the risk verdict and the evidence gathered, and the incident waits for a person.
+
+* **Refuse and hand off**
+  * No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here.
+
+
+
+The three gates. A draft is written only when all three pass; otherwise the incident is flagged and left for a person.
+
+
+| OUTCOME                    | WHATYOUSEEONTHEFORM                                                                  | WHATTODO                                                                                                                                                       |
+|----------------------------|--------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Suggested                  | A numbered procedure with a cited article. Confidence between 0 and 1.               | Read it against the reported symptom before applying it. If it does not match, discard it and say so in the work note - that note is what improves the corpus. |
+| Escalated - no evidence    | No draft. A work note naming what was searched and the best score found.             | Work the incident normally. The absence of an article is itself useful: if the fault recurs, propose one.                                                      |
+| Escalated - high risk      | No draft. A work note recording the risk verdict and the evidence that was gathered. | Follow Sections 4 and 10. The pilot has deliberately not acted; it has not failed.                                                                             |
+| Escalated - low confidence | No draft, or a draft marked below the confidence floor.                              | Treat as if there were no draft. Do not apply a below-floor draft because it looks plausible.                                                                  |
+| Failed                     | AI Status shows failed, with a reason.                                               | Nothing. Work the incident normally and, if it repeats on the same category, raise it with the service owner.                                                  |
+
+
+A declined suggestion is a correct outcome, not a fault
+
+The pilot declines on roughly one incident in five. That is the design working: the alternative is a confident printer procedure for a mechanical fault, carrying our citation format and a confidence score. INC0010047 in 7.3 is the reference case.
+
+<!-- page: 40 -->
+
+11.5 Where the drafts come from
+
+The retrieval pipeline
+
+Build time runs once per corpus change. Query time runs once per incident.
+
+
+
+
+> [Diagram p.40]
+### BUILD TIME - ONE COMMAND, REPEATABLE
+
+> * **Load**
+>   * Pull published knowledge articles from the KB.
+> * $\rightarrow$ **Chunk**
+>   * Fixed size with overlap. Article identity kept.
+> * $\rightarrow$ **Embed**
+>   * Vectors built once per corpus change.
+> * $\rightarrow$ **Index**
+>   * Persisted Qdrant collection with payload metadata.
+
+---
+
+### QUERY TIME - ONCE PER INCIDENT
+
+> * **Query**
+>   * Short description plus the symptom text. No credentials, no PII.
+> * $\rightarrow$ **Filter**
+>   * state = published, category, service, current version only.
+> * $\rightarrow$ **Search**
+>   * Ranked candidates, each with a score against the query.
+> * $\rightarrow$ **Rerank**
+>   * Reorder the candidates before anything reaches the drafting step.
+
+**Output:** top-k chunks, each with a similarity score and the article number it came from.
+
+
+
+Only published articles at their current version are candidates. Draft and retired revisions are removed before ranking, not ranked low.
+
+How the knowledge base is indexed and searched. Only published articles at their current version are ever candidates.
+
+The retrieval console shows what the pilot found for a given incident, with the score for each candidate. It is the first place to look when a suggestion is wrong: nine times in ten the draft is a faithful reading of the wrong article, not an invention.
+
+
+
+
+> [Diagram p.40]
+### Retrieval results — INC0010023
+
+| RANK | ARTICLE | SECTION | SCORE | READING |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | **KB0001** | Resolution | 0.847 | Correct article and section. |
+| **2** | **KB0001** | Cause | 0.812 | Same article, adjacent section. |
+| **3** | **KB0005** | Symptom | 0.694 | Plausible neighbour, not wrong. |
+| **4** | **KB0009** | Resolution | 0.611 | Category-adjacent noise. |
+| **5** | **KB0003** | Symptom | 0.585 | Noise. |
+
+
+
+Threshold 0.55· top-3 hit: yes· confidence 0.79
+
+Retrieval console output for INC0010023. KB0001 at rank 1 and rank 2, with adjacent articles below the useful line.
+
+Typed out, so the numbers can be quoted in a journal entry:
+
+
+|   RANK | ARTICLE   | SECTION    |   SCORE | READING                                                               |
+|--------|-----------|------------|---------|-----------------------------------------------------------------------|
+|      1 | KB0001    | Resolution |   0.847 | Correct article, correct section. This is what a good run looks like. |
+|      2 | KB0001    | Cause      |   0.812 | Same article, adjacent section. Expected and useful.                  |
+|      3 | KB0005    | Symptom    |   0.694 | Account lockout. A plausible neighbour - password changes cause both. |
+|      4 | KB0009    | Resolution |   0.611 | Wireless. Category-adjacent noise.                                    |
+|      5 | KB0003    | Symptom    |   0.585 | Shared drive mapping. Noise.                                          |
+
+
+<!-- page: 41 -->
+
+11.6 Safety controls
+
+Two stages of deterministic checks sit around the model. They are code, not instructions, and the model cannot route around them.
+
+
+| STAGE             | CHECKS PERFORMED                                                                                                                                                                  | CHECKS PERFORMED                                                                                                                                                                  | ENFORCEMENT                                                                                                               |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Before            | ▪ Screening for instructions embedded in the incident text ▪ Credential and key redaction ▪ Personal-data redaction ▪ Length and encoding bounds                                  | ▪ Screening for instructions embedded in the incident text ▪ Credential and key redaction ▪ Personal-data redaction ▪ Length and encoding bounds                                  | Runs before the model is called. A flagged incident is routed to a person and never reaches drafting.                     |
+| After             | 1. Validate the draft against the expected shape 2. Match every step back to a retrieved article 3. Enforce the permitted-action list 4. Scan the text for secrets before writing | 1. Validate the draft against the expected shape 2. Match every step back to a retrieved article 3. Enforce the permitted-action list 4. Scan the text for secrets before writing | Runs after drafting and before the write. A block is logged and escalated - never logged and continued.                   |
+| Permitted actions | read_incident search_knowledge write_work_note flag_human_review write_ai_fields                                                                                                  | - read - read - low risk - low risk - low risk                                                                                                                                    | Checked at call time. Resolve, close, reassign and contact-requester are not on the list and do not exist in the service. |
+
+
+If an incident description contains text addressed to the pilot rather than describing a fault -which has happened twice during the pilot -the screening stage flags it, the incident goes to a person, and the genuine symptom underneath is still worked normally. Report any occurrence to Security Operations as well as to the pilot owner.
+
+11.7 Configuration
+
+The values below are the ones in effect for edition 4.0. They are held in the pilot's configuration file and are changed under normal change control, one at a time, with the effect measured before the next change.
+
+
+
+
+> [Diagram p.41]
+| GROUP | VALUES | WHY IT IS SET THIS WAY |
+| :--- | :--- | :--- |
+| **Indexing** | <table><tr><th>KEY</th><th>VALUE</th></tr><tr><td><code>chunk_size</code></td><td><code>700</code></td></tr><tr><td><code>overlap</code></td><td><code>120</code></td></tr><tr><td><code>split_on</code></td><td><code>heading</code></td></tr></table> | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half. |
+| **Search** | <table><tr><th>KEY</th><th>VALUE</th></tr><tr><td><code>top_k</code></td><td><code>5</code></td></tr><tr><td><code>threshold</code></td><td><code>0.55</code></td></tr><tr><td><code>published</code></td><td><code>true</code></td></tr></table> | The threshold sits between the scores seen on answerable incidents and those seen on out-of-scope ones. Published-only is a hard filter — it is what keeps KB0010 v1 out of a live incident. |
+| **Safety** | <table><tr><th>KEY</th><th>VALUE</th></tr><tr><td><code>floor</code></td><td><code>0.45</code></td></tr><tr><td><code>risk_p</code></td><td><code>[1]</code></td></tr><tr><td><code>retries</code></td><td><code>1</code></td></tr></table> | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible. |
+
+
+
+
+| GROUP    | VALUES     | VALUES   | WHYITISSETTHISWAY                                                                                                                                                                             |
+|----------|------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Indexing | KEY        | VALUE    | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half.          |
+| Indexing | chunk_size | 700      | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half.          |
+| Indexing | overlap    | 120      | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half.          |
+| Indexing | split_on   | heading  | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half.          |
+| Search   | KEY        | VALUE    | The threshold sits between the scores seen on answerable incidents and those seen on out-of- scope ones. Published-only is a hard filter - it is what keeps KB0010 v1 out of a live incident. |
+| Search   | top_k      | 5        | The threshold sits between the scores seen on answerable incidents and those seen on out-of- scope ones. Published-only is a hard filter - it is what keeps KB0010 v1 out of a live incident. |
+| Search   | threshold  | 0.55     | The threshold sits between the scores seen on answerable incidents and those seen on out-of- scope ones. Published-only is a hard filter - it is what keeps KB0010 v1 out of a live incident. |
+| Search   | published  | true     | The threshold sits between the scores seen on answerable incidents and those seen on out-of- scope ones. Published-only is a hard filter - it is what keeps KB0010 v1 out of a live incident. |
+| Safety   | KEY        | VALUE    | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible.            |
+| Safety   | floor      | 0.45     | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible.            |
+| Safety   | risk_p     | [1]      | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible.            |
+| Safety   | retries    | 1        | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible.            |
+
+
+<!-- page: 42 -->
+
+BARQ Systems · IT Service Operations Manual
+
+I N TERNAL DOCUMENT
+
+
+
+
+
+The capture beside this paragraph circulated during the pilot handover and is reproduced because several teams copied their values from it rather than from the file. Two of the numbers in it are now out of date. Read the configuration from the repository, not from a photograph of somebody's screen -a value nobody can diff is a value nobody can review, and the whole point of holding these in one file is that a
+
+change to any of them shows up in the change record.
+
+11.8 Reading the run log
+
+Every run is logged. The extract below covers one incident from acceptance to write-back and is the level of detail available when a suggestion needs explaining.
+
+
+
+
+> [Diagram p.42]
+```text
+worker.log — smartops-worker-1
+
+2026-09-08 09:14:22 INFO  webhook  event 9f2b1c4e accepted sys_id=1c741bd7 -> 202
+2026-09-08 09:14:22 INFO  idemp    claim ok event_id=9f2b1c4e
+2026-09-08 09:14:23 INFO  snow     PATCH incident u_ai_status=in_progress (204)
+2026-09-08 09:14:24 INFO  retrv    top_k=5 filter=state:published,category:network
+2026-09-08 09:14:24 INFO  retrv    hit#1 KB0001/Resolution score=0.847
+2026-09-08 09:14:24 INFO  retrv    hit#2 KB0001/Cause      score=0.812
+2026-09-08 09:14:24 INFO  retrv    hit#3 KB0005/Symptom    score=0.694
+2026-09-08 09:14:29 INFO  gen      prompt_version=v3 tokens_in=1842 tokens_out=214
+2026-09-08 09:14:29 WARN  gen      step 5 not matched to a chunk - dropped
+2026-09-08 09:14:30 INFO  conf     confidence=0.79 threshold=0.55 gate=pass
+2026-09-08 09:14:31 INFO  snow     PATCH suggestion u_human_review=true (204)
+2026-09-08 09:14:31 ERROR trace    langfuse flush timeout after 3000ms - retrying
+2026-09-08 09:14:33 INFO  trace    flush ok trace_id=7c1f8e02e4021bd9
+2026-09-08 09:14:33 INFO  worker   run complete in 11.2s
+```
+
+
+
+11.9 Integration payload
+
+For reference during supplier conversations: the event the ticketing system sends carries identifiers only. No incident text, no requester details and no attachments leave the platform in the event itself -the pilot reads what it is authorised to read, with its own credentials.
+
+<!-- page: 43 -->
+
+
+
+
+> [Diagram p.43]
+```http
+POST /api/v1/events/servicenow
+X-Signature: 4a7f19c2be08d5316f0a2c9d7e41b8e3
+```
+
+```json
+{
+  "event_id" : "9f2b1c4e7a5d64f8bb1e3c0762e6f4e19",
+  "sys_id" : "1c741bd70b2322007518478d83673ef3",
+  "number" : "INC0010023",
+  "event_type" : "incident.created",
+  "emitted_at" : "2026-09-08 09:14:22"
+}
+```
+
+
+
+The event payload, as attached to a supplier ticket during integration testing and reproduced as received.
+
+<!-- page: 44 -->
+
+12. Reporting
+
+12.1 The monthly service review
+
+Held on the second Tuesday. Attended by the service delivery manager, the team leads, the problem manager and any service owner with an open action. The pack is circulated two working days ahead and is not presented in the meeting -the meeting is for the exceptions.
+
+
+| MEASURE                  | DEFINITION                                                            | WHATITISUSEDFOR                                                                                                              |
+|--------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| Volume                   | Incidents created in the period, by priority and by service.          | Capacity planning. A rise with no matching change is the first sign of an undiagnosed problem.                               |
+| First-contact resolution | Resolved by Tier 1 without escalation, as a share of all incidents.   | Knowledge coverage. This is the number that moves when Section 6 improves.                                                   |
+| SLA attainment           | Incidents meeting both response and resolution targets, by priority.  | The contractual measure. Reported with the breaches listed individually, never as a percentage alone.                        |
+| Article usage            | Incidents naming an article in the journal, by article.               | Which articles earn their place at the next review. An article with no uses in twelve months is a candidate for retirement.  |
+| Reopen rate              | Incidents reopened within five working days of resolution.            | Resolution quality. A rising reopen rate alongside improving SLA attainment means we are closing tickets, not fixing faults. |
+| Pilot acceptance         | Drafts applied or edited by an analyst, as a share of drafts written. | Whether the pilot is helping. A draft discarded is not a failure; a draft nobody reads is.                                   |
+
+
+12.2 Reporting to service delivery managers
+
+Service delivery managers at BARQ read their operational reporting in Arabic. The layout below is the agreed one: labels right-aligned in Arabic, and identifiers, scores and article numbers left exactly as they appear in the platform.
+
+
+
+
+> [Diagram p.44]
+### SmartOps · Run report | تقرير تشغيل النظام
+
+| Property / الخاصية | Value / القيمة |
+| :--- | :--- |
+| **رقم البلاغ** | INC0010023 |
+| **الحالة** | مقترح — بانتظار مراجعة بشرية |
+| **درجة الثقة** | 0.79 |
+| **المقال المرجعي** | KB0001 (v2) |
+| **زمن المعالجة** | 11.2 ثانية |
+| **النتيجة** | تم كتابة الاقتراح في ملاحظات العمل |
+
+> **ملاحظة: النظام يقترح ولا يغلق البلاغ.**  
+> القرار النهائي لموظف الدعم دائماً.
+
+
+
+
+| SmartOps·Runreport   |            |
+|----------------------|------------|
+|                      | INC0010023 |
+|                      | 0.79       |
+|                      | KB0001(v2) |
+|                      | 11.2       |
+
+
+A run report as delivered. Identifiers are never translated or transliterated -they must remain resolvable in the ticketing system.
+
+<!-- page: 45 -->
+
+Never translate an identifier
+
+INC0010023, KB0001 and CHG0030455 are keys, not words. Translating or transliterating one breaks the link between a report and the record it describes, and that link is the only thing that makes a report auditable.
+
+12.3 What is not reported
+
+Individual analyst performance. The pack is service-level. Individual coaching happens between an analyst and their team lead, from data neither of them publishes.
+
+Raw journal text. Journals contain requester details. Extracts quoted in a review are anonymised first.
+
+Absolute pilot confidence values across periods. The value is derived from search scores, and those are not comparable if the underlying model changes. Report the distribution and the acceptance rate instead.
+
+<!-- page: 46 -->
+
+Appendix A · Glossary
+
+
+| TERM                     | MEANINGATBARQ                                                                                                                                                                                                                                         |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Bridge                   | The conference line opened for a P1 or a multi-service P2. Attendance is the incident manager, the affected service owners and one representative per resolver group. It stays open until the service is restored, not until the cause is understood. |
+| Breach                   | A response or resolution target missed. Recorded automatically and not editable. A breach with a good reason is still a breach; the reason belongs in the journal.                                                                                    |
+| Clock                    | The elapsed or working-hours measure against a target. Starts at creation, pauses on hold, stops at resolved.                                                                                                                                         |
+| Criticality              | The tier assigned to a service in Section 5. Feeds the impact column of the priority matrix and is changed only through governance.                                                                                                                   |
+| Deviation                | A departure from a Must step in this manual. Recorded in the journal at the time, and reviewed at the monthly service review.                                                                                                                         |
+| First-contact resolution | Resolved by Tier 1 with no escalation. Not the same as resolved on the first call.                                                                                                                                                                    |
+| Known error              | A problem whose cause is understood and whose workaround is documented. See 8.3.                                                                                                                                                                      |
+| Latent change            | A change applied under emergency conditions and recorded afterwards. Reported as a deviation.                                                                                                                                                         |
+| Major incident           | A declared state, not a priority. Declared by the incident manager; it may accompany a P1 or a multi-service P2.                                                                                                                                      |
+| No-contact rule          | Resolution after two recorded chases at least one working day apart with no requester response. See 3.5.                                                                                                                                              |
+| Problem                  | The underlying cause of one or more incidents. Not necessarily understood yet. See 8.1.                                                                                                                                                               |
+| Reopen                   | A resolved incident returned to In Progress within five working days. Counted in Section 12.                                                                                                                                                          |
+| Resolver group           | A team that accepts escalations within its service scope. Listed in 4.2 and in the service catalogue.                                                                                                                                                 |
+| Service owner            | Accountable for a service in Section 5. Approves emergency changes against it and signs post- incident reviews.                                                                                                                                       |
+| Standard change          | A pre-approved change whose procedure is documented and unchanged. Listed in 10.2.                                                                                                                                                                    |
+| Suggested response       | A draft written by the pilot in Section 11. A candidate, never an action.                                                                                                                                                                             |
+| Workaround               | A documented way to restore service without fixing the cause. Applying one resolves the incident and leaves the problem open.                                                                                                                         |
+
+
+<!-- page: 47 -->
+
+Appendix B · Templates
+
+B.1 Escalation handover
+
+Paste into the work note when escalating. A resolver group may reject an escalation that does not carry these five things.
+
+B.2 Requester update
+
+For Additional comments. Three sentences: what is happening, what you need, when they will next hear from you.
+
+B.3 No-contact resolution
+
+B.4 Knowledge article proposal
+
+Raise against the Knowledge -new article catalogue item. The knowledge manager will not publish a proposal that omits the cause; a procedure with no cause behind it is a habit, not knowledge.
+
+
+| Title                | The symptom as a requester would report it, not the fix               |
+|----------------------|-----------------------------------------------------------------------|
+| Service and category | From the catalogue in Section 5                                       |
+| Symptom              | What the requester sees. Include the exact error text if there is one |
+| Cause                | Why it happens. Required - a proposal without this is returned        |
+| Resolution           | Numbered steps, each a single action a Tier 1 analyst can perform     |
+
+
+<!-- page: 48 -->
+
+
+| Escalation   | When to stop and who to send it to                        |
+|--------------|-----------------------------------------------------------|
+| Evidence     | At least two incident numbers where this pattern occurred |
+
+
+<!-- page: 49 -->
+
+Appendix C · Impact and urgency worksheet
+
+Use this when the priority is disputed. Answer both columns, then read the priority off the matrix in 3.3.
+
+
+| IMPACT - HOWMANY,ANDHOWBADLY                                                     | URGENCY - HOWFASTITDEGRADES                                                    |
+|----------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| ▪ 1 - Enterprise. A whole service is unavailable, or an entire site is affected. | ▪ 1 - High. Work stops now, or a deadline inside four hours is at risk.        |
+| ▪ 2 - Department. A team, a floor or a business function cannot work.            | ▪ 2 - Medium. Work is degraded but continuing, or a deadline today is at risk. |
+| ▪ 3 - Individual. One person is affected, or a small number with a workaround.   | ▪ 3 - Low. Inconvenient. A workaround exists and is acceptable for now.        |
+| Count people who cannot work , not people who noticed.                           | Urgency is about the rate of harm, not about who is asking.                    |
+
+
+The two questions that settle most disputes
+
+Is there a workaround the requester can use today? If yes, urgency is rarely 1, whatever the pressure on the call.
+
+Would a second person report this independently? If yes, impact is rarely 3, even though only one person has called.
+
+<!-- page: 50 -->
+
+Appendix D · Directory
+
+Names and roles as at the edition date. Extension numbers and the on-call rota are maintained in the ticketing system and are authoritative there; this table is for routing, not for dialling.
+
+
+| GROUP              | ROLE                         | NAME           | COVERS                                          | OUTOF HOURS    |
+|--------------------|------------------------------|----------------|-------------------------------------------------|----------------|
+| Service management | Service Delivery Manager     | N. Abdelrahman | All services                                    | On-call rota   |
+| Service management | Service Desk Team Lead       | O. Sabry       | Tier 1, both sites                              | Extended hours |
+| Service management | Problem Manager              | D. Halim       | Problem and known error registers               | Working hours  |
+| Service management | Knowledge Manager            | H. Moawad      | Section 6, article lifecycle                    | Working hours  |
+| Service management | Change Manager               | Y. Naguib      | CAB, emergency approvals                        | On-call rota   |
+| Service owners     | Head of Platform Engineering | K. Selim       | order-processing , sap- erp                     | On-call rota   |
+| Service owners     | Network Operations Lead      | L. Haddad      | corporate-vpn , corporate-wifi , file- services | On-call rota   |
+|                    | Identity &Access Lead        | N. Abdelrahman | identity                                        | On-call rota   |
+|                    | Collaboration Services Lead  | O. Sabry       | corporate-email                                 | Extended hours |
+|                    | Endpoint Engineering Lead    | D. Halim       | endpoint , print- services                      | Working hours  |
+
+
+<!-- page: 51 -->
+
+Appendix E · Identifier index
+
+Every record identifier used in this manual, against the sections it appears in. Search the ticketing system for the live record; this index tells you where the context is written down.
+
+
+| IDENTIFIER   | WHATITIS                                                    | SECTIONS                           |
+|--------------|-------------------------------------------------------------|------------------------------------|
+| KB0001       | VPN authentication fails after a password change            | 5.2, 6.1, 6.4, 7.2, 10.2, 11.5     |
+| KB0002       | Outlook shows Disconnected and no mail is delivered         | 3.2, 5.2, 6.1, 6.5                 |
+| KB0003       | Mapped shared drive is missing after sign-in                | 5.2, 6.1, 6.6, 8.3                 |
+| KB0004       | Print jobs queue but nothing prints                         | 5.2, 6.1, 6.7, 7.3, 10.2           |
+| KB0005       | Account is locked after repeated failed sign-ins            | 5.2, 6.1, 6.3, 6.8, 7.4, 8.3, 10.2 |
+| KB0006       | Multi-factor authentication after a lost or replaced device | 6.1, 6.9                           |
+| KB0007       | Laptop performance degrades after a system update           | 5.2, 6.1, 6.10                     |
+| KB0008       | SAP GUI connection times out                                | 5.2, 6.1, 6.11, 8.3                |
+| KB0009       | Wi-Fi drops on the 5 GHz corporate network                  | 5.2, 6.1, 6.12, 8.3, 10.2          |
+| KB0010 v1    | Order service pool exhaustion - retired, do not apply       | 6.1, 6.13, 9.2, 9.5, 9.6           |
+| KB0010 v2    | Order service pool exhaustion - current                     | 5.2, 6.1, 6.13, 7.5, 10.2          |
+| INC0009884   | The 14 March order-processing incident                      | 9.1, 9.3                           |
+| INC0010023   | VPN authentication failure, 08 Sep 2026                     | 7.1, 7.2, 11.5                     |
+| INC0010047   | Meeting room 4 printer, mechanical fault                    | 7.3, 11.4                          |
+| INC0010052   | Order service pool saturation, 08 Sep 2026                  | 7.5, 10.4                          |
+| INC0010064   | Three symptoms, one lockout                                 | 7.4                                |
+| PRB0040012   | Repeat lockouts from cached mobile credentials              | 7.4, 8.2, 8.3, 10.2                |
+| PRB0040018   | Connection lifetime defect on order-processing              | 7.5, 8.2, 9.6                      |
+| PRB0040021   | 5 GHz roaming drops, floors 3 and 4                         | 5.2, 8.2, 10.2                     |
+| PRB0040026   | Post-update endpoint degradation on one model               | 8.2                                |
+| PRB0040029   | Third-floor print queue stalls                              | 8.2, 8.3                           |
+| KE0000034    | SAP connection profile names a decommissioned server        | 5.2, 8.3                           |
+| KE0000041    | Drive mapping absent although the path is reachable         | 8.3                                |
+| KE0000047    | Account re-locks within minutes of an unlock                | 8.3                                |
+| KE0000052    | Wireless drops while roaming                                | 8.3                                |
+| KE0000055    | Print queue stalls after a spooler restart                  | 8.3                                |
+| CHG0030401   | Spooler restart and queue clear - standard                  | 10.2                               |
+
+
+<!-- page: 52 -->
+
+
+| IDENTIFIER   | WHATITIS                                                               | SECTIONS                        |
+|--------------|------------------------------------------------------------------------|---------------------------------|
+| CHG0030418   | Cached credential clear - standard                                     | 10.2                            |
+| CHG0030422   | Account unlock after verification - standard                           | 10.2                            |
+| CHG0030455   | Order service pool drain - standard procedure, emergency authorisation | 6.13, 7.5, 9.3, 9.6, 10.2, 10.4 |
+| CHG0030470   | Wireless driver update on one endpoint - standard                      | 10.2                            |
+| CHG0030588   | Wireless controller firmware                                           | 8.2, 8.3                        |
+| CHG0030602   | Login script rewrite                                                   | 8.3                             |
+| RITM0010877  | MFA reset request                                                      | 1.2, 6.9                        |
+| MIR-2026-03  | Order processing unavailable, 14 March 2026                            | 6.13, 7.5, 9, 10.2              |
+
+
+End of manual. Edition 4.0, published 11 August 2026. Next scheduled review 10 August 2027.

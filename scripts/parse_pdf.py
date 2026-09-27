@@ -1,4 +1,5 @@
 import os
+import gc
 import json
 import base64
 import sys
@@ -8,7 +9,11 @@ from pathlib import Path
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from litellm import completion
-import fitz
+import pymupdf as fitz  # fitz alias kept for compatibility with existing code
+
+# Suppress PyMuPDF unclosed-document warnings produced by Docling's internal BytesIO handling
+import warnings
+warnings.filterwarnings("ignore", message=".*still open.*", category=UserWarning)
 
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.pipeline_options import (
@@ -46,21 +51,38 @@ def normalize_extracted_text(text: str) -> str:
     """Normalize composed Unicode without reversing logical RTL text."""
     return unicodedata.normalize("NFC", text)
 
-def convert_pdf_with_fallback(pdf_path: str, page_range: tuple[int, int] | None = None):
-    """Attempts to process the document using GPU first, falls back to CPU on error."""
+def _create_converter_with_fallback() -> DocumentConverter:
+    """Creates a DocumentConverter once (GPU/AUTO first, CPU fallback). Models load only here."""
     try:
-        print("[Phase 1] Processing PDF (GPU/AUTO)...")
-        converter = _create_converter(AcceleratorDevice.AUTO)
-        return converter.convert(pdf_path, page_range=page_range or (1, sys.maxsize))
+        print("[Phase 1] Initializing converter (GPU/AUTO)...")
+        return _create_converter(AcceleratorDevice.AUTO)
     except Exception as e:
-        print(f"[Phase 1] Error during GPU processing: {e}")
-        print("[Phase 1] Automatically switching to CPU fallback...")
+        print(f"[Phase 1] GPU init failed: {e}. Falling back to CPU...")
+        return _create_converter(AcceleratorDevice.CPU)
+
+
+def convert_pdf_with_fallback(
+    pdf_path: str,
+    page_range: tuple[int, int] | None = None,
+    converter: DocumentConverter | None = None,
+):
+    """Runs conversion using a pre-built converter (or creates one). Models are NOT reloaded."""
+    _converter = converter or _create_converter_with_fallback()
+    try:
+        return _converter.convert(pdf_path, page_range=page_range or (1, sys.maxsize))
+    except Exception as e:
+        if converter is not None:
+            # Re-raise; caller manages the converter lifecycle
+            raise
+        # No pre-built converter supplied — try CPU as last resort
+        print(f"[Phase 1] Conversion failed: {e}. Retrying with CPU converter...")
+        cpu_converter = _create_converter(AcceleratorDevice.CPU)
         try:
-            converter = _create_converter(AcceleratorDevice.CPU)
-            return converter.convert(pdf_path, page_range=page_range or (1, sys.maxsize))
+            return cpu_converter.convert(pdf_path, page_range=page_range or (1, sys.maxsize))
         except Exception as cpu_err:
             print(f"[Phase 1 Error] CPU fallback also failed: {cpu_err}")
             raise cpu_err
+
 
 def extract_pdf_structure(pdf_path: str, output_dir: str):
     """Extract each PDF page independently and preserve failures in the manifest."""
@@ -68,6 +90,11 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
     images_metadata = []
     image_counter = 1
     source_title = None
+
+    # Build the converter ONCE so RapidOCR/ONNX models are loaded only once
+    print("[Phase 1] Loading OCR models (one-time)...")
+    shared_converter = _create_converter_with_fallback()
+    print("[Phase 1] Models loaded. Starting page extraction...")
 
     output_path = Path(output_dir)
     images_dir = output_path / "images"
@@ -105,7 +132,7 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
             markdown_content.append(f"<!-- page: {page_number} -->")
 
             try:
-                result = convert_pdf_with_fallback(pdf_path, (page_number, page_number))
+                result = convert_pdf_with_fallback(pdf_path, (page_number, page_number), converter=shared_converter)
                 doc = result.document
                 page_meta["ocr_used"] = not bool(source_page.get_text("text").strip())
                 if rotation:
@@ -174,6 +201,13 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
                 page_meta["error"] = str(page_error)
                 page_meta["warnings"].append("Page conversion failed; page content was isolated.")
                 print(f"[Phase 1 Warning] Page {page_number} failed: {page_error}")
+            finally:
+                # Release Docling's internal BytesIO-backed PdfDocument handles
+                try:
+                    del result, doc
+                except NameError:
+                    pass
+                gc.collect()
 
     final_markdown = "\n\n".join(markdown_content)
 
