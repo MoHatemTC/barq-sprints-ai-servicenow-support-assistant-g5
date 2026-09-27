@@ -4,10 +4,10 @@ import logging
 import httpx
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import ValidationError
-from schemas.KB_ingestion_schema import KBIngestionPayload
+from Schemas.KB_ingestion_schema import KBIngestionPayload
 
-from schemas.KB_event_schema import KB_event
-from schemas.settings import settings
+from Schemas.KB_event_schema import KB_event
+from Schemas.settings import settings
 from Services.KB_service import KB_services
 from Services.shared import get_ingestion_service
 

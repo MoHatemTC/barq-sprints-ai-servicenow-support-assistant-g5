@@ -1,3 +1,27 @@
+# AI ServiceNow IT Incident Resolution Assistant Knowledge Base
+
+Document ID: doc_001  
+Source file: kbpdf.pdf  
+Source organization: Sprints for BARQ Systems  
+Content type: technical runbook and shared benchmark corpus  
+Coverage: ServiceNow integration, RAG ingestion, retrieval, reasoning, safety, evaluation, and worked examples  
+
+## RAG Ingestion Notes
+
+This document is the canonical knowledge-base corpus for the AI ServiceNow Support Assistant and the advanced Agentic Incident Resolution Platform. Preserve the section identifiers such as KB-01 through KB-32 and UC-01 through UC-08 because they are stable citation anchors.
+
+Use the nearest Markdown heading, section identifier, and page marker as context when creating a chunk. Keep code identifiers, API paths, field names, error codes, article numbers, version numbers, table values, and quoted payloads exactly as written. Do not merge unrelated sections merely because they occur on adjacent pages.
+
+The document contains explanatory prose, Markdown tables, code and JSON examples, benchmark incidents, policy constraints, and diagram descriptions. Tables are part of the knowledge and must remain attached to their surrounding heading. Diagram descriptions beginning with `> [Diagram p.N]` should be indexed as descriptive content and cited with their page number.
+
+The central safety rule is mandatory: the agent suggests and a human decides. No registered tool may resolve, close, or reassign an incident, and high-risk actions require recorded human approval.
+
+Source-page markers below identify the originating PDF page. The source PDF has 58 pages. Repeated running headers and page-number footers were removed from the extracted content. This sample corpus is English-only; Arabic/English OCR and RTL behavior require a separate bilingual test fixture and must not be inferred from this file.
+
+## Corpus Index
+
+Part 1 covers orientation and the ServiceNow platform layer. Part 2 covers the incident lifecycle and platform fields. Part 3 covers the event and webhook contracts. Part 4 covers knowledge ingestion, chunking, embeddings, and retrieval. Part 5 covers reasoning, safety, tools, and orchestration. Part 6 contains worked use cases. Part 7 covers evidence and evaluation. Part 8 contains troubleshooting and the final checklist.
+
 <!-- page: 1 -->
 
 

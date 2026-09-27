@@ -106,11 +106,17 @@ class QdrantService:
         workflow_state: str,
         chunks: list[str],
         vectors: list[list[float]],
+        metadata: list[dict] | None = None,
     ):
         if len(chunks) != len(vectors):
             raise ValueError(
                 f"Chunk/vector count mismatch for {article_id}: "
                 f"{len(chunks)} chunks vs {len(vectors)} vectors"
+            )
+        if metadata is not None and len(metadata) != len(chunks):
+            raise ValueError(
+                f"Chunk/metadata count mismatch for {article_id}: "
+                f"{len(chunks)} chunks vs {len(metadata)} metadata records"
             )
 
         points = []
@@ -119,18 +125,22 @@ class QdrantService:
             point_id = str(
                 uuid.uuid5(uuid.NAMESPACE_URL, f"{article_id}_chunk_{index}")
             )
+            payload = {
+                "article_id": article_id,
+                "title": title,
+                "category": category,
+                "workflow_state": workflow_state,
+                "chunk_index": index,
+                "text": chunk,
+            }
+            if metadata is not None:
+                payload.update(metadata[index])
+
             points.append(
                 PointStruct(
                     id=point_id,
                     vector=vector,
-                    payload={
-                        "article_id": article_id,
-                        "title": title,
-                        "category": category,
-                        "workflow_state": workflow_state,
-                        "chunk_index": index,
-                        "text": chunk,
-                    },
+                    payload=payload,
                 )
             )
 
