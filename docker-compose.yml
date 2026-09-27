@@ -28,8 +28,11 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
+<<<<<<< HEAD
       redis:
         condition: service_healthy
+=======
+>>>>>>> origin/main
 
     networks:
       - app_network
