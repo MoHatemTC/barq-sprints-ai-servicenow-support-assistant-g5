@@ -54,7 +54,20 @@ uv.lock
 requirements.txt
 ```
 
-### 3. Set up the environment
+#### Updating dependencies
+
+`pyproject.toml` is the source of truth. `requirements.txt` is generated from it — never edit it by hand.
+
+After adding, removing, or changing a package:
+
+```bash
+uv add <package>          # or edit pyproject.toml, then: uv lock
+uv export --no-hashes --emit-index-url --format requirements-txt -o requirements.txt
+```
+
+Commit all three files together: `pyproject.toml`, `uv.lock`, `requirements.txt`.
+
+### 3. Set up your environment file
 
 Copy the example environment file:
 

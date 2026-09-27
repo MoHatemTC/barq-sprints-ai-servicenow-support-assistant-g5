@@ -63,6 +63,17 @@ def convert_pdf_with_fallback(pdf_path: str, page_range: tuple[int, int] | None 
             raise cpu_err
 
 def extract_pdf_structure(pdf_path: str, output_dir: str):
+    """Reads PDF, extracts text/tables in order, saves images, and writes draft markdown."""
+    try:
+        result = convert_pdf_with_fallback(pdf_path)
+        doc = result.document
+    except Exception as e:
+        print(f"[Phase 1 Error] Could not convert PDF document '{pdf_path}': {e}")
+        raise e
+
+    markdown_content = []
+    images_metadata = []
+    image_counter = 1
     """Extract each PDF page independently and preserve failures in the manifest."""
     markdown_content = []
     images_metadata = []
@@ -200,6 +211,7 @@ def extract_pdf_structure(pdf_path: str, output_dir: str):
             "page_count": page_count,
             "parsed_at": parsed_at_iso,
             "parser": "Docling + RapidOCR + LiteLLM Vision",
+            "status": "in_progress",
             "ocr_engine": "rapidocr",
             "ocr_languages": pages_meta[0]["ocr_languages"] if pages_meta else [],
             "status": "partial_failure" if any(page.get("error") for page in pages_meta) else "in_progress",
@@ -353,6 +365,9 @@ def process_images_from_manifest(output_dir: str, max_workers: int = 5) -> dict:
             json.dump(manifest_data, f, ensure_ascii=False, indent=4)
     except Exception as e:
         print(f"[Phase 2 Error] Could not update manifest.json: {e}", flush=True)
+
+    if failed_images:
+        raise RuntimeError(f"Image LLM extraction failed for {len(failed_images)} images: {failed_images}")
 
     print("[Phase 2] Image extraction completed successfully.", flush=True)
     return extracted_data_map

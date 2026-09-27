@@ -1,7 +1,9 @@
 services:
 
   fastapi_app:
+
     build: .
+
     container_name: fastapi_support_assistant
 
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
@@ -15,6 +17,8 @@ services:
       - .env
 
     environment:
+      QDRANT_HOST: qdrant_db
+      QDRANT_PORT: 6333
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
@@ -28,17 +32,15 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
-<<<<<<< HEAD
-      redis:
-        condition: service_healthy
-=======
->>>>>>> origin/main
 
     networks:
       - app_network
 
+
   postgres_db:
+
     image: postgres:15-alpine
+
     container_name: postgres_relational_db
 
     restart: always
@@ -115,6 +117,8 @@ services:
       - app_network
 
 volumes:
+
+  qdrant_storage:
 
   postgres_data:
 

@@ -1,4 +1,4 @@
-"""Agent package exposing RunContext, tools, registry, and ports."""
+"""src.agent package mirroring agent package."""
 
 from agent.config import (
     ALLOWED_WORKFLOW_STATES,
