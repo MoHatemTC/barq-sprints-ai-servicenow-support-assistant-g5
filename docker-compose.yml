@@ -23,15 +23,15 @@ services:
       POSTGRES_PORT: 5432
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
 
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
     volumes:
       - .:/app
 
     depends_on:
       postgres_db:
         condition: service_healthy
-
-      qdrant_db:
-        condition: service_started
 
     networks:
       - app_network
@@ -65,6 +65,57 @@ services:
     networks:
       - app_network
 
+  redis:
+    image: redis:7-alpine
+    container_name: barq_redis
+
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+    networks:
+      - app_network
+
+  celery_worker:
+    build: .
+    container_name: celery_worker
+
+    command: celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=2
+
+    restart: always
+
+    env_file:
+      - .env
+
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      POSTGRES_HOST: postgres_db
+      POSTGRES_PORT: 5432
+
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
+
+    volumes:
+      - .:/app
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+      postgres_db:
+        condition: service_healthy
+
+    networks:
+      - app_network
+
 volumes:
 
   qdrant_storage:
@@ -74,5 +125,4 @@ volumes:
 networks:
 
   app_network:
-
     driver: bridge

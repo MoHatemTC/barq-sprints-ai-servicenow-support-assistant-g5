@@ -1,4 +1,4 @@
-"""Agent package exposing RunContext, tools, registry, and ports."""
+"""Compatibility exports for the canonical Agent package."""
 
 from Agent.config import (
     ALLOWED_WORKFLOW_STATES,

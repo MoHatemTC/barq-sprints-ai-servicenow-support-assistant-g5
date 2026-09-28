@@ -90,7 +90,7 @@ def process_incident(ctx: IncidentContext) -> dict:
                 response = build_escalation("The AI model call failed.", number)
 
     # FR-17: confidence = best retrieval score, recorded even when escalated
-    confidence = retrieval.get("best_score") or 0.0
+    confidence = retrieval.get("best_score")
 
     print_execution_trace(ctx, chunks, response, confidence)
     payload = to_writeback_payload(response, confidence)
