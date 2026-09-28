@@ -1,6 +1,7 @@
 """Adapter between the synchronous agent WriteBackPort and S3.6 ServiceNow client."""
 
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict
 
 from agent.ports import WriteBackPort
@@ -24,10 +25,12 @@ class ServiceNowWritebackAdapter(WriteBackPort):
         except RuntimeError:
             return asyncio.run(coro)
 
-        raise RuntimeError(
-            "ServiceNow write-back cannot run synchronously inside an active "
-            "asyncio event loop."
-        )
+        # The agent tool is synchronous, but it can be called while
+        # the worker is already inside an active asyncio event loop.
+        # Run the coroutine in a separate thread with its own event loop.
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(asyncio.run, coro)
+            return future.result()
 
     @staticmethod
     def _to_agent_result(result: Dict[str, Any]) -> Dict[str, Any]:
