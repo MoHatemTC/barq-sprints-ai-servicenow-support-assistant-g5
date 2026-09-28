@@ -1,6 +1,6 @@
-"""src.agent.formatting re-exporting Agent.formatting."""
+"""src.agent.formatting re-exporting agent.formatting."""
 
-from Agent.formatting import (
+from agent.formatting import (
     CITATION_RE,
     STEP_NUMBER_PREFIX_RE,
     calculate_ai_confidence,

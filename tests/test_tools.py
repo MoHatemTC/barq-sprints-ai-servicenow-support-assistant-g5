@@ -19,17 +19,17 @@ if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
 
-from Agent.config import MAX_NOTE_LENGTH, MIN_REASON_LENGTH, SCORE_THRESHOLD
-from Agent.formatting import (
+from agent.config import MAX_NOTE_LENGTH, MIN_REASON_LENGTH, SCORE_THRESHOLD
+from agent.formatting import (
     calculate_ai_confidence,
     format_escalation_message,
     format_suggested_resolution,
     validate_numbered_procedure,
     validate_step_citations,
 )
-from Agent.ports import FakeWriteBackPort
-from Agent.run_context import RunContext
-from Agent.tools import (
+from agent.ports import FakeWriteBackPort
+from agent.run_context import RunContext
+from agent.tools import (
     AddWorkNoteTool,
     RequestHRTool,
     SearchKBTool,

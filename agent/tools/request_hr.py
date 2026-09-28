@@ -9,10 +9,10 @@ State & Terminal Semantics:
 
 import logging
 from typing import Any, Dict
-from Agent.config import MIN_REASON_LENGTH
-from Agent.formatting import calculate_ai_confidence, format_escalation_message
-from Agent.ports import WriteBackPort
-from Agent.run_context import RunContext
+from agent.config import MIN_REASON_LENGTH
+from agent.formatting import calculate_ai_confidence, format_escalation_message
+from agent.ports import WriteBackPort
+from agent.run_context import RunContext
 
 logger = logging.getLogger("agent.tools.request_hr")
 

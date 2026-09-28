@@ -1,6 +1,6 @@
-"""src.agent.tools forwarding to Agent.tools."""
+"""src.agent.tools forwarding to agent.tools."""
 
-from Agent.tools import (
+from agent.tools import (
     AddWorkNoteTool,
     RequestHRTool,
     SearchKBTool,

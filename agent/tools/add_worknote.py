@@ -7,9 +7,9 @@ structured observations and leaves the run open for retry.
 
 import logging
 from typing import Any, Dict
-from Agent.config import MAX_NOTE_LENGTH
-from Agent.ports import WriteBackPort
-from Agent.run_context import RunContext
+from agent.config import MAX_NOTE_LENGTH
+from agent.ports import WriteBackPort
+from agent.run_context import RunContext
 
 logger = logging.getLogger("agent.tools.add_worknote")
 

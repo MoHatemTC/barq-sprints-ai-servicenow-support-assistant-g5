@@ -1,10 +1,10 @@
 """Tools module exposing the four Sprint 3.3 tools and ToolRegistry."""
 
-from Agent.tools.add_worknote import AddWorkNoteTool
-from Agent.tools.registry import ToolRegistry
-from Agent.tools.request_hr import RequestHRTool
-from Agent.tools.search_kb import SearchKBTool
-from Agent.tools.suggest_answer import SuggestAnswerTool
+from agent.tools.add_worknote import AddWorkNoteTool
+from agent.tools.registry import ToolRegistry
+from agent.tools.request_hr import RequestHRTool
+from agent.tools.search_kb import SearchKBTool
+from agent.tools.suggest_answer import SuggestAnswerTool
 
 __all__ = [
     "SearchKBTool",

@@ -1,5 +1,5 @@
-"""src.agent.tools.suggest_answer forwarding to Agent.tools.suggest_answer."""
+"""src.agent.tools.suggest_answer forwarding to agent.tools.suggest_answer."""
 
-from Agent.tools.suggest_answer import SuggestAnswerTool
+from agent.tools.suggest_answer import SuggestAnswerTool
 
 __all__ = ["SuggestAnswerTool"]

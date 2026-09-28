@@ -13,13 +13,13 @@ close, or reassign incidents.
 from typing import Any, Callable, Dict, List, Optional
 from langchain_core.tools import StructuredTool, tool
 
-from Agent.config import FORBIDDEN_TOOL_WORDS
-from Agent.ports import WriteBackPort
-from Agent.run_context import RunContext
-from Agent.tools.add_worknote import AddWorkNoteTool
-from Agent.tools.request_hr import RequestHRTool
-from Agent.tools.search_kb import SearchKBTool
-from Agent.tools.suggest_answer import SuggestAnswerTool
+from agent.config import FORBIDDEN_TOOL_WORDS
+from agent.ports import WriteBackPort
+from agent.run_context import RunContext
+from agent.tools.add_worknote import AddWorkNoteTool
+from agent.tools.request_hr import RequestHRTool
+from agent.tools.search_kb import SearchKBTool
+from agent.tools.suggest_answer import SuggestAnswerTool
 
 EXACT_TOOL_NAMES = {"searchKB", "addworknote", "suggestAnswer", "requestHR"}
 

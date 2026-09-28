@@ -1,21 +1,21 @@
 """Compatibility exports for the canonical Agent package."""
 
-from Agent.config import (
+from agent.config import (
     ALLOWED_WORKFLOW_STATES,
     MAX_NOTE_LENGTH,
     SCORE_THRESHOLD,
     TOP_K,
 )
-from Agent.formatting import (
+from agent.formatting import (
     calculate_ai_confidence,
     format_escalation_message,
     format_suggested_resolution,
     validate_numbered_procedure,
     validate_step_citations,
 )
-from Agent.ports import FakeWriteBackPort, WriteBackPort
-from Agent.run_context import RunContext
-from Agent.tools import (
+from agent.ports import FakeWriteBackPort, WriteBackPort
+from agent.run_context import RunContext
+from agent.tools import (
     AddWorkNoteTool,
     RequestHRTool,
     SearchKBTool,

@@ -1,5 +1,5 @@
-"""src.agent.ports forwarding to Agent.ports."""
+"""src.agent.ports forwarding to agent.ports."""
 
-from Agent.ports import FakeWriteBackPort, WriteBackPort
+from agent.ports import FakeWriteBackPort, WriteBackPort
 
 __all__ = ["WriteBackPort", "FakeWriteBackPort"]

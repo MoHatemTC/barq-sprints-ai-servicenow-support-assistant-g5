@@ -1,5 +1,5 @@
-"""src.agent.run_context re-exporting Agent.run_context."""
+"""src.agent.run_context re-exporting agent.run_context."""
 
-from Agent.run_context import RunContext
+from agent.run_context import RunContext
 
 __all__ = ["RunContext"]

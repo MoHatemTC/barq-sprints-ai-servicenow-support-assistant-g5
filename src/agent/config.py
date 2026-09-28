@@ -1,3 +1,3 @@
-"""src.agent.config forwarding to Agent.config."""
+"""src.agent.config forwarding to agent.config."""
 
-from Agent.config import *
+from agent.config import *

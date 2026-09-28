@@ -12,14 +12,14 @@ State & Terminal Semantics:
 import logging
 from typing import Any, Dict, List, Optional
 
-from Agent.formatting import (
+from agent.formatting import (
     calculate_ai_confidence,
     format_suggested_resolution,
     validate_numbered_procedure,
     validate_step_citations,
 )
-from Agent.ports import WriteBackPort
-from Agent.run_context import RunContext
+from agent.ports import WriteBackPort
+from agent.run_context import RunContext
 
 logger = logging.getLogger("agent.tools.suggest_answer")
 

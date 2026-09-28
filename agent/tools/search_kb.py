@@ -9,8 +9,8 @@ import logging
 from typing import Any, Callable, Dict, List, Optional
 from qdrant_client.models import FieldCondition, Filter, MatchAny
 
-from Agent.config import ALLOWED_WORKFLOW_STATES, SCORE_THRESHOLD, TOP_K
-from Agent.run_context import RunContext
+from agent.config import ALLOWED_WORKFLOW_STATES, SCORE_THRESHOLD, TOP_K
+from agent.run_context import RunContext
 
 logger = logging.getLogger("agent.tools.search_kb")
 
