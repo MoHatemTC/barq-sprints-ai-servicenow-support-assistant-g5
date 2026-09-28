@@ -37,6 +37,12 @@ class FakeDB:
         self.completed = False
         self.status_updates = []
 
+    async def connect(self):
+        return None
+
+    async def disconnect(self):
+        return None
+
     async def is_event_completed(self, event_id):
         return self.completed
 

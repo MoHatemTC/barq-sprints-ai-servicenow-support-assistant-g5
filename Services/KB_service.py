@@ -1,7 +1,7 @@
 import logging
 
 from Clients.serviceNow_clients import serviceNow_client
-from schemas.KB_schema import ServiceNowKBArticle
+from Schemas.KB_schema import ServiceNowKBArticle
 from pydantic import ValidationError
 
 

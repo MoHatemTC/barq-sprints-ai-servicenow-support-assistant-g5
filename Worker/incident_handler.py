@@ -6,7 +6,7 @@ an incident after the Celery worker finishes validation
 and security checks.
 """
 
-from Services.run_pipeline import process_incident
+from run_pipeline import process_incident
 
 
 def handle_incident(incident_context):

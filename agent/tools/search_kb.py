@@ -70,19 +70,18 @@ class SearchKBTool:
 
             # Query Qdrant with published-only filter
             # Support both 'workflow_state' and 'status' payload attributes
+                        # Query Qdrant with published-only filter (FR-11).
+            # Only 'workflow_state' is used: it is on every chunk and it has a
+            # payload index. Qdrant Cloud rejects filters on non-indexed keys
+            # (e.g. 'status') with 400 "Index required but not found".
             state_filter = Filter(
-                should=[
+                must=[
                     FieldCondition(
                         key="workflow_state",
                         match=MatchAny(any=list(self.allowed_states)),
                     ),
-                    FieldCondition(
-                        key="status",
-                        match=MatchAny(any=list(self.allowed_states)),
-                    ),
                 ]
             )
-
             client = getattr(self.qdrant_service, "client", self.qdrant_service)
             collection_name = getattr(self.qdrant_service, "collection_name", "kb_collection")
 
