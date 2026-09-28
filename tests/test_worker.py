@@ -1,4 +1,3 @@
-import os
 import sys
 from pathlib import Path
 
@@ -12,8 +11,6 @@ sys.path.insert(
 
 # Load project environment variables before importing Worker.tasks.
 load_dotenv()
-os.environ["REDIS_URL"] = "redis://localhost:6379/0"
-os.environ["INCIDENT_HANDLER"] = "Worker.incident_handler.handle_incident"
 
 import pytest
 
@@ -41,10 +38,10 @@ class FakeDB:
         self.status_updates = []
 
     async def connect(self):
-        pass
+        return None
 
     async def disconnect(self):
-        pass
+        return None
 
     async def is_event_completed(self, event_id):
         return self.completed

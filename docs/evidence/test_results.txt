@@ -1,0 +1,42 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0 -- D:\barq-sprints-ai-servicenow-support-assistant-g5\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\barq-sprints-ai-servicenow-support-assistant-g5
+configfile: pyproject.toml
+plugins: anyio-4.15.1, Faker-40.39.0, langsmith-0.13.0
+collecting ... collected 32 items
+
+tests/test_agent_loop.py::test_answerable_incident_is_suggested PASSED   [  3%]
+tests/test_agent_loop.py::test_unanswerable_incident_is_escalated PASSED [  6%]
+tests/test_agent_loop.py::test_max_iterations_forces_escalation PASSED   [  9%]
+tests/test_agent_loop.py::test_plain_text_answer_gets_one_nudge_then_escalates PASSED [ 12%]
+tests/test_agent_loop.py::test_nudge_can_recover_the_run PASSED          [ 15%]
+tests/test_agent_loop.py::test_time_budget_forces_escalation PASSED      [ 18%]
+tests/test_agent_loop.py::test_token_budget_forces_escalation PASSED     [ 21%]
+tests/test_agent_loop.py::test_repeated_query_is_blocked_without_hitting_qdrant PASSED [ 25%]
+tests/test_agent_loop.py::test_search_cap_is_enforced PASSED             [ 28%]
+tests/test_agent_loop.py::test_normalize_query PASSED                    [ 31%]
+tests/test_agent_loop.py::test_suggest_without_any_search_is_rejected_then_escalated PASSED [ 34%]
+tests/test_agent_loop.py::test_citing_an_article_that_was_never_retrieved_is_rejected PASSED [ 37%]
+tests/test_agent_loop.py::test_grounding_gate_problems[args0-numbered] PASSED [ 40%]
+tests/test_agent_loop.py::test_grounding_gate_problems[args1-no citation] PASSED [ 43%]
+tests/test_agent_loop.py::test_grounding_gate_problems[args2-sources must] PASSED [ 46%]
+tests/test_agent_loop.py::test_grounding_gate_passes_valid_answer PASSED [ 50%]
+tests/test_agent_loop.py::test_irrelevant_search_then_suggest_is_rejected PASSED [ 53%]
+tests/test_agent_loop.py::test_transient_errors_are_retried PASSED       [ 56%]
+tests/test_agent_loop.py::test_retries_exhausted_raises_agent_failure PASSED [ 59%]
+tests/test_agent_loop.py::test_non_transient_error_is_not_retried PASSED [ 62%]
+tests/test_agent_loop.py::test_exactly_four_allowed_tools_are_bound PASSED [ 65%]
+tests/test_agent_loop.py::test_no_tool_can_resolve_close_or_reassign PASSED [ 68%]
+tests/test_agent_loop.py::test_unknown_tool_call_is_rejected_not_executed PASSED [ 71%]
+tests/test_agent_loop.py::test_calls_after_terminal_tool_are_ignored PASSED [ 75%]
+tests/test_agent_loop.py::test_incident_is_wrapped_as_untrusted_data PASSED [ 78%]
+tests/test_agent_loop.py::test_fake_closing_delimiter_cannot_escape_the_data_block PASSED [ 81%]
+tests/test_agent_loop.py::test_incident_text_never_enters_the_system_prompt PASSED [ 84%]
+tests/test_agent_loop.py::test_system_prompt_declares_injection_rules PASSED [ 87%]
+tests/test_agent_loop.py::test_injected_model_cannot_close_or_invent_a_fix PASSED [ 90%]
+tests/test_agent_loop.py::test_injected_incident_still_gets_grounded_answer_when_model_ignores_injection PASSED [ 93%]
+tests/test_agent_loop.py::test_agent_result_contract PASSED              [ 96%]
+tests/test_agent_loop.py::test_config_from_env PASSED                    [100%]
+
+============================= 32 passed in 0.45s ==============================

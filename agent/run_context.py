@@ -30,6 +30,9 @@ class RunContext(BaseModel):
     terminal_tool: Optional[str] = Field(default=None, description="Name of terminal tool invoked")
     terminal_payload: Optional[Dict[str, Any]] = Field(default=None, description="Payload submitted by terminal tool")
 
+    # ReAct loop execution log (S3.4): llm / tool / guardrail / fallback events
+    events: List[Dict[str, Any]] = Field(default_factory=list, description="Ordered execution steps of the agent loop")
+
     def record_retrieval(self, query: str, chunks: List[Dict[str, Any]], best_score: float) -> None:
         """Record the results of a searchKB query."""
         self.retrieval_history.append({
@@ -87,3 +90,49 @@ class RunContext(BaseModel):
     def check_completed(self) -> Optional[Dict[str, Any]]:
         """Alias for check_finished."""
         return self.check_finished()
+
+    # ------------------------------------------------------------------ #
+    # S3.4 ReAct loop view (read-only helpers; the tools above are unchanged)
+    # ------------------------------------------------------------------ #
+    def log(self, kind: str, **data: Any) -> None:
+        """Append one step to the execution log."""
+        self.events.append({"step": len(self.events) + 1, "kind": kind, **data})
+
+    @property
+    def incident_number(self) -> str:
+        return self.number
+
+    @property
+    def finished(self) -> bool:
+        return self.is_finished or self.is_completed or self.status == "completed"
+
+    @property
+    def outcome(self) -> Optional[str]:
+        """'suggested' | 'escalated' | None, derived from the terminal tool."""
+        return {"suggestAnswer": "suggested", "requestHR": "escalated"}.get(self.terminal_tool or "")
+
+    @property
+    def final_payload(self) -> Dict[str, Any]:
+        return self.terminal_payload or {}
+
+    @property
+    def max_score(self) -> float:
+        return self.best_score
+
+    @property
+    def any_relevant(self) -> bool:
+        """True once any searchKB call returned a chunk above the threshold."""
+        return bool(self.retrieved_chunks)
+
+    @property
+    def retrieved(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Relevant chunks grouped by article id (used by the grounding gate)."""
+        grouped: Dict[str, List[Dict[str, Any]]] = {}
+        for chunk in self.retrieved_chunks:
+            if chunk.get("article_id"):
+                grouped.setdefault(str(chunk["article_id"]), []).append(chunk)
+        return grouped
+
+    def all_chunks(self) -> List[Dict[str, Any]]:
+        """Relevant chunks, best score first."""
+        return sorted(self.retrieved_chunks, key=lambda c: float(c.get("score", 0.0)), reverse=True)
