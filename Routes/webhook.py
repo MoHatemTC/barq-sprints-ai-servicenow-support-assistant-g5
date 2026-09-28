@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.webhook_schema import IncidentPayload
@@ -15,22 +14,8 @@ router = APIRouter()
 preparer = IncidentContextPreparer(max_chars=4000)
 
 
-async def run_ai_pipeline(incident_context, sys_id: str):
-    """Background task: retrieval, answer/escalation, console trace."""
-    try:
-        # process_incident is blocking (model + network), so keep it off the event loop
-        await asyncio.to_thread(process_incident, incident_context)
-        await db.update_event_status(sys_id, "completed")
-    except Exception:
-        logger.exception("AI pipeline failed", extra={"sys_id": sys_id})
-        try:
-            await db.update_event_status(sys_id, "failed")
-        except Exception:
-            logger.exception("Failed to update incident webhook status")
-
-
 @router.post("/api/webhook", status_code=status.HTTP_202_ACCEPTED, dependencies=[Depends(verify_webhook_signature)])
-async def receive_incident_webhook(payload: IncidentPayload, background_tasks: BackgroundTasks):
+async def receive_incident_webhook(payload: IncidentPayload):
     logger.info(
         "Received incident webhook",
         extra={"incident_number": payload.number, "sys_id": payload.sys_id},
@@ -83,19 +68,15 @@ async def receive_incident_webhook(payload: IncidentPayload, background_tasks: B
                 f"PROMPT INJECTION BLOCKED for incident {payload.number}.",
                 extra={"sys_id": payload.sys_id},
             )
-            await db.update_event_status(payload.sys_id, "flagged_malicious")
+            await db.update_event_status(event_id, "flagged_malicious")
             return {
                 "status": "rejected",
                 "number": payload.number,
                 "message": "Payload rejected due to security policy.",
             }
 
-        # 5. Hand off to the AI pipeline; the 202 goes back before it runs
-        background_tasks.add_task(run_ai_pipeline, incident_context, payload.sys_id)
-
-        event_recorded = True
-            
-        #Celery Task
+        # 5. Hand off to the Celery worker; the 202 goes back before any model runs.
+        #    The worker is the ONLY place the AI pipeline runs (S3.5).
         worker_context = WorkerPayload(
             event_id=event_id,
             sys_id=payload.sys_id,
