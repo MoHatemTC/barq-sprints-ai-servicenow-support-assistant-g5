@@ -22,12 +22,13 @@ services:
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
-
+      HF_HOME: /hf_cache
       REDIS_HOST: redis
       REDIS_PORT: 6379
 
     volumes:
       - .:/app
+      - hf_cache:/hf_cache
 
     depends_on:
       postgres_db:
@@ -97,7 +98,7 @@ services:
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
-
+      HF_HOME: /hf_cache
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
 
@@ -105,6 +106,8 @@ services:
 
     volumes:
       - .:/app
+      - hf_cache:/hf_cache
+
 
     depends_on:
       redis:
@@ -121,6 +124,7 @@ volumes:
   qdrant_storage:
 
   postgres_data:
+  hf_cache:
 
 networks:
 
