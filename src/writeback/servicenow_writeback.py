@@ -353,6 +353,7 @@ class ServiceNowWritebackClient:
         self,
         sys_id: str,
         reason: str,
+        ai_confidence: float | None = None
     ) -> dict[str, Any]:
         """
         Escalate an Incident.
@@ -372,12 +373,16 @@ class ServiceNowWritebackClient:
             payload = {
                 "x_2216229_sprint_1_ai_status": "escalated",
                 "x_2216229_sprint_1_ai_suggested_response": "",
-                "x_2216229_sprint_1_human_review_required": False,
+                "x_2216229_sprint_1_human_review_required": True,   # was False
+                "x_2216229_sprint_1_ai_processed": True,            # new
                 "work_notes": (
                     "AI escalation reason: "
                     f"{reason.strip()}"
                 ),
             }
+            if ai_confidence is not None:                           # new
+                self._validate_confidence(ai_confidence)            # his own validator
+                payload["x_2216229_sprint_1_ai_confidence"] = float(ai_confidence)
 
             return await self._patch(
                 sys_id,

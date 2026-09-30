@@ -41,3 +41,7 @@ FORBIDDEN_TOOL_WORDS: Tuple[str, ...] = (
     "create",
     "patch",
 )
+
+# Machine-readable code returned by the write tools when ServiceNow could not be
+# updated. The ReAct loop stops on the first one (no retry storm on a failing API).
+WRITEBACK_FAILED_CODE: str = "WRITEBACK_FAILED"

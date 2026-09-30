@@ -1,4 +1,3 @@
-
 import asyncio
 
 from agent.ports import WriteBackPort
@@ -37,12 +36,13 @@ class FakeServiceNowClient:
         )
         return {"ok": True}
 
-    async def escalate(self, sys_id, reason):
+    async def escalate(self, sys_id, reason, ai_confidence=None):
         self.calls.append(
             {
                 "operation": "escalate",
                 "sys_id": sys_id,
                 "reason": reason,
+                "ai_confidence": ai_confidence,
             }
         )
         return {"ok": True}
@@ -68,7 +68,7 @@ class FailingServiceNowClient:
             "error": "ServiceNow request failed",
         }
 
-    async def escalate(self, sys_id, reason):
+    async def escalate(self, sys_id, reason, ai_confidence=None):
         return {
             "ok": False,
             "error": "ServiceNow request failed",
@@ -165,6 +165,7 @@ def test_escalate_forwards_sys_id_and_reason():
             "operation": "escalate",
             "sys_id": "incident-sys-id",
             "reason": "AI confidence is below the escalation threshold.",
+            "ai_confidence": 0.35,
         }
     ]
 

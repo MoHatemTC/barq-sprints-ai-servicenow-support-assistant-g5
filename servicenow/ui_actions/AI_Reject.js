@@ -1,9 +1,9 @@
-```javascript
 /*
  * ServiceNow UI Action Export
  * Name: Reject AI Suggestion
  * Table: Incident [incident]
  * Action name: rejectAISuggestion
+ * Client: true  |  Onclick: rejectAISuggestion()
  *
  * Condition:
  * current.x_2216229_sprint_1_ai_status == 'suggested' &&
@@ -32,4 +32,3 @@ function rejectAISuggestion() {
 
     g_form.save();
 }
-```

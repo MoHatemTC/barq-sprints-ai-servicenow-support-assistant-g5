@@ -111,6 +111,7 @@ class ServiceNowWritebackAdapter(WriteBackPort):
             self.client.escalate(
                 sys_id=sys_id,
                 reason=reason,
+                ai_confidence=(payload or {}).get("ai_confidence"),
             )
         )
         return self._to_agent_result(result)

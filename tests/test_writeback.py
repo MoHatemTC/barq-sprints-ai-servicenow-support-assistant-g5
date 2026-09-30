@@ -286,10 +286,44 @@ async def test_escalate_sends_correct_payload(client):
         {
             "x_2216229_sprint_1_ai_status": "escalated",
             "x_2216229_sprint_1_ai_suggested_response": "",
-            "x_2216229_sprint_1_human_review_required": False,
+            "x_2216229_sprint_1_human_review_required": True,
+            "x_2216229_sprint_1_ai_processed": True,
             "work_notes": "AI escalation reason: Confidence below threshold",
         },
     )
+
+
+@pytest.mark.asyncio
+async def test_escalate_records_confidence_when_given(client):
+    with patch.object(
+        client,
+        "_patch",
+        new_callable=AsyncMock,
+        return_value={"ok": True},
+    ) as mock_patch:
+        result = await client.escalate(
+            sys_id=SYS_ID,
+            reason="No relevant knowledge base article found.",
+            ai_confidence=0.6241,
+        )
+
+    assert result == {"ok": True}
+    sent = mock_patch.await_args.args[1]
+    assert sent["x_2216229_sprint_1_ai_confidence"] == 0.6241
+    assert sent["x_2216229_sprint_1_human_review_required"] is True
+
+
+@pytest.mark.asyncio
+async def test_escalate_rejects_out_of_range_confidence(client):
+    with patch.object(client, "_patch", new_callable=AsyncMock) as mock_patch:
+        result = await client.escalate(
+            sys_id=SYS_ID,
+            reason="No relevant knowledge base article found.",
+            ai_confidence=1.7,
+        )
+
+    assert result["ok"] is False
+    mock_patch.assert_not_awaited()
 
 
 @pytest.mark.asyncio

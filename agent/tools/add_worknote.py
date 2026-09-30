@@ -7,7 +7,7 @@ structured observations and leaves the run open for retry.
 
 import logging
 from typing import Any, Dict
-from agent.config import MAX_NOTE_LENGTH
+from agent.config import MAX_NOTE_LENGTH,WRITEBACK_FAILED_CODE
 from agent.ports import WriteBackPort
 from agent.run_context import RunContext
 
@@ -91,6 +91,7 @@ class AddWorkNoteTool:
             logger.exception("addworknote write-back failed")
             return {
                 "status": "error",
+                "code": WRITEBACK_FAILED_CODE,
                 "error": f"Failed to post work note via write-back port: {type(exc).__name__}: {str(exc)}",
                 "incident_number": self.run_context.number,
             }

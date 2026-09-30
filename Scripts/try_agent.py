@@ -1,6 +1,9 @@
 """Manual check of the ReAct loop against the real LLM + Qdrant.
 
     python -m scripts.try_agent "wifi keeps disconnecting on my laptop"
+
+SAFE BY DESIGN: the write-back port is the in-memory FakeWriteBackPort, so this
+script can never PATCH a real ServiceNow incident (the sys_id used here is fake).
 """
 import json
 import logging
@@ -10,6 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from agent.ports import FakeWriteBackPort
 from src.agent.factory import build_agent_tools, new_run_context
 from src.agent.react_agent import AgentConfig, run_agent
 from Services.incident_preparer import IncidentContextPreparer
@@ -25,7 +29,8 @@ def main() -> None:
     print("is_safe :", incident.is_safe, "| config:", AgentConfig.from_env())
 
     ctx = new_run_context(incident.sys_id, incident.original_number)
-    tools = build_agent_tools(ctx)
+    # Fake port: nothing is ever written to ServiceNow from this script.
+    tools = build_agent_tools(ctx, write_back_port=FakeWriteBackPort())
     result = run_agent(incident.sys_id, incident, tools, ctx=ctx)
 
     for e in result.events:

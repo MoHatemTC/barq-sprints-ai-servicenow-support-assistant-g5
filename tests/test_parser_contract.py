@@ -74,13 +74,13 @@ def test_extracted_images_exist():
         assert len(images) > 0, "Extracted images directory should contain PNG files"
 
 def test_parser_cli_invalid_pdf():
-    from Scripts.parse_pdf import run_full_pipeline
+    from scripts.parse_pdf import run_full_pipeline
     with pytest.raises(FileNotFoundError):
         run_full_pipeline("non_existent_file.pdf", "data/parsed/test_invalid")
 
 
 def test_image_failure_is_recorded_without_raising(tmp_path):
-    from Scripts.parse_pdf import process_images_from_manifest
+    from scripts.parse_pdf import process_images_from_manifest
 
     output_dir = tmp_path / "parsed"
     output_dir.mkdir()
@@ -110,7 +110,7 @@ def test_image_failure_is_recorded_without_raising(tmp_path):
 
 
 def test_decorative_image_is_skipped(tmp_path):
-    from Scripts.parse_pdf import process_images_from_manifest
+    from scripts.parse_pdf import process_images_from_manifest
 
     output_dir = tmp_path / "parsed"
     output_dir.mkdir()
@@ -138,7 +138,7 @@ def test_decorative_image_is_skipped(tmp_path):
 
 
 def test_page_failure_isolated_in_manifest(tmp_path, monkeypatch):
-    from Scripts import parse_pdf
+    from scripts import parse_pdf
 
     pdf_path = tmp_path / "two-pages.pdf"
     pdf = fitz.open()

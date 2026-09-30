@@ -1,6 +1,6 @@
 """Task 5: filtered KB retrieval (+ read-only tool check).
 
-The agent itself now lives in Agent/react_agent.py (S3.4 ReAct loop).
+The ReAct loop itself lives in src/agent/react_agent.py (S3.4).
 
 Uses the shared EmbeddingService and QdrantService so ingestion and
 retrieval always use the same model and the same collection.

@@ -6,12 +6,14 @@ calculating ai_confidence from retrieval scores, and calling suggest via WriteBa
 
 State & Terminal Semantics:
 - On success: marks RunContext.is_finished = True, blocking further tool execution.
-- On write-back failure: keeps run open for retry, returning a structured error observation.
+- On write-back failure: returns an error observation with code WRITEBACK_FAILED. The
+  ReAct loop stops on the first one (no retries against a failing ServiceNow).
 """
 
 import logging
 from typing import Any, Dict, List, Optional
 
+from agent.config import WRITEBACK_FAILED_CODE
 from agent.formatting import (
     calculate_ai_confidence,
     format_suggested_resolution,
@@ -101,9 +103,10 @@ class SuggestAnswerTool:
                 port_result.get("status") in ("error", "failed")
                 or port_result.get("success") is False
             ):
-                # Write-back operation failed: keep run OPEN for retry
+                # Write-back failed: report it with a code; the loop stops here.
                 return {
                     "status": "error",
+                    "code": WRITEBACK_FAILED_CODE,
                     "error": f"Write-back port failed: {port_result.get('error', 'Operation unconfirmed')}",
                     "incident_number": self.run_context.number,
                     "ai_confidence": ai_confidence,
@@ -125,9 +128,10 @@ class SuggestAnswerTool:
 
         except Exception as exc:
             logger.exception("suggestAnswer write-back failed")
-            # Failed write-back keeps the run OPEN for retry
+            # Write-back raised: same code, the loop stops here.
             return {
                 "status": "error",
+                "code": WRITEBACK_FAILED_CODE,
                 "error": f"Failed to submit suggested resolution via write-back port: {type(exc).__name__}: {str(exc)}",
                 "incident_number": self.run_context.number,
                 "ai_confidence": ai_confidence,

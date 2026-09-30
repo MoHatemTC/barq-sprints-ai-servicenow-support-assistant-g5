@@ -85,7 +85,10 @@ def split_steps(agent_output: str) -> list[str]:
     return [STEP_PREFIX_RE.sub("", ln).strip() for ln in candidates]
 
 
-CITATION_RE = re.compile(r"\[(?:Article:\s*)?([A-Za-z]{2,}\d+)\]")
+# Matches [Article: KB0010001], [KB0010001] AND PDF chunk ids such as [Article: doc_001].
+# An id starts with a letter, may contain letters, digits, "_" and "-", and ends in a digit.
+# KEEP IN SYNC with agent/formatting.py (tests/test_citations.py checks this).
+CITATION_RE = re.compile(r"\[(?:Article:\s*)?([A-Za-z][A-Za-z0-9_\-]*\d)\]")
 
 def validate_steps(step_texts, chunks):
     titles = {}
