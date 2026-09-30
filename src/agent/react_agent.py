@@ -5,6 +5,9 @@ Owning the loop lets us ENFORCE the rules in code, not just in the prompt:
 
   * Guaranteed termination : max iterations, time budget, token budget,
                              forced requestHR if the model never finishes.
+  * Write-back failure     : the FIRST failed ServiceNow write stops the run.
+                             No retries by the model, no forced requestHR
+                             (that would just hit the failing API again).
   * Search loop prevention : max searchKB calls per run + repeated-query block.
   * Grounding gate         : suggestAnswer is checked against what was really
                              retrieved; rejected with feedback; after N
@@ -41,7 +44,8 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AgentConfig:
     max_iterations: int = 6            # LLM turns per run
-    max_seconds: float = 45.0          # wall-clock budget (NFR-01: 60s end-to-end)
+    max_seconds: float = 30.0          # wall-clock budget; the Celery worker's soft limit is 60s,
+                                       # so 30s leaves a safe margin for write-back + retries
     max_total_tokens: int = 20_000     # token budget across all LLM calls
     max_nudges: int = 1                # "you must call a final tool" reminders
     max_searches: int = 3              # searchKB calls allowed per run
@@ -90,6 +94,8 @@ def _env_float(name: str, default: float) -> float:
 
 
 TERMINAL_TOOL_BY_STATUS = {"suggested": "suggestAnswer", "escalated": "requestHR"}
+WRITE_TOOLS = ("addworknote", "suggestAnswer", "requestHR")
+WRITEBACK_FAILED_CODE = "WRITEBACK_FAILED"  # same value as agent.config.WRITEBACK_FAILED_CODE
 
 
 @dataclass
@@ -322,6 +328,7 @@ def run_agent(
     seen_queries: set[str] = set()
     fallback_reason: str | None = None
     terminal_args: dict = {}
+    writeback_error: str | None = None
 
     while not ctx.finished and fallback_reason is None:
         # ---- budgets ------------------------------------------------------
@@ -390,6 +397,14 @@ def run_agent(
 
             if ctx.finished and not terminal_args and name in TERMINAL_TOOL_BY_STATUS.values():
                 terminal_args = dict(args)
+
+            # First failed ServiceNow write stops the run: no more retries.
+            if (name in WRITE_TOOLS and not writeback_error
+                    and isinstance(observation, dict)
+                    and observation.get("code") == WRITEBACK_FAILED_CODE):
+                writeback_error = str(observation.get("error") or "unknown write-back error")
+                fallback_reason = f"write-back failed ({name}): {writeback_error}"
+                ctx.log("guardrail", rule="writeback", detail=fallback_reason)
             ctx.log("tool", name=name, args=args, observation=observation)
             messages.append(ToolMessage(
                 content=json.dumps(observation, ensure_ascii=False, default=str),
@@ -398,8 +413,16 @@ def run_agent(
             ))
 
     if not ctx.finished:
-        forced_reason = f"Agent fallback: {fallback_reason}."
-        _force_escalation(ctx, tool_map, forced_reason)
+        if writeback_error:
+            # ServiceNow is failing: do NOT call requestHR (it would write again).
+            # Close the run locally as an escalation that was never written back.
+            forced_reason = f"ServiceNow write-back failed: {writeback_error}"
+            ctx.log("fallback", reason=forced_reason)
+            ctx.mark_finished("requestHR", {"reason": forced_reason, "escalated": True,
+                                            "writeback_ok": False})
+        else:
+            forced_reason = f"Agent fallback: {fallback_reason}."
+            _force_escalation(ctx, tool_map, forced_reason)
         terminal_args = {"reason": forced_reason}
 
     payload = ctx.final_payload or {}

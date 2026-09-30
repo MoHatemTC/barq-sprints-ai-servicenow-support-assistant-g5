@@ -1,474 +1,117 @@
-# barq-sprints-ai-servicenow-support-assistant-g5
+﻿## ServiceNow Write-back & Human Review
 
-An event-driven, RAG-powered ServiceNow assistant that retrieves trusted knowledge, drafts cited resolutions, and routes responses for human approval.
+Sprint 3 (S3.6) adds the ServiceNow write-back client and human review surface for AI-generated incident suggestions.
 
-## Getting started
+### Python Write-back Client
 
-### 1. Install `uv`
+Implementation:
 
-Dependencies are managed via `uv` and `pyproject.toml`.
+`src/writeback/servicenow_writeback.py`
 
-**macOS / Linux**
+The `ServiceNowWritebackClient` provides:
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+* `add_work_note()`
+* `suggest()`
+* `escalate()`
+
+All write-back operations use the ServiceNow Incident Table API.
+
+The client uses an explicit allow-list of AI-managed fields:
+
+* `x_2216229_sprint_1_ai_status`
+* `x_2216229_sprint_1_ai_confidence`
+* `x_2216229_sprint_1_ai_suggested_response`
+* `x_2216229_sprint_1_human_review_required`
+* `x_2216229_sprint_1_ai_processed`
+* `work_notes`
+
+`comments` is intentionally not part of the AI write-back allow-list.
+
+Customer-facing communication is performed by the human fulfiller through the ServiceNow review UI.
+
+### ServiceNow Field Mapping
+
+The write-back client maps AI output to the following Incident fields:
+
+| AI purpose               | ServiceNow field                           | Write behavior                                                                    |
+| ------------------------ | ------------------------------------------ | --------------------------------------------------------------------------------- |
+| AI status                | `x_2216229_sprint_1_ai_status`             | Written by `suggest()` and `escalate()`                                           |
+| AI confidence            | `x_2216229_sprint_1_ai_confidence`         | Written by `suggest()` and `escalate()` (`0.0` when nothing matched)              |
+| AI suggested response    | `x_2216229_sprint_1_ai_suggested_response` | Written by `suggest()`; read-only on the form                                     |
+| Human review flag        | `x_2216229_sprint_1_human_review_required` | Set (checked) by `suggest()` **and** `escalate()`; cleared only by a human action |
+| AI processed flag        | `x_2216229_sprint_1_ai_processed`          | Set by `suggest()` and `escalate()`                                               |
+| Internal work notes      | `work_notes`                               | AI notes start with `[AI]`; escalations write `AI escalation reason: ...`         |
+| Customer-facing comments | `comments`                                 | Not written directly by the AI client; populated through the human review actions |
+
+The Python write-back client enforces an explicit field allow-list before every PATCH request. Any field outside the allow-list is rejected before an HTTP request is sent to ServiceNow.
+
+Sensitive Incident fields such as `state`, `assigned_to`, `assignment_group`, `close_code`, and `close_notes` are intentionally excluded from the AI write-back allow-list.
+
+### Atomic Write-back
+
+`suggest()` and `escalate()` update the required AI fields and work notes through a single ServiceNow PATCH request.
+
+`escalate()` sets AI Status to `escalated`, **keeps Human Review Required checked**, sets AI Processed, records the run's AI Confidence (`0.0` when nothing matched) and writes the reason as an internal work note.
+
+Expected API failures are returned as:
+
+```python
+{"ok": False, "error": "..."}
 ```
 
-**Windows (PowerShell)**
+instead of raising expected operational exceptions.
 
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+Transient HTTP failures use bounded retries for:
 
-Verify the installation:
+* `429`
+* `500`
+* `502`
+* `503`
+* `504`
 
-```bash
-uv --version
-```
+The write-back client also validates the incident `sys_id` and request parameters before attempting the PATCH request.
 
-### 2. Install dependencies
+### Human Review Surface
 
-From the project root:
+The ServiceNow Incident form provides three review actions:
 
-```bash
-uv sync
-```
+1. **Approve AI Suggestion**
 
-This creates the `.venv` and installs the project dependencies.
+   * Available only when the AI status is `suggested` and human review is required.
+   * Copies the AI suggestion into the customer-facing `comments` field, **without** the internal `Suggested resolution (pending human approval):` header line.
+   * Clears `human_review_required`.
+   * Saves the incident.
 
-If dependencies are changed:
+2. **Edit AI Suggestion**
 
-```bash
-uv add <package>
+   * Available under the same review conditions.
+   * Copies the AI suggestion into `comments` (same header removal as Approve).
+   * Allows the fulfiller to review and modify the customer-facing response before saving.
 
-uv lock
+3. **Reject AI Suggestion**
 
-uv export --no-hashes --emit-index-url --format requirements-txt -o requirements.txt
-```
+   * Available when the AI status is `suggested` and human review is required.
+   * Clears `human_review_required`.
+   * Changes `ai_status` to `escalated`.
+   * Adds an internal work note documenting the rejection.
+   * Saves the incident.
 
-Commit the updated dependency files:
+### ServiceNow scripts in this repo
 
-```text
-pyproject.toml
-uv.lock
-requirements.txt
-```
+The PDI configuration is versioned in `servicenow/` (copy each file into the matching record in the PDI, and keep both identical):
 
-#### Updating dependencies
+| File                                                    | PDI record                                                                 |
+| ------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `servicenow/business_rules/AI_Confidence_Validation.js` | Business rule: AI Confidence must be 0.0 to 1.0 (both ends allowed)        |
+| `servicenow/business_rules/AI_Lifecycle_Guard.js`       | Business rule: clears Human Review when a **human** acts; ignores AI notes |
+| `servicenow/ui_actions/AI_Approve.js`, `AI_Edit.js`, `AI_Reject.js` | UI actions on the Incident form                                |
+| `servicenow/ui_policies/AI_Fields_Read_Only.js`         | UI policy: AI fields are read-only on the form                             |
 
-`pyproject.toml` is the source of truth. `requirements.txt` is generated from it — never edit it by hand.
+The AI Lifecycle Guard treats a work note as written by the AI when it starts with `[AI]`, contains `AI escalation reason:`, or was written by the user named in the optional system property `x_2216229_sprint_1.ai_integration_user`. This matters because escalations keep Human Review checked: an AI note must never switch it off.
 
-After adding, removing, or changing a package:
+The logic of these scripts is tested without a PDI: `node --test tests/js/servicenow_scripts.test.js` (also run by `pytest`).
 
-```bash
-uv add <package>          # or edit pyproject.toml, then: uv lock
-uv export --no-hashes --emit-index-url --format requirements-txt -o requirements.txt
-```
-
-Commit all three files together: `pyproject.toml`, `uv.lock`, `requirements.txt`.
-
-### 3. Set up your environment file
-
-Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-On Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Fill in the required environment variables.
-
-### 4. Required environment variables
-
-#### ServiceNow
-
-| Variable                    | Description                                      |
-| --------------------------- | ------------------------------------------------ |
-| `SERVICENOW_INSTANCE_URL`   | ServiceNow PDI base URL without a trailing slash |
-| `SERVICENOW_USERNAME`       | Dedicated ServiceNow integration user            |
-| `SERVICENOW_PASSWORD`       | Integration user's password                      |
-| `SERVICENOW_KB_ID`          | Knowledge Base Sys ID                            |
-| `SERVICENOW_KB_CATEGORY_ID` | Knowledge Base Category Sys ID                   |
-
-#### Webhook and worker
-
-| Variable           | Description                                           |
-| ------------------ | ----------------------------------------------------- |
-| `WEBHOOK_SECRET`   | Secret used to verify ServiceNow webhook signatures   |
-| `REDIS_URL`        | Redis URL used by Celery as broker and result backend |
-| `INCIDENT_HANDLER` | Dotted Python path for the incident handler           |
-
-Example:
-
-```text
-REDIS_URL=redis://redis:6379/0
-INCIDENT_HANDLER=Worker.incident_handler.handle_incident
-```
-
-Set a unique `WEBHOOK_SECRET` and configure the same secret in ServiceNow.
-
-Webhook requests must contain a valid `X-ServiceNow-Signature`.
-
-### 5. Redis and PostgreSQL
-
-Sprint 3 uses Redis as the Celery message broker and result backend.
-
-PostgreSQL stores application events, completion markers, and dead-lettered events.
-
-The Docker Compose setup provides:
-
-```text
-PostgreSQL
-Redis
-FastAPI
-Celery Worker
-```
-
-## Running the application
-
-### Run PostgreSQL only
-
-For local FastAPI development:
-
-```bash
-docker compose up -d postgres_db
-```
-
-Then:
-
-```bash
-uv run uvicorn main:app --reload
-```
-
-FastAPI connects to PostgreSQL through:
-
-```text
-localhost:5433
-```
-
-### Run the complete application
-
-Start all services:
-
-```bash
-docker compose up --build
-```
-
-This starts:
-
-```text
-FastAPI
-PostgreSQL
-Redis
-Celery Worker
-```
-
-The Celery worker runs with bounded concurrency:
-
-```text
---concurrency=2
-```
-
-Redis and PostgreSQL health checks are used before dependent services start.
-
-### Run the Celery worker directly
-
-The worker can also be started directly with:
-
-```bash
-celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=2
-```
-
-## Sprint 3.5 — Celery Worker
-
-The webhook endpoint performs the synchronous work required for request handling:
-
-```text
-Webhook
-   |
-   +--> Signature verification
-   |
-   +--> Event deduplication
-   |
-   +--> Queue Celery task
-   |
-   +--> HTTP 202 response
-```
-
-The actual incident processing runs asynchronously in the Celery worker:
-
-```text
-Celery Worker
-   |
-   +--> Validate worker payload
-   |
-   +--> Check completion marker
-   |
-   +--> Fetch incident from ServiceNow
-   |
-   +--> Prepare incident context
-   |
-   +--> Execute incident handler
-   |
-   +--> Mark event completed
-```
-
-### Celery reliability configuration
-
-The worker uses:
-
-```text
-task_acks_late = True
-
-task_reject_on_worker_lost = True
-
-worker_prefetch_multiplier = 1
-
-task_soft_time_limit = 60 seconds
-
-task_time_limit = 90 seconds
-
-Redis visibility_timeout = 120 seconds
-```
-
-The Redis visibility timeout is greater than the hard task time limit so an active task is not redelivered prematurely.
-
-### Worker payload
-
-The Celery task receives only the required event metadata:
-
-```json
-{
-  "event_id": "string",
-  "sys_id": "string",
-  "number": "string",
-  "received_at": "ISO timestamp"
-}
-```
-
-The worker then retrieves the current incident directly from ServiceNow using the configured credentials.
-
-## Retry policy
-
-Transient failures are retried with bounded exponential backoff and jitter.
-
-Retryable conditions include:
-
-* Network timeouts
-* Network/request errors
-* HTTP `429`
-* HTTP `5xx`
-* `RetryableError`
-
-The worker allows a maximum of **3 total attempts**:
-
-```text
-Attempt 1
-   |
-   +--> transient failure
-          |
-          v
-       retry + backoff
-          |
-Attempt 2
-   |
-   +--> transient failure
-          |
-          v
-       retry + backoff
-          |
-Attempt 3
-   |
-   +--> success
-   |
-   +--> failure → DLQ
-```
-
-Permanent failures are not retried.
-
-These include:
-
-* HTTP `4xx` except `429`
-* `PermanentError`
-
-## Dead-Letter Queue
-
-When an event cannot be processed after the allowed attempts, it is persisted in PostgreSQL.
-
-The DLQ stores:
-
-```text
-event_id
-payload
-error
-attempts
-created_at
-updated_at
-```
-
-The dead-letter hook records the failure and produces structured logs containing:
-
-```text
-event_id
-sys_id
-attempt
-outcome
-```
-
-Sensitive credentials and incident descriptions are not written to the worker's structured logs.
-
-## DLQ CLI
-
-The DLQ CLI is located at:
-
-```text
-Scripts/dlq.py
-```
-
-### Inspect DLQ
-
-Run:
-
-```bash
-docker compose exec fastapi_app python Scripts/dlq.py inspect
-```
-
-This displays the currently stored dead-letter events, including their event ID, incident identifiers, attempt count, error, and timestamps.
-
-### Requeue an event
-
-Run:
-
-```bash
-docker compose exec fastapi_app python Scripts/dlq.py requeue <event_id>
-```
-
-The event is submitted back to Celery for processing.
-
-After successful requeue, the corresponding DLQ record is removed.
-
-## Event completion and idempotency
-
-Ingress deduplication and task completion are handled independently.
-
-The event log prevents duplicate webhook ingestion.
-
-The completion marker prevents a redelivered Celery task from executing the incident-processing pipeline again after the event has already completed.
-
-This allows late-acknowledged tasks to be safely redelivered after worker failures.
-
-## Incident handler
-
-Incident processing is pluggable through the `INCIDENT_HANDLER` environment variable.
-
-Example:
-
-```text
-INCIDENT_HANDLER=Worker.incident_handler.handle_incident
-```
-
-The default handler delegates to the existing incident-processing pipeline.
-
-## Evidence
-
-Sprint 3.5 runtime evidence covers:
-
-* Successful asynchronous task execution
-* Retry with exponential backoff
-* Retry exhaustion resulting in DLQ
-* DLQ persistence in PostgreSQL
-* DLQ requeue
-* Worker crash followed by Celery task redelivery
-
-Evidence screenshots are stored under:
-
-```text
-docs/evidence/
-```
-
-## Project structure
-
-Relevant Sprint 3.5 files:
-
-```text
-Worker/
-├── celery_app.py
-├── tasks.py
-├── dead_letter.py
-├── errors.py
-└── incident_handler.py
-
-Scripts/
-└── dlq.py
-
-tests/
-└── test_worker.py
-
-docs/
-└── evidence/
-
-docker-compose.yml
-README.md
-```
-
-## Running tests
-
-Run the worker test suite with:
-
-```bash
-pytest -q tests/test_worker.py
-```
-
-Run the complete test suite with:
-
-```bash
-pytest -q
-```
-
-
-## 📄 PDF Parser CLI & Multimodal Ingestion Pipeline
-
-The project includes an end-to-end PDF parsing and multimodal extraction script located in [`scripts/parse_pdf.py`](scripts/parse_pdf.py). It converts complex technical runbooks into structured Markdown with embedded Vision LLM extractions.
-
-### 🛠️ Execution Commands
-
-Run the parser CLI on any input PDF document:
-
-```bash
-# Parse a PDF and output results to data/parsed/doc_001
-uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001
-
-# Force re-execution and overwrite existing outputs
-uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001 --overwrite
-```
-
-### 🎯 Parser Tool Selection Rationale
-1. **IBM Docling (`docling`):** Selected for state-of-the-art layout analysis, native Markdown table export, bounding box tracking, and page division.
-2. **RapidOCR (`rapidocr`):** Lightweight, multi-lingual OCR engine supporting Arabic & English text detection without heavy external dependencies.
-3. **LiteLLM Vision Integration (`litellm`):** Converts complex sequence diagrams, flowcharts, and architecture diagrams into structured Markdown blockquotes.
-4. **Parallel Processing (`ThreadPoolExecutor`):** Processes image extractions concurrently to achieve 5x faster processing.
-
-### 📦 Contract Deliverables & Outputs
-* **`document.md`**: Clean, standardized Markdown output containing consecutive `<!-- page: N -->` markers and injected image extractions.
-* **`manifest.json`**: Complete metadata tracking image bounding boxes (`bbox`), page numbers, and processing status (`completed`).
-* **`images/`**: Saved PNG picture items extracted from the PDF.
-
-### 🧪 Running Contract Tests
-
-Validate parser compliance against contract specifications:
-
-```bash
-uv run pytest tests/test_parser_contract.py
-```
-
-### ⚠️ Runtime Expectations & Known Constraints
-* **GPU vs CPU Fallback:** Automatically utilizes PyTorch GPU acceleration when available, falling back seamlessly to CPU execution.
-* **API Rate Limits:** When running parallel image vision extraction on documents with >20 diagrams, ensure your `LITELLM_BASE_URL` endpoint supports concurrent calls.
+---
 
 ---
 
@@ -479,151 +122,95 @@ The incident pipeline is driven by an autonomous **ReAct loop** (Thought → Act
 ### How a run works
 
 ```text
-Webhook → IncidentContextPreparer (sanitize, is_safe)
-        │  is_safe = False → escalate, agent never runs
-        ▼
+Webhook → Celery worker → IncidentContextPreparer (sanitize, is_safe)
+         │  is_safe = False → rejected, agent never runs
+         ▼
 run_agent(sys_id, incident, tools, ctx)
    ┌─────────────────────────────────────────────────────────┐
    │ LLM (bind_tools) ── Thought + Action ──► tool call       │
    │        ▲                                   │             │
    │        └──────── Observation (JSON) ◄──────┘             │
    │ guardrails: budgets · search cap · repeated query ·      │
-   │             grounding gate · LLM retry                   │
+   │   grounding gate · LLM retry · stop on write-back error  │
    └─────────────── ends with suggestAnswer | requestHR ─────┘
-        ▼
-response_formatter (2nd citation check) → console trace → write-back payload
+         ▼
+response_formatter (2nd citation check) → console trace → result payload (log only)
 ```
 
-| File | Role |
-|---|---|
-| `src/agent/react_agent.py` | The loop, guardrails, `AgentConfig`, `AgentResult`, `AgentFailure` |
-| `src/agent/prompts/system_prompt.py` | Versioned system prompt (`PROMPT_VERSION`, changelog) |
-| `src/agent/run_context.py` | Per-run state: retrieved articles, scores, searches, outcome, event log |
-| `src/agent/local_tools.py` | Temporary tool layer (see *Swapping in S3.3 tools*) |
-| `agent/agent.py` | Task 5 retriever (`KnowledgeRetriever`) used by `searchKB` |
-| `run_pipeline.py` | `process_incident()`, called by the webhook background task |
-| `tests/test_agent_loop.py` | 32 offline tests (scripted fake LLM, fake retriever) |
-| `scripts/try_agent.py` | One real run, printing the full transcript |
-| `scripts/make_evidence.py` | Regenerates `docs/evidence/*.md` from real runs |
+**Who writes to ServiceNow?** The agent's own tools (`addworknote`, `suggestAnswer`, `requestHR`) do, through the write-back port (`src/agent/factory.py` → `ServiceNowWritebackAdapter`). `process_incident()` sends nothing to ServiceNow; its `Pipeline result for ...` log line is only a log.
+
+| File                                 | Role                                                                    |
+| ------------------------------------ | ----------------------------------------------------------------------- |
+| `src/agent/react_agent.py`           | The loop, guardrails, `AgentConfig`, `AgentResult`, `AgentFailure`      |
+| `src/agent/prompts/system_prompt.py` | Versioned system prompt (`PROMPT_VERSION`, changelog; now `v1.3`)       |
+| `src/agent/run_context.py`           | Per-run state: retrieved articles, scores, searches, outcome, event log |
+| `agent/agent.py`                     | Task 5 retriever (`KnowledgeRetriever`) used by `searchKB`              |
+| `run_pipeline.py`                    | `process_incident()`, called by the Celery worker                       |
+| `tests/test_agent_loop.py`           | Offline agent-loop tests                                                |
+| `scripts/try_agent.py`               | One real LLM run, printing the full transcript (fake write-back port)   |
+| `scripts/make_evidence.py`           | Regenerates `docs/evidence/*.md` from real runs (fake write-back port)  |
 
 ### Entry point and result
 
 ```python
 from src.agent.react_agent import run_agent
 
-result = run_agent(sys_id, incident, tools, ctx=run_ctx)   # incident = pre-fetched IncidentContext
-result.status          # "suggested" | "escalated"
-result.terminal_tool   # "suggestAnswer" | "requestHR"  (exactly one per run, always set)
-result.iterations      # LLM turns used
-result.steps           # ordered log: llm / tool / guardrail / fallback events
+result = run_agent(sys_id, incident, tools, ctx=run_ctx)
+
+result.status
+result.terminal_tool
+result.iterations
+result.steps
 ```
 
-`AgentResult` also carries `procedure`, `sources`, `reason`, `searches`, `grounding_rejections`, `fallback_reason`, `total_tokens`, `max_score`, `retrieved_chunks` and `prompt_version`. Unrecoverable LLM failures raise `AgentFailure`, which the pipeline turns into an escalation.
+`AgentResult` also carries `procedure`, `sources`, `reason`, `searches`, `grounding_rejections`, `fallback_reason`, `total_tokens`, `max_score`, `retrieved_chunks`, and `prompt_version`.
 
-### Tools (exactly four)
+Unrecoverable LLM failures raise `AgentFailure`, which the pipeline turns into an escalation.
 
-| Tool | Terminal | Purpose |
-|---|---|---|
-| `searchKB(query)` | no | Dense search over **published** KB chunks; returns `relevant`, `max_score`, `threshold`, `results` |
-| `addworknote(note)` | no | Internal note |
-| `suggestAnswer(procedure, sources)` | **yes** | Submit a grounded, numbered, cited fix for human approval |
-| `requestHR(reason)` | **yes** | Hand the incident to a human |
+### Tools
 
-No tool can resolve, close or reassign an incident. That boundary is structural, and a test asserts it.
+| Tool                                | Terminal | Purpose                                                   |
+| ----------------------------------- | -------- | --------------------------------------------------------- |
+| `searchKB(query)`                   | No       | Dense search over published KB chunks                     |
+| `addworknote(note)`                 | No       | Internal note (written to ServiceNow with an `[AI]` prefix) |
+| `suggestAnswer(procedure, sources)` | Yes      | Submit a grounded, numbered, cited fix for human approval |
+| `requestHR(reason)`                 | Yes      | Hand the incident to a human                              |
+
+No tool can resolve, close, or reassign an incident. That boundary is structural.
+
+### Citations
+
+Every step of a suggested procedure ends with `[Article: <article_id>]`, where `<article_id>` is exactly what `searchKB` returned. Both ServiceNow KB numbers (`[Article: KB0010174]`) and PDF chunk documents (`[Article: doc_001]`) are valid. Citing an id that was not retrieved in the run is rejected.
 
 ### Guardrails
 
-| Guardrail | Rule | When broken |
-|---|---|---|
-| Guaranteed termination | Max iterations, time budget, token budget; one nudge if the model answers in plain text | Forced `requestHR`, logged in `steps` as `forced: true`, with `fallback_reason` recorded. Every test asserts exactly one valid terminal tool |
-| Search cap | Max `AGENT_MAX_SEARCHES` `searchKB` calls per run | Call blocked; model told to finish |
-| Repeated query | Queries are normalized (case, punctuation, spaces); duplicates are blocked | Call blocked; Qdrant is not hit |
-| Grounding gate | `suggestAnswer` requires: a search returned `relevant: true`; every step is numbered and cited; every cited ID was actually retrieved; `sources` is non-empty | Rejected with feedback; after `AGENT_MAX_GROUNDING_REJECTIONS` the run becomes `requestHR` |
-| Untrusted input | Incident text goes only into the user message, wrapped in `<incident_data>` and declared untrusted. Any delimiter planted inside the text is stripped first, so it cannot "close" the block early. The prompt forbids role changes, prompt disclosure and ticket actions | Offline tests + a real injection run |
-| LLM resilience | 408/409/429/5xx, timeouts and connection errors are retried with exponential backoff | `AgentFailure` → pipeline escalates "AI model is unavailable"; the service keeps running |
+| Guardrail              | Rule                                                                                                   | When broken                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Guaranteed termination | Max iterations (`AGENT_MAX_ITERATIONS`, 6), time budget (`AGENT_MAX_SECONDS`, **30**), token budget (`AGENT_MAX_TOKENS`, 20000) | Forced `requestHR`                                                  |
+| Search cap             | Max `AGENT_MAX_SEARCHES` (3) `searchKB` calls; the same query twice is blocked                         | Error observation; the model must finish                            |
+| Grounding gate         | `suggestAnswer` = numbered steps only, every step cited, only retrieved article ids cited              | Rejected with feedback; after `AGENT_MAX_GROUNDING_REJECTIONS` (2) the run becomes `requestHR` |
+| Plain-text answer      | The model must end with a final tool                                                                   | One nudge (`AGENT_MAX_NUDGES`, 1), then forced `requestHR`          |
+| LLM errors             | Transient errors retried with backoff (`AGENT_LLM_RETRIES` 2, `AGENT_RETRY_BASE_DELAY` 1 s)            | `AgentFailure`, the pipeline escalates                              |
+| Write-back failure     | The **first** failed ServiceNow write (`addworknote`, `suggestAnswer`, `requestHR`) stops the run      | No retries, no forced `requestHR`; run closed locally as `escalated` (`fallback_reason` starts with `write-back failed`) |
+
+The 30 s default for `AGENT_MAX_SECONDS` leaves a safe margin under the Celery worker's 60 s soft limit (`Worker/celery_app.py`).
 
 ### Configuration (`.env`, all optional)
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `LLM_TEMPERATURE` | `0` | Low by default for repeatable runs |
-| `AGENT_MAX_ITERATIONS` | `6` | LLM turns per run |
-| `AGENT_MAX_SECONDS` | `45` | Wall-clock budget per run |
-| `AGENT_MAX_TOKENS` | `20000` | Token budget per run |
-| `AGENT_MAX_NUDGES` | `1` | Reminders when the model answers in plain text |
-| `AGENT_MAX_SEARCHES` | `3` | `searchKB` calls per run |
-| `AGENT_MAX_GROUNDING_REJECTIONS` | `2` | Rejected suggestions before escalation |
-| `AGENT_LLM_RETRIES` | `2` | Extra attempts on transient LLM errors |
-| `AGENT_RETRY_BASE_DELAY` | `1.0` | Backoff base in seconds (doubles each retry) |
+`AGENT_MAX_ITERATIONS`, `AGENT_MAX_SECONDS`, `AGENT_MAX_TOKENS`, `AGENT_MAX_NUDGES`, `AGENT_MAX_SEARCHES`, `AGENT_MAX_GROUNDING_REJECTIONS`, `AGENT_LLM_RETRIES`, `AGENT_RETRY_BASE_DELAY`, `LLM_MODEL`, `LLM_TEMPERATURE`, `SCORE_THRESHOLD`, `TOP_K`. Invalid or non-positive values fall back to the defaults above.
 
-Invalid values log a warning and fall back to the default. `SCORE_THRESHOLD` and `TOP_K` (retrieval) are shared with Task 5.
+### Manual runs and evidence
 
-### Running it
+Both scripts use the in-memory `FakeWriteBackPort`, so they can never write to a real ServiceNow incident (they still call the real LLM and Qdrant):
 
 ```bash
-# Offline tests (no LLM / Qdrant / token needed)
-python -m pytest tests/test_agent_loop.py -v
-
-# Save the test proof for the PR
-python -m pytest tests/test_agent_loop.py -v | tee docs/evidence/test_results.txt
-
-# One real run with the full ReAct transcript
 python -m scripts.try_agent "wifi keeps disconnecting on my laptop"
-
-# Full pipeline (trace + write-back payload + outputs/)
-python run_pipeline.py "wifi keeps disconnecting on my laptop"
-
-# Regenerate evidence from real runs
-python -m scripts.make_evidence
+python -m scripts.make_evidence      # rewrites docs/evidence/answerable_run.md, unanswerable_run.md, injection_run.md
 ```
 
-### Evidence (`docs/evidence/`)
+### Tests
 
-`test_results.txt` holds the offline test log. The transcripts below come from real runs (Gemini via the Sprints LiteLLM proxy + Qdrant Cloud).
-
-| File | Outcome | Shows |
-|---|---|---|
-| `answerable_run.md` | suggested | search → relevant (0.86) → grounded, cited procedure |
-| `unanswerable_run.md` | escalated | two different queries, both below 0.70 → `requestHR`, no invented fix |
-| `injection_run.md` (extra) | suggested | injection ignored; only the technical symptom was searched; no prompt leak or ticket action |
-
-> **Why "Thought" is empty in the transcripts:** Gemini's function calling returns the tool call without visible reasoning text. The reasoning is still auditable through the Action → Observation chain and the guardrail events.
-
-### Output of a run
-
-`process_incident()` keeps the Sprint 2 payload (`ai_suggested_response`, `ai_confidence`, `human_review_required: true`, `escalated`, `citations`) and adds an `agent` block:
-
-```json
-"agent": {
-  "prompt_version": "v1.1",
-  "outcome": "suggested",
-  "terminal_tool": "suggestAnswer",
-  "iterations": 2,
-  "searches": 1,
-  "grounding_rejections": 0,
-  "fallback_reason": null,
-  "total_tokens": 2844
-}
+```bash
+python -m pytest                     # Python tests (offline)
+node --test tests/js/servicenow_scripts.test.js   # ServiceNow script logic (also run by pytest)
 ```
-
-`ai_confidence` is the best retrieval score seen during the run (0.0 if nothing was retrieved).
-
-### Swapping in S3.3 tools
-
-`src/agent/local_tools.py` is a stand-in with the **same four tool names** as the S3.3 tool layer. It records outcomes in `RunContext` but does not write back to ServiceNow. When `build_tools(context, kb_client, writeback)` is merged, replace one line in `run_pipeline.py`:
-
-```python
-tools = build_local_tools(run_ctx, get_knowledge_retriever())
-# →
-tools = build_tools(run_ctx, kb_client, writeback)
-```
-
-The loop, guardrails and tests do not change. The loop still applies its own grounding gate before `suggestAnswer` runs.
-
-### Known limits
-
-- Write-back to ServiceNow is not wired here; that is S3.6.
-- Runs execute in FastAPI background tasks, not Celery; that is S3.5.
-- The time budget is checked between LLM calls. A single slow call is bounded by the LLM client timeout (30 s in `Services/llm.py`).
-- The grounding gate checks citations and retrieval, not semantic faithfulness of each sentence. Human review remains mandatory for every suggestion.
-

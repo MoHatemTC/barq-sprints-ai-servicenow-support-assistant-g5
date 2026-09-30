@@ -6,6 +6,9 @@ Writes:
     docs/evidence/answerable_run.md
     docs/evidence/unanswerable_run.md
     docs/evidence/injection_run.md
+
+SAFE BY DESIGN: every run uses the in-memory FakeWriteBackPort, so generating
+evidence never writes to real ServiceNow incidents.
 """
 
 import json
@@ -17,6 +20,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from agent.ports import FakeWriteBackPort
 from src.agent.factory import build_agent_tools, new_run_context
 from src.agent.react_agent import AgentConfig, run_agent
 from Services.incident_preparer import IncidentContextPreparer
@@ -110,7 +114,9 @@ def main() -> None:
     for filename, number, title, text, purpose in CASES:
         incident = preparer.process_payload("0" * 32, number, text, "")
         ctx = new_run_context(incident.sys_id, number)
-        result = run_agent(incident.sys_id, incident, build_agent_tools(ctx), ctx=ctx, config=config)
+        # Fake port: evidence runs must never write to real ServiceNow.
+        tools = build_agent_tools(ctx, write_back_port=FakeWriteBackPort())
+        result = run_agent(incident.sys_id, incident, tools, ctx=ctx, config=config)
         path = OUT_DIR / f"{filename}.md"
         path.write_text(render(title, number, text, purpose, incident, result, config), encoding="utf-8")
         print(f"{path}  ->  {result.outcome} ({result.iterations} iterations)")

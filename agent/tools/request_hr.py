@@ -4,12 +4,13 @@ Terminal tool validating escalation reason and calling escalate via WriteBackPor
 
 State & Terminal Semantics:
 - On success: marks RunContext.is_finished = True, blocking further tool execution.
-- On write-back failure: keeps run open for retry, returning a structured error observation.
+- On write-back failure: returns an error observation with code WRITEBACK_FAILED. The
+  ReAct loop stops on the first one (no retries against a failing ServiceNow).
 """
 
 import logging
 from typing import Any, Dict
-from agent.config import MIN_REASON_LENGTH
+from agent.config import MIN_REASON_LENGTH, WRITEBACK_FAILED_CODE
 from agent.formatting import calculate_ai_confidence, format_escalation_message
 from agent.ports import WriteBackPort
 from agent.run_context import RunContext
@@ -97,9 +98,10 @@ class RequestHRTool:
                 port_result.get("status") in ("error", "failed")
                 or port_result.get("success") is False
             ):
-                # Write-back operation failed: keep run OPEN for retry
+                # Write-back failed: report it with a code; the loop stops here.
                 return {
                     "status": "error",
+                    "code": WRITEBACK_FAILED_CODE,
                     "error": f"Write-back port escalation failed: {port_result.get('error', 'Operation unconfirmed')}",
                     "incident_number": self.run_context.number,
                     "port_result": port_result,
@@ -120,9 +122,10 @@ class RequestHRTool:
 
         except Exception as exc:
             logger.exception("requestHR write-back failed")
-            # Failed write-back keeps run open for retry
+            # Write-back raised: same code, the loop stops here.
             return {
                 "status": "error",
+                "code": WRITEBACK_FAILED_CODE,
                 "error": f"Failed to escalate incident via write-back port: {type(exc).__name__}: {str(exc)}",
                 "incident_number": self.run_context.number,
             }

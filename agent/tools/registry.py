@@ -127,7 +127,7 @@ class ToolRegistry:
             name="suggestAnswer",
             description=(
                 "Terminal: Submit a suggested resolution for human review. "
-                "Procedure must be a numbered list with inline citations [Article: KBxxxxxxx]. "
+                "Procedure must be a numbered list with inline citations [Article: <article_id>], e.g. [Article: KB0010001] or [Article: doc_001]. "
                 "Locks the run context upon success."
             ),
         )

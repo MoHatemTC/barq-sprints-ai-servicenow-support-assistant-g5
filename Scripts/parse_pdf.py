@@ -342,7 +342,7 @@ def process_images_from_manifest(output_dir: str, max_workers: int = 5) -> dict:
             print(f"[Phase 2 Warning] Image file not found for {img_id}", flush=True)
             img_meta["status"] = "missing"
             failure_text = f"\n\n> [Diagram p.{page_n}]\n> [Image file missing: {img_label}]\n"
-            return (img_id, failure_text, img_meta, img_label)
+            return (img_id, failure_text, img_meta, None)
 
     items_to_process = list(enumerate(images, 1))
     

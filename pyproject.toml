@@ -42,6 +42,7 @@ dependencies = [
     "watchfiles==1.2.0",
     "websockets==17.1",
     "torch>=2.6.0",
+    "pytest-asyncio>=1.4.0",
     "celery>=5.6.3",
     "redis>=8.1.0",
     "torchvision",
@@ -60,3 +61,8 @@ torchvision = [{ index = "pytorch-cpu" }]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
 explicit = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+

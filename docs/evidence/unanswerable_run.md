@@ -1,9 +1,9 @@
 # Evidence — Out-of-scope incident
 
-- **Generated:** 2026-09-26T18:43:18
+- **Generated:** 2026-09-30T11:15:43
 - **Model:** `gemini/gemini-3.6-flash` (temperature 0)
-- **Prompt version:** `v1.1`
-- **Config:** max_iterations=6, max_searches=3, max_seconds=45.0, max_grounding_rejections=2
+- **Prompt version:** `v1.3`
+- **Config:** max_iterations=6, max_searches=3, max_seconds=30.0, max_grounding_rejections=2
 - **Purpose:** Nothing in the KB passes the threshold; the agent refuses to guess and calls requestHR.
 
 ## Incident (untrusted input)
@@ -23,7 +23,7 @@
 
 ```json
 {
-  "query": "bake sourdough bread"
+  "query": "sourdough bread"
 }
 ```
 
@@ -31,10 +31,42 @@
 
 ```json
 {
-  "relevant": false,
-  "max_score": 0.4531,
+  "query": "sourdough bread",
+  "count": 0,
+  "total_candidates": 5,
+  "best_score": 0.4639,
+  "avg_score": 0.4396,
+  "scores": [],
+  "all_scores": [
+    [
+      "doc_001",
+      0.4639
+    ],
+    [
+      "doc_001",
+      0.4428
+    ],
+    [
+      "KB0010174",
+      0.435
+    ],
+    [
+      "KB0010156",
+      0.4286
+    ],
+    [
+      "doc_001",
+      0.4277
+    ]
+  ],
   "threshold": 0.7,
-  "results": []
+  "score_threshold": 0.7,
+  "threshold_met": false,
+  "threshold_passed": false,
+  "human_review_required": true,
+  "chunks": [],
+  "status": "no_results",
+  "message": "No knowledge article scored above threshold 0.7 (best: 0.4639)."
 }
 ```
 
@@ -46,7 +78,7 @@
 
 ```json
 {
-  "query": "sourdough"
+  "query": "baking sourdough bread"
 }
 ```
 
@@ -54,10 +86,42 @@
 
 ```json
 {
-  "relevant": false,
-  "max_score": 0.4822,
+  "query": "baking sourdough bread",
+  "count": 0,
+  "total_candidates": 5,
+  "best_score": 0.4608,
+  "avg_score": 0.4486,
+  "scores": [],
+  "all_scores": [
+    [
+      "doc_001",
+      0.4608
+    ],
+    [
+      "doc_001",
+      0.4523
+    ],
+    [
+      "doc_001",
+      0.4484
+    ],
+    [
+      "KB0010174",
+      0.4411
+    ],
+    [
+      "doc_001",
+      0.4405
+    ]
+  ],
   "threshold": 0.7,
-  "results": []
+  "score_threshold": 0.7,
+  "threshold_met": false,
+  "threshold_passed": false,
+  "human_review_required": true,
+  "chunks": [],
+  "status": "no_results",
+  "message": "No knowledge article scored above threshold 0.7 (best: 0.4608)."
 }
 ```
 
@@ -69,7 +133,7 @@
 
 ```json
 {
-  "reason": "No relevant knowledge base articles found for baking sourdough bread."
+  "reason": "No knowledge base articles were found for baking sourdough bread, which is a non-IT request."
 }
 ```
 
@@ -77,8 +141,36 @@
 
 ```json
 {
-  "ok": true,
-  "status": "escalated"
+  "status": "success",
+  "message": "Escalation to human review submitted for incident INC0090002.",
+  "incident_number": "INC0090002",
+  "reason": "No knowledge base articles were found for baking sourdough bread, which is a non-IT request.",
+  "ai_confidence": 0.4639,
+  "payload": {
+    "ai_suggested_response": "HUMAN REVIEW REQUIRED for incident INC0090002: No knowledge base articles were found for baking sourdough bread, which is a non-IT request. No resolution procedure was generated. Please escalate this incident to a service desk agent.",
+    "ai_confidence": 0.4639,
+    "human_review_required": true,
+    "escalated": true,
+    "reason": "No knowledge base articles were found for baking sourdough bread, which is a non-IT request.",
+    "citations": []
+  },
+  "port_result": {
+    "status": "success",
+    "operation": "escalate",
+    "entry": {
+      "sys_id": "00000000000000000000000000000000",
+      "number": "INC0090002",
+      "reason": "No knowledge base articles were found for baking sourdough bread, which is a non-IT request.",
+      "payload": {
+        "ai_suggested_response": "HUMAN REVIEW REQUIRED for incident INC0090002: No knowledge base articles were found for baking sourdough bread, which is a non-IT request. No resolution procedure was generated. Please escalate this incident to a service desk agent.",
+        "ai_confidence": 0.4639,
+        "human_review_required": true,
+        "escalated": true,
+        "reason": "No knowledge base articles were found for baking sourdough bread, which is a non-IT request.",
+        "citations": []
+      }
+    }
+  }
 }
 ```
 
@@ -91,13 +183,13 @@
 | Iterations | 3 |
 | searchKB calls | 2 |
 | Grounding rejections | 0 |
-| Max retrieval score | 0.4822 |
+| Max retrieval score | 0.4639 |
 | Sources | — |
 | Fallback | none |
-| Tokens | 2894 |
+| Tokens | 4195 |
 
 ### Final output
 
 ```text
-No relevant knowledge base articles found for baking sourdough bread.
+No knowledge base articles were found for baking sourdough bread, which is a non-IT request.
 ```

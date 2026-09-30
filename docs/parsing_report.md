@@ -1,7 +1,7 @@
 # PDF Parsing & Multimodal Extraction Quality Report
 
 ## 1. Overview & Architecture Rationale
-This document evaluates the multi-stage document parsing pipeline implemented in [`scripts/parse_pdf.py`](../scripts/parse_pdf.py). The pipeline processes technical PDF runbooks into standardized Markdown with structured Vision LLM extractions.
+This document evaluates the multi-stage document parsing pipeline implemented in [`Scripts/parse_pdf.py`](../Scripts/parse_pdf.py). The pipeline processes technical PDF runbooks into standardized Markdown with structured Vision LLM extractions.
 
 ### Pipeline Architecture:
 1. **Phase 1 (Layout Analysis & Hybrid Extraction):** Uses IBM Docling (`PdfPipelineOptions`) with RapidOCR and PyTorch acceleration to extract structural layout, page breaks (`<!-- page: N -->`), text, tables, and raw picture bounding boxes (`bbox`).

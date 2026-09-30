@@ -10,8 +10,10 @@ Contains logic to:
 import re
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-# Matches [Article: KB0010001] or [KB0010001]
-CITATION_RE = re.compile(r"\[(?:Article:\s*)?([A-Za-z]{2,}\d+)\]")
+# Matches [Article: KB0010001], [KB0010001] AND PDF chunk ids such as [Article: doc_001].
+# An id starts with a letter, may contain letters, digits, "_" and "-", and ends in a digit.
+# KEEP IN SYNC with Services/response_formatter.py (tests/test_citations.py checks this).
+CITATION_RE = re.compile(r"\[(?:Article:\s*)?([A-Za-z][A-Za-z0-9_\-]*\d)\]")
 
 # Matches lines starting with numbers like "1.", "1)", "1 - "
 STEP_NUMBER_PREFIX_RE = re.compile(r"^\s*(\d+)[\.\)\-]\s*(.*)$")

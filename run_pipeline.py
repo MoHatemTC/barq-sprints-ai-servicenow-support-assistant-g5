@@ -4,8 +4,13 @@ Called by the webhook background task (process_incident), or locally:
     python run_pipeline.py "wifi keeps disconnecting on my laptop"
 
 S3.4: the one-shot LLM call was replaced by the ReAct agent loop
-(src/agent/react_agent.py). Output shape (trace, write-back payload, outputs/ files)
+(src/agent/react_agent.py). Output shape (trace, result payload, outputs/ files)
 is unchanged, so the webhook needs no change.
+
+WHO WRITES TO SERVICENOW: the agent's own tools (suggestAnswer / requestHR /
+addworknote) do the write-back through the write-back port (src/agent/factory.py).
+process_incident() itself sends nothing to ServiceNow; it only returns and logs
+the result.
 """
 
 import json
@@ -46,7 +51,11 @@ def agent_result_to_response(result: AgentResult, number: str) -> FormattedRespo
 
 
 def process_incident(ctx: IncidentContext) -> dict:
-    """One incident, one run. Always returns a write-back payload with human review set."""
+    """One incident, one run. Returns the result payload (human review always set).
+
+    The ServiceNow write-back has already been done by the agent tools by the time
+    this returns; nothing is sent to ServiceNow from this function.
+    """
     number = ctx.original_number
     result: AgentResult | None = None
     chunks: list[dict] = []
@@ -84,9 +93,13 @@ def process_incident(ctx: IncidentContext) -> dict:
         "fallback_reason": result.fallback_reason if result else None,
         "total_tokens": result.total_tokens if result else 0,
     }
-    logger.info("Write-back payload for %s: %s", number, json.dumps(payload))
+    # Log only. The agent tools already wrote to ServiceNow; this payload is NOT sent anywhere.
+    logger.info(
+        "Pipeline result for %s (log only, not sent to ServiceNow): %s",
+        number,
+        json.dumps(payload),
+    )
 
-    # NEXT STEP: send `payload` to ServiceNow through the write-back client (S3.6).
     out = Path("outputs")
     out.mkdir(exist_ok=True)
     (out / f"{number}.md").write_text(to_markdown(response), encoding="utf-8")

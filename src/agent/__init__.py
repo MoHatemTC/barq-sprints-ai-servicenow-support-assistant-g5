@@ -1,4 +1,4 @@
-"""src.agent package mirroring agent package."""
+"""Compatibility exports for the canonical Agent package."""
 
 from agent.config import (
     ALLOWED_WORKFLOW_STATES,
