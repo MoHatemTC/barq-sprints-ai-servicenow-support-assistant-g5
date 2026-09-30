@@ -3,356 +3,637 @@
     "title": "Kbpdf",
     "source_file": "kbpdf.pdf",
     "source_type": "pdf",
-    "page_count": 58,
-    "parsed_at": "2026-09-24T17:37:16Z",
+    "page_count": 52,
+    "parsed_at": "2026-09-30T12:43:48Z",
     "parser": "Docling + RapidOCR + LiteLLM Vision",
+    "ocr_engine": "rapidocr",
+    "ocr_languages": [
+        "english",
+        "arabic"
+    ],
     "status": "completed",
     "pages": [
         {
             "page": 1,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 2,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 3,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 4,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 5,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 6,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 7,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 8,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 9,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 10,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 11,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 12,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 13,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 14,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 15,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 16,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 17,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 18,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 19,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 20,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 21,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 22,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 23,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 24,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 25,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 26,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 27,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 28,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 29,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 30,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 31,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 32,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 33,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 34,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 35,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 36,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 37,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 38,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 39,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 40,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 41,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 42,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 43,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 44,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 45,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 46,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 47,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 48,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 49,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 50,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 51,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         },
         {
             "page": 52,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 53,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 54,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 55,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 56,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 57,
-            "ocr_used": true,
-            "rotation_corrected_deg": 0,
-            "warnings": []
-        },
-        {
-            "page": 58,
-            "ocr_used": true,
+            "ocr_used": false,
+            "ocr_engine": "rapidocr",
+            "ocr_languages": [
+                "english",
+                "arabic"
+            ],
+            "rotation_detected_deg": 0,
             "rotation_corrected_deg": 0,
             "warnings": []
         }
@@ -365,73 +646,88 @@
             "image_path": "data/parsed/doc_001/images/image_1.png",
             "page_no": 1,
             "bbox": [
-                64.53711700439453,
-                751.2099456787109,
-                190.68960571289062,
-                721.5571136474609
+                220.79051208496094,
+                754.5394821166992,
+                374.173828125,
+                695.9100494384766
             ],
             "status": "success",
-            "extracted_text": "Sprints"
+            "width": 153,
+            "height": 59,
+            "is_diagram_candidate": true,
+            "extracted_text": "BARQ\nSYSTEMS"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_2 -->",
             "image_index": 2,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_2.png",
-            "page_no": 5,
+            "page_no": 14,
             "bbox": [
-                85.43183135986328,
-                445.26800537109375,
-                506.99169921875,
-                119.7950439453125
+                129.48858642578125,
+                602.1558837890625,
+                464.7668762207031,
+                407.364501953125
             ],
             "status": "success",
-            "extracted_text": "### 1 - SERVICENOW PLATFORM\n\n> * **Incident raised**\n>   * A requester reports a symptom. Category, service and text captured.\n>   * **↓**\n> * **Business Rule**\n>   * Fires on insert and on relevant update. Checks eligibility.\n>   * **↓**\n> * **RESTMessageV2**\n>   * Posts event_id, sys_id, number, event_type. Never the record.\n>   * **↓** *(minimal event over HTTPS)*\n> * **Incident form**\n>   * AI Suggested Response and Human Review Required render here.\n>   * *(Receives `write-back` from Section 3: Write back)*\n\n---\n\n### 2 - INGESTION EDGE — THE WEBHOOK IS THE FRONT DOOR\n\n> *(Triggers from Section 1: RESTMessageV2 via `minimal event over HTTPS`)*\n>\n> * **POST /events**\n>   * Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.\n>   * **↓**\n> * **Idempotency + claim**\n>   * Persist the event key. A replay is discarded. Claim the incident.\n>   * **↓**\n> * **202 Accepted**\n>   * Returned before any model runs. ServiceNow is never blocked.\n>   * **↓**\n> * **Dispatch**\n>   * Intermediate: background task. Advanced: Redis and Celery.\n>   * **↓** *(dispatched to the worker)*\n\n---\n\n### 3 - REASONING — RETRIEVE, GROUND, DECIDE\n\n> *(Triggers from Section 2: Dispatch via `dispatched to the worker`)*\n>\n> * **Retrieve**\n>   * Qdrant. Dense top-k at intermediate; hybrid and rerank at advanced.\n>   * **↓**\n> * **Reason**\n>   * LangChain agent, or an explicit LangGraph state machine.\n>   * **↓**\n> * **Ground + check**\n>   * Numbered procedure, cited article. Score, risk and confidence gates.\n>   * **↓**\n> * **Write back**\n>   * Table API: suggestion, confidence, work note, Human Review Required.\n>   * **↓** *(write-back ➔ sends output to Section 1: Incident form)*\n\n---\n\n### 4 · Evidence — every run leaves a record\n\n* **Langfuse holds the trace:** retrieval, generation, prompt version, tokens, latency, cost, errors.\n* **PostgreSQL (advanced) holds:** executions, idempotency keys, approvals, failures and retry state.\n* **Benchmark harness:** re-scores the same ten incidents after every change, so quality is measured, not claimed."
+            "width": 336,
+            "height": 195,
+            "is_diagram_candidate": true,
+            "extracted_text": "# Two columns, one figure, one footnote\n\nThe webhook returns 202 Accepted before retrieval or generation has run. This is not an optimisation; it is the contract.\n\nServiceNow's outbound call is synchronous and holds a worker thread while it waits. Retrieval plus generation takes seconds to tens of seconds. A webhook that waited would exhaust the platform's outbound capacity under any realistic burst, slow the instance for every user, and time out anyway.\n\n202 means the service has taken responsibility for the event. That promise is only real because the idempotency key was persisted before the reply was sent.\n\nAnswering 202 and then failing to store the key means the event can be replayed into a second suggestion, which is the exact failure the status code was meant to rule out.¹\n\n---\n\n### Order of operations\n\n> **Sequence / Diagram Flow:**\n> \n> * **authenticate**\n>   * ◄ **validate**\n>   * ◄ **claim key**\n>   * ◄ **claim incident**\n>   * ◄ **dispatch**\n>   * ◄ **return 202**\n>\n> *Caption:* Only the fourth step writes to ServiceNow on the request path."
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_3 -->",
             "image_index": 3,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_3.png",
-            "page_no": 6,
+            "page_no": 16,
             "bbox": [
-                85.46723937988281,
-                475.4353332519531,
-                519.977294921875,
-                261.47088623046875
+                35.14024353027344,
+                789.20263671875,
+                502.8157958984375,
+                412.7786865234375
             ],
             "status": "success",
-            "extracted_text": "| | **Intermediate**<br>AI ServiceNow Support Assistant | **Advanced**<br>Agentic Incident Resolution Platform |\n| :--- | :--- | :--- |\n| **Trigger** | Business Rule, then RESTMessageV2 | Business Rule, then RESTMessageV2 |\n| **Execution** | FastAPI background task | Redis queue + Celery workers |\n| **Orchestration** | LangChain agent, four tools | LangGraph, checkpointed nodes |\n| **Retrieval** | Dense top-k + metadata filters | Hybrid dense + sparse, reranked |\n| **State** | Idempotency store only | PostgreSQL: state, approvals, audit |\n| **Identity** | Least-privilege integration user | OAuth, least-privilege, ACL-governed |\n| **Safety** | Restricted toolset, human review | Permission classes, interrupts, guardrails |\n| **Evidence** | Langfuse traces + benchmark | Per-node traces, eval suite gating CI |\n| **Autonomy** | Suggests and escalates. Never resolves. | Low-risk writes only, after approval |\n| **Load** | ~30 hrs/week | ~35 hrs/week |"
+            "width": 468,
+            "height": 376,
+            "is_diagram_candidate": true,
+            "extracted_text": "| Service | Tier | Metadata | Notes |\n| :--- | :--- | :--- | :--- |\n| `file-services` | **Tier 2** | <table><tr><th>FIELD</th><th>VALUE</th></tr><tr><td>Owner</td><td>L. Haddad</td></tr><tr><td>Group</td><td>Infrastructure</td></tr><tr><td>Window</td><td>Working</td></tr></table> | Permission changes never happen from an incident. Raise the access request — 3.2 and KB0003. |\n| `corporate-wifi` | **Tier 3** | <table><tr><th>FIELD</th><th>VALUE</th></tr><tr><td>Owner</td><td>L. Haddad</td></tr><tr><td>Group</td><td>Network Ops</td></tr><tr><td>Window</td><td>Working</td></tr></table> | Multiple reports in one area are an infrastructure fault, not several endpoint faults. PRB0040021. |\n| `endpoint` | **Tier 3** | <table><tr><th>FIELD</th><th>VALUE</th></tr><tr><td>Owner</td><td>D. Halim</td></tr><tr><td>Group</td><td>Endpoint Eng</td></tr><tr><td>Window</td><td>Working</td></tr></table> | Post-update degradation is expected for 24 hours. Do not act inside that window — KB0007. |\n| `print-services` | **Tier 4** | <table><tr><th>FIELD</th><th>VALUE</th></tr><tr><td>Owner</td><td>O. Sabry</td></tr><tr><td>Group</td><td>Print Services</td></tr><tr><td>Window</td><td>Working</td></tr></table> | Mechanical faults are a facilities matter and are outside the knowledge base. KB0004 covers queues only. |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_4 -->",
             "image_index": 4,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_4.png",
-            "page_no": 16,
+            "page_no": 18,
             "bbox": [
-                88.04874420166016,
-                705.3962860107422,
-                505.0399475097656,
-                481.4256286621094
+                172.61831665039062,
+                698.3331604003906,
+                422.4229736328125,
+                384.01715087890625
             ],
             "status": "success",
-            "extracted_text": "### Participants / Lifelines\n\n* **ServiceNow**\n* **Webhook**\n* **Store**\n* **Worker**\n\n---\n\n### Sequence Flow\n\n#### FIRST EVENT\n\n> * **ServiceNow** → **Webhook**: `POST /events`\n>   * *Parameters:* `event_id, sys_id, number, event_type`\n>\n> * **Webhook** → **Store**: `put(event_id)`\n>   * *Note:* `new key stored`\n>\n> * **Webhook** → **ServiceNow**: `PATCH ai_status = in_progress`\n>   * *Note:* `the incident is claimed`\n>\n> * **Webhook** → **ServiceNow**: `202 Accepted`\n>   * *Note:* `under one second, no model called`\n>\n> * **Webhook** → **Worker**: `dispatch(event)`\n>   * *Note:* `background task or queued job`\n>\n> * **Worker** → **ServiceNow**: `PATCH suggestion + human_review`\n>   * *Note:* `write-back after retrieval and generation`\n\n---\n\n#### REPLAY OF THE SAME EVENT\n\n> * **ServiceNow** → **Webhook**: `POST /events`\n>   * *Note:* `identical event_id`\n>\n> * **Webhook** --dashed--> **Store**: `put(event_id) — already present`"
+            "width": 249,
+            "height": 314,
+            "is_diagram_candidate": true,
+            "extracted_text": "# RUNBOOK — ACCOUNT LOCKOUT\n\nKB0005 - version 4 - Identity\n\n### SYMPTOM\nThe user cannot sign in to any corporate system. Errors mention a locked or disabled account. Often follows a password change, and often presents as several services failing at once.\n\n### CAUSE\nThe lockout policy triggers after a threshold of failed attempts. A cached credential on any device can retry an old password silently and lock the account repeatedly.\n\n### RESOLUTION\n1. Verify the user's identity. This step is mandatory.\n2. Unlock the account in the identity console.\n3. Sign out of the corporate mail profile on the mobile device.\n4. Clear cached credentials on the laptop, including VPN.\n5. Confirm access to two different services before closing.\n\n### ESCALATION\nRepeated lockouts with no identifiable source go to the identity team. Never disable the lockout policy for an individual user.\n\n| REVIEWED BY: H. Moawad |\n| :--- |\n| **DATE:** 11 / 04 / 2026 |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_5 -->",
             "image_index": 5,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_5.png",
-            "page_no": 19,
+            "page_no": 18,
             "bbox": [
-                85.04821014404297,
-                676.2929840087891,
-                508.6885681152344,
-                458.98175048828125
+                35.20936584472656,
+                328.9130859375,
+                502.3551025390625,
+                223.28173828125
             ],
             "status": "success",
-            "extracted_text": "### BUILD TIME - ONE COMMAND, REPEATABLE\n\n> * **Load**\n>   * Pull published knowledge articles from the KB.\n>   * $\\rightarrow$\n> * **Chunk**\n>   * Fixed size with overlap. Article identity kept.\n>   * $\\rightarrow$\n> * **Embed**\n>   * Dense vectors. Sparse too, at advanced level.\n>   * $\\rightarrow$\n> * **Index**\n>   * Persisted Qdrant collection with payload metadata.\n\n---\n\n### QUERY TIME - ONCE PER INCIDENT\n\n> * **Query**\n>   * Short description plus the symptom text. No credentials, no PII.\n>   * $\\rightarrow$\n> * **Filter**\n>   * state = published, category, service, current version only.\n>   * $\\rightarrow$\n> * **Search**\n>   * Intermediate: dense top-k. Advanced: dense + sparse fused at query time.\n>   * $\\rightarrow$\n> * **Rerank**\n>   * Advanced only. Reorder the fused candidates before anything reaches the model.\n\n**Output:** top-k chunks, each with a similarity score and the article number it came from.\n\n---\n\n> **Note:** Keep the dense-only path switchable. You cannot claim hybrid retrieval helped unless you can turn it off and measure."
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0001 | VPN AUTHENTICATION FAILS AFTER A PASSWORD CHANGE | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 2 |\n| **Service** | `corporate-vpn` | **Category** | network |\n| **Owner** | Network Operations | **Author** | L. Haddad |\n| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 1,284 · **Related** PRB0040012, INC0010023 |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_6 -->",
@@ -440,43 +736,394 @@
             "image_path": "data/parsed/doc_001/images/image_6.png",
             "page_no": 19,
             "bbox": [
-                63.992069244384766,
-                349.3708801269531,
-                532.1177368164062,
-                96.12249755859375
+                35.36634826660156,
+                683.8299713134766,
+                502.31256103515625,
+                578.41064453125
             ],
             "status": "success",
-            "extracted_text": "```yaml\n---\narticle_number: KB0001\ntitle: VPN authentication fails after a password change\ncategory: network\nservice: corporate-vpn\nstate: published        # published | draft | retired\nversion: 2\nsecurity_level: internal    # internal | restricted\nupdated: 2026-04-11\n---\n```\n\n## Symptom\n...\n## Cause\n...\n## Resolution\n1. ...\n## Escalation\n..."
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| **KB0002** | **OUTLOOK SHOWS DISCONNECTED AND NO MAIL IS DELIVERED** | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 3 |\n| **Service** | `corporate-email` | **Category** | software |\n| **Owner** | Collaboration Services | **Author** | O. Sabry |\n| **Reviewed** | 02 Feb 2026 | **Uses, 12 mo** | 947 · **Related** INC0010024 |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_7 -->",
             "image_index": 7,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_7.png",
-            "page_no": 28,
+            "page_no": 19,
             "bbox": [
-                97.850830078125,
-                443.7716369628906,
-                496.8967590332031,
-                189.44793701171875
+                35.420166015625,
+                296.21722412109375,
+                502.336181640625,
+                190.14794921875
             ],
             "status": "success",
-            "extracted_text": "> ### Workflow Diagram Overview\n> \n> The diagram illustrates an incident processing graph flow consisting of sequential execution steps on the main left pipeline, branching logic based on risk and confidence, and right-hand side handling states (actions, interrupts, escalations, and dead letters).\n\n---\n\n### Sequential Main Pipeline (Left Column)\n\n* **`load`**\n  * **Description:** Fetch the incident by sys_id\n  * **Next Step:** `validate`\n\n* **`validate`**\n  * **Description:** Schema, required fields, eligibility re-check\n  * **Next Step:** `classify`\n\n* **`classify`**\n  * **Description:** Category, service, symptom type\n  * **Next Step:** `determine_risk`\n\n* **`determine_risk`**\n  * **Description:** Risk assessed BEFORE retrieval\n  * **Next Step:** `retrieve`\n  * **Branch Connection:** Points to **`interrupt`** (via orange arrow for high risk or low confidence assessment)\n\n* **`retrieve`**\n  * **Description:** Hybrid search, filters, rerank\n  * **Next Step:** `diagnose`\n\n* **`diagnose`**\n  * **Description:** Reason over the retrieved evidence\n  * **Next Step:** `generate`\n\n* **`generate`**\n  * **Description:** Draft the numbered procedure\n  * **Next Step:** `verify_evidence`\n\n* **`verify_evidence`**\n  * **Description:** Every step traced to a chunk\n  * **Next Step:** `safety_check`\n\n* **`safety_check`**\n  * **Description:** Output schema, tool allowlist, redaction\n  * **Next Step:** `confidence_check`\n\n* **`confidence_check`**\n  * **Description:** Compare against the configured floor\n  * **Branch Connections:**\n    * Points to **`act`** (via green arrow)\n    * Points to **`escalate`** (via cyan arrow)\n\n---\n\n### Handling & Execution States (Right Column)\n\n* **`act`**\n  * **Description:** Low-risk write only. Suggestion and work note go back through the Table API.\n  * **Source:** Triggered from **`confidence_check`**\n\n* **`interrupt`**\n  * **Description:** High risk or low confidence. The graph pauses and presents incident, evidence, draft and verdicts for approval.\n  * **Source:** Triggered from **`determine_risk`**\n  * **Next Connection:** Flows into **`resume`** (via dashed blue arrow)\n\n* **`resume`**\n  * **Description:** Only once a decision is persisted in PostgreSQL. Continues from the checkpoint, never from the start.\n  * **Source:** Follows from **`interrupt`**\n\n* **`escalate`**\n  * **Description:** No safe action available. Human Review Required is set and the run ends with a written reason.\n  * **Source:** Triggered from **`confidence_check`**\n\n* **`dead_letter`**\n  * **Description:** Reached from the Celery retry policy, not from the graph. Retries exhausted; the job lands where a person looks."
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| **KB0003** | **MAPPED SHARED DRIVE IS MISSING AFTER SIGN-IN** | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 2 |\n| **Service** | `file-services` | **Category** | network |\n| **Owner** | Infrastructure | **Author** | L. Haddad |\n| **Reviewed** | 19 Jan 2026 | **Uses, 12 mo** | 612 · **Related** INC0010025 |"
         },
         {
             "image_id": "<!-- IMAGE_PLACEHOLDER_8 -->",
             "image_index": 8,
             "doc_prefix": "doc",
             "image_path": "data/parsed/doc_001/images/image_8.png",
-            "page_no": 30,
+            "page_no": 20,
             "bbox": [
-                93.6989517211914,
-                732.0482025146484,
-                509.05859375,
-                502.0883483886719
+                35.1933708190918,
+                663.2956237792969,
+                502.43121337890625,
+                557.6091613769531
             ],
             "status": "success",
-            "extracted_text": "> **GATE 1**  \n> ### Evidence  \n> Did any chunk clear the score threshold?  \n>  \n> ➔  \n>  \n> **GATE 2**  \n> ### Risk  \n> Is this a high-risk category, service or action?  \n>  \n> ➔  \n>  \n> **GATE 3**  \n> ### Confidence  \n> Is the derived confidence above the floor?  \n\n---\n\n### OUTCOMES\n\n* **Suggest**  \n  All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.\n\n* **Escalate to a human**  \n  Risk is high, or confidence sits below the floor. Advanced raises a LangGraph interrupt and waits for a recorded decision. Intermediate writes the hand-off note and stops.\n\n* **Refuse and hand off**  \n  No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here."
+            "width": 467,
+            "height": 105,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0004 | PRINT JOBS QUEUE BUT NOTHING PRINTS | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 1 |\n| **Service** | `print-services` | **Category** | hardware |\n| **Owner** | Print Services | **Author** | O. Sabry |\n| **Reviewed** | 06 Oct 2025 | **Uses, 12 mo** | 1,530 · **Related** INC0010026, INC0010047 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_9 -->",
+            "image_index": 9,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_9.png",
+            "page_no": 20,
+            "bbox": [
+                35.322425842285156,
+                304.84564208984375,
+                502.2957458496094,
+                198.90606689453125
+            ],
+            "status": "success",
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0005 | ACCOUNT IS LOCKED AFTER REPEATED FAILED SIGN-INS | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 4 |\n| **Service** | `identity` | **Category** | inquiry |\n| **Owner** | Identity & Access | **Author** | H. Moawad |\n| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 2,109 · **Related** PRB0040012, INC001027 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_10 -->",
+            "image_index": 10,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_10.png",
+            "page_no": 21,
+            "bbox": [
+                35.262474060058594,
+                619.9631500244141,
+                502.31781005859375,
+                514.1224365234375
+            ],
+            "status": "success",
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0006 | MULTI-FACTOR AUTHENTICATION AFTER A LOST OR REPLACED DEVICE | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 3 |\n| **Service** | `identity` | **Category** | inquiry |\n| **Owner** | Identity & Access | **Author** | H. Moawad |\n| **Reviewed** | 11 Apr 2026 | **Uses, 12 mo** | 438 · **Related** RITM0010877, INC0010028 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_11 -->",
+            "image_index": 11,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_11.png",
+            "page_no": 21,
+            "bbox": [
+                35.26690673828125,
+                219.17864990234375,
+                502.3099670410156,
+                112.62506103515625
+            ],
+            "status": "success",
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0007 | LAPTOP PERFORMANCE DEGRADES AFTER A SYSTEM UPDATE | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 2 |\n| **Service** | endpoint | **Category** | hardware |\n| **Owner** | Endpoint Engineering | **Author** | D. Halim |\n| **Reviewed** | 19 Jan 2026 | **Uses, 12 mo** | 776 · **Related** INC0010029 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_12 -->",
+            "image_index": 12,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_12.png",
+            "page_no": 22,
+            "bbox": [
+                35.161556243896484,
+                563.468505859375,
+                502.4597473144531,
+                457.2856750488281
+            ],
+            "status": "success",
+            "width": 467,
+            "height": 107,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0008 | SAP GUI CONNECTION TIMES OUT WITH RFC_ERROR_COMMUNICATION | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 1 |\n| **Service** | sap-erp | **Category** | software |\n| **Owner** | SAP Basis | **Author** | K. Selim |\n| **Reviewed** | 06 Oct 2025 | **Uses, 12 mo** | 203 · **Related** KE0000034, INC0010031 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_13 -->",
+            "image_index": 13,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_13.png",
+            "page_no": 22,
+            "bbox": [
+                35.315757751464844,
+                161.76129150390625,
+                502.3236999511719,
+                55.63702392578125
+            ],
+            "status": "success",
+            "width": 467,
+            "height": 106,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0009 | WI-FI DROPS REPEATEDLY ON THE 5 GHZ CORPORATE NETWORK | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Published | **Version** | 2 |\n| **Service** | `corporate-wifi` | **Category** | network |\n| **Owner** | Network Operations | **Author** | L. Haddad |\n| **Reviewed** | 02 Feb 2026 | **Uses, 12 mo** | 1,041 · **Related** PRB0040021, INC0010033 |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_14 -->",
+            "image_index": 14,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_14.png",
+            "page_no": 23,
+            "bbox": [
+                34.897682189941406,
+                468.7108459472656,
+                502.5552062988281,
+                395.754150390625
+            ],
+            "status": "success",
+            "width": 468,
+            "height": 73,
+            "is_diagram_candidate": true,
+            "extracted_text": "| KB0010 | ORDER SERVICE CONNECTION POOL EXHAUSTION - **RETIRED** | | |\n| :--- | :--- | :--- | :--- |\n| **State** | Retired | **Version** | 1 |\n| **Retired on** | 02 Apr 2026 | **Reason** | Step 1 caused a 40-minute outage on 14 Mar 2026. See MIR-2026-03. |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_15 -->",
+            "image_index": 15,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_15.png",
+            "page_no": 25,
+            "bbox": [
+                120.85408782958984,
+                611.6206207275391,
+                474.4205627441406,
+                388.81036376953125
+            ],
+            "status": "success",
+            "width": 353,
+            "height": 223,
+            "is_diagram_candidate": true,
+            "extracted_text": "### Incident INC0010023\n**Platform:** ServiceNow\n\n**Actions:** `[Save]` `[Resolve]` `[Delete]`\n\n---\n\n| Field | Value | Field | Value |\n| :--- | :--- | :--- | :--- |\n| **Number** | INC0010023 | **Caller** | Mariam Fouad |\n| **Category** | Network | **Subcategory** | VPN |\n| **Business service** | corporate-vpn | **State** | In Progress |\n| **Impact** | 3 - Low | **Urgency** | 2 - Medium |\n| **Priority** | 3 - Moderate | **Assignment group** | Service Desk Tier 1 |\n\n---\n\n**Short description**\n> Cannot connect to VPN since password reset this morning\n\n---\n\n| AI Status | AI Confidence | Human Review Required |\n| :--- | :--- | :--- |\n| **suggested** | **0.79** | **true** |\n\n---\n\n**AI Suggested Response**\n\n1. Confirm with the user that they changed their password within the last 24 hours.\n2. Ask the user to sign out of the VPN client completely, including the tray icon.\n3. Clear the cached credential for the VPN profile.\n4. Reconnect using the new password.\n\n*Source: KB0001 - VPN authentication fails after a password change (v2).*"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_16 -->",
+            "image_index": 16,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_16.png",
+            "page_no": 32,
+            "bbox": [
+                120.05632781982422,
+                516.2055969238281,
+                474.3569641113281,
+                282.66839599609375
+            ],
+            "status": "success",
+            "width": 354,
+            "height": 233,
+            "is_diagram_candidate": true,
+            "extracted_text": "# Whiteboard — sprint 2 planning\n\n## EVENT FLOW\n\n* BR -> RESTMsg -> /events\n* 202 FIRST!! then work\n* idem key = event_id NOT sys_id\n* claim: PATCH ai_status\n* before dispatch\n\n---\n\n> ### NOTHING POLLS\n> if there is a loop reading the incident table -> FAIL\n\n---\n\n## OPEN Qs\n\n* async BR? previous is null\n* who owns the PDI\n* threshold: 0.55 ??\n* retire v1 of KB0010\n\n**DONE = 202 in <1s**"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_17 -->",
+            "image_index": 17,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_17.png",
+            "page_no": 35,
+            "bbox": [
+                127.97429656982422,
+                624.3831787109375,
+                469.11846923828125,
+                409.7154235839844
+            ],
+            "status": "success",
+            "width": 341,
+            "height": 214,
+            "is_diagram_candidate": true,
+            "extracted_text": "# HIGH-RISK ACTION — APPROVAL RECORD\n\n| Field | Value |\n| :--- | :--- |\n| **Incident** | **INC0010052** |\n| **Execution ID** | **7c1f8a02e4021bd9** |\n| **Risk level** | **HIGH** |\n| **Requested action** | **propose_resolution** |\n| **Evidence** | **KB0010 v2, section Resolution, score 0.88** |\n\n### Approver decision\n- [x] Approved\n- [ ] Approved with edits\n- [ ] Rejected\n\n| Field | Value |\n| :--- | :--- |\n| **Approver** | <u>N. Abdelrahman</u> |\n| **Role** | <u>Service Delivery Manager</u> |\n| **Date** | <u>08 / 09 / 2026</u> |\n| **Time** | <u>09:41</u> |\n\n---\n**[STAMP]**  \n**APPROVED**  \n**08 SEP 2026**"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_18 -->",
+            "image_index": 18,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_18.png",
+            "page_no": 37,
+            "bbox": [
+                85.3372802734375,
+                718.1765975952148,
+                506.4476623535156,
+                394.0787048339844
+            ],
+            "status": "success",
+            "width": 421,
+            "height": 324,
+            "is_diagram_candidate": true,
+            "extracted_text": "### 1 - TICKETING SYSTEM\n\n> **Flow Sequence:**  \n> **Incident raised** → **Business Rule** → **RESTMessageV2**  \n> *(Target destination: Incident form receives write-back response)*\n>\n> * **Incident raised**: A requester reports a symptom. Category, service and text captured.\n> * **Business Rule**: Fires on insert and on relevant update. Checks eligibility.\n> * **RESTMessageV2**: Posts event_id, sys_id, number, event_type. Never the record.\n> * **Incident form**: AI Suggested Response and Human Review Required render here.\n\n⬇ *(Connection: `minimal event over HTTPS` from **RESTMessageV2** to **POST /events**)*\n\n---\n\n### 2 - PILOT SERVICE — THE FRONT DOOR\n\n> **Flow Sequence:**  \n> **POST /events** → **Idempotency + claim** → **202 Accepted** → **Dispatch**\n>\n> * **POST /events**: Authenticate the caller. Validate with Pydantic. 401 / 422 on failure.\n> * **Idempotency + claim**: Persist the event key. A replay is discarded. Claim the incident.\n> * **202 Accepted**: Returned before any model runs. ServiceNow is never blocked.\n> * **Dispatch**: Queued to a worker. The desk is never blocked by it.\n\n⬇ *(Connection: `dispatched to the worker` from **Dispatch** to **Retrieve**)*\n\n---\n\n### 3 - REASONING — RETRIEVE, GROUND, DECIDE\n\n> **Flow Sequence:**  \n> **Retrieve** → **Reason** → **Ground + check** → **Write back**\n>\n> * **Retrieve**: Published articles only, filtered by service and category.\n> * **Reason**: Reason over the retrieved articles. Nothing else.\n> * **Ground + check**: Numbered procedure, cited article. Score, risk and confidence gates.\n> * **Write back**: Table API: suggestion, confidence, work note, Human Review Required.\n\n⬆ *(Connection: `write-back` from **Write back** to **Incident form** in Section 1)*\n\n---\n\n### 4 - Evidence — every run leaves a record\n\n* The run log holds every step: what was searched, what was found, what was drafted and what was blocked.\n* The execution record holds the attempt itself — including attempts that produced nothing at all.\n* Acceptance is measured monthly: drafts applied or edited, against drafts written. See Section 12."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_19 -->",
+            "image_index": 19,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_19.png",
+            "page_no": 38,
+            "bbox": [
+                87.00001525878906,
+                742.8184814453125,
+                506.3403625488281,
+                481.0716552734375
+            ],
+            "status": "success",
+            "width": 419,
+            "height": 262,
+            "is_diagram_candidate": true,
+            "extracted_text": "### Systems / Components\n* **Ticketing system**\n* **Pilot API**\n* **Store**\n* **Worker**\n\n---\n\n### Sequence Diagram Flow\n\n#### **FIRST EVENT**\n\n> * **1. POST `/events`**\n>   * **From:** `Ticketing system` ➔ **To:** `Pilot API`\n>   * **Parameters:** `event_id, sys_id, number, event_type`\n>\n> * **2. `put(event_id)`**\n>   * **From:** `Pilot API` ➔ **To:** `Store`\n>   * **Note:** `new key stored`\n>\n> * **3. `PATCH ai_status = in_progress`**\n>   * **From:** `Pilot API` ➔ **To:** `Ticketing system`\n>   * **Note:** `the incident is claimed`\n>\n> * **4. `202 Accepted`**\n>   * **From:** `Pilot API` ➔ **To:** `Ticketing system`\n>   * **Note:** `under one second, no model called`\n>\n> * **5. `dispatch(event)`**\n>   * **From:** `Pilot API` ➔ **To:** `Worker`\n>   * **Note:** `queued to a worker`\n>\n> * **6. `PATCH suggestion + human_review`**\n>   * **From:** `Worker` ➔ **To:** `Ticketing system`\n>   * **Note:** `write-back after retrieval and generation`\n\n---\n\n#### **REPLAY OF THE SAME EVENT**\n\n> * **1. POST `/events`**\n>   * **From:** `Ticketing system` ➔ **To:** `Pilot API`\n>   * **Note:** `identical event_id`\n>\n> * **2. `put(event_id) — already present`**\n>   * **From:** `Pilot API` ➔ **To:** `Store` *(Dashed Line)*\n\n---\n\n### Outcome of the replay\n\n> **202 Accepted** is returned again — the caller must not see an error — but nothing is dispatched and no second suggestion is written."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_20 -->",
+            "image_index": 20,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_20.png",
+            "page_no": 39,
+            "bbox": [
+                93.3808364868164,
+                711.5707702636719,
+                507.58575439453125,
+                482.6222229003906
+            ],
+            "status": "success",
+            "width": 415,
+            "height": 229,
+            "is_diagram_candidate": true,
+            "extracted_text": "> ### Process Flow\n> \n> * **GATE 1: Evidence**\n>   * Did any chunk clear the score threshold?\n> \n>   $\\rightarrow$\n> \n> * **GATE 2: Risk**\n>   * Is this a high-risk category, service or action?\n> \n>   $\\rightarrow$\n> \n> * **GATE 3: Confidence**\n>   * Is the derived confidence above the floor?\n\n---\n\n### OUTCOMES\n\n* **Suggest**\n  * All three gates pass. A numbered, cited procedure is written to AI Suggested Response. Human Review Required is set. A service desk agent still approves, edits or rejects it.\n\n* **Escalate to a human**\n  * Risk is high, or confidence sits below the floor. No draft is written. A work note records the risk verdict and the evidence gathered, and the incident waits for a person.\n\n* **Refuse and hand off**\n  * No chunk cleared the score threshold, so no fix is drafted. An explicit note says the knowledge base holds nothing relevant. Silence is the correct answer here."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_21 -->",
+            "image_index": 21,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_21.png",
+            "page_no": 40,
+            "bbox": [
+                85.62077331542969,
+                717.4267272949219,
+                507.3426513671875,
+                532.0857238769531
+            ],
+            "status": "success",
+            "width": 421,
+            "height": 186,
+            "is_diagram_candidate": true,
+            "extracted_text": "### BUILD TIME - ONE COMMAND, REPEATABLE\n\n> * **Load**\n>   * **Details:** Pull published knowledge articles from the KB.\n>   * **Next Step:** Chunk\n> * **Chunk**\n>   * **Details:** Fixed size with overlap. Article identity kept.\n>   * **Next Step:** Embed\n> * **Embed**\n>   * **Details:** Vectors built once per corpus change.\n>   * **Next Step:** Index\n> * **Index**\n>   * **Details:** Persisted Qdrant collection with payload metadata.\n\n---\n\n### QUERY TIME - ONCE PER INCIDENT\n\n> * **Query**\n>   * **Details:** Short description plus the symptom text. No credentials, no PII.\n>   * **Next Step:** Filter\n> * **Filter**\n>   * **Details:** state = published, category, service, current version only.\n>   * **Next Step:** Search\n> * **Search**\n>   * **Details:** Ranked candidates, each with a score against the query.\n>   * **Next Step:** Rerank\n> * **Rerank**\n>   * **Details:** Reorder the candidates before anything reaches the drafting step.\n\n**Output:** top-k chunks, each with a similarity score and the article number it came from."
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_22 -->",
+            "image_index": 22,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_22.png",
+            "page_no": 40,
+            "bbox": [
+                127.08840942382812,
+                432.52099609375,
+                467.433349609375,
+                330.5928649902344
+            ],
+            "status": "success",
+            "width": 340,
+            "height": 102,
+            "is_diagram_candidate": true,
+            "extracted_text": "### Retrieval results — INC0010023\n\n| RANK | ARTICLE | SECTION | SCORE | READING |\n| :--- | :--- | :--- | :--- | :--- |\n| **1** | **KB0001** | Resolution | 0.847 | Correct article and section. |\n| **2** | **KB0001** | Cause | 0.812 | Same article, adjacent section. |\n| **3** | **KB0005** | Symptom | 0.694 | Plausible neighbour, not wrong. |\n| **4** | **KB0009** | Resolution | 0.611 | Category-adjacent noise. |\n| **5** | **KB0003** | Symptom | 0.585 | Noise. |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_23 -->",
+            "image_index": 23,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_23.png",
+            "page_no": 41,
+            "bbox": [
+                35.30868148803711,
+                388.4058532714844,
+                502.6750793457031,
+                85.9554443359375
+            ],
+            "status": "success",
+            "width": 468,
+            "height": 302,
+            "is_diagram_candidate": true,
+            "extracted_text": "| GROUP | KEY | VALUE | WHY IT IS SET THIS WAY |\n| :--- | :--- | :--- | :--- |\n| **Indexing** | `chunk_size` | `700` | Splitting on headings keeps Symptom, Cause and Resolution intact. Fixed-width splitting cuts procedures mid-step, and the damage only shows when a draft is missing its second half. |\n| | `overlap` | `120` | |\n| | `split_on` | `heading` | |\n| **Search** | `top_k` | `5` | The threshold sits between the scores seen on answerable incidents and those seen on out-of-scope ones. Published-only is a hard filter — it is what keeps KB0010 v1 out of a live incident. |\n| | `threshold` | `0.55` | |\n| | `published` | `true` | |\n| **Safety** | `floor` | `0.45` | Below the floor the pilot escalates rather than drafting. Priority 1 leaves the automated path before any search runs, so nothing is spent on an incident that was never eligible. |\n| | `risk_p` | `[1]` | |\n| | `retries` | `1` | |"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_24 -->",
+            "image_index": 24,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_24.png",
+            "page_no": 42,
+            "bbox": [
+                35.132938385009766,
+                790.5243949890137,
+                180.25311279296875,
+                730.899528503418
+            ],
+            "status": "success",
+            "width": 145,
+            "height": 60,
+            "is_diagram_candidate": true,
+            "extracted_text": "Config excerpt (photographed from a laptop screen):\n\n```yaml\nretrieval:\n  collection: kb_articles\n  chunk_size: 700\n  chunk_overlap: 120\n  top_k: 8\n  score_threshold: 0.35\n  enforce_acl: true\n  hybrid: false\nsafety:\n  confidence_floor: 0.45\n  high_risk_services: [payments, identity, order-processing]\n```"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_25 -->",
+            "image_index": 25,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_25.png",
+            "page_no": 42,
+            "bbox": [
+                120.55313873291016,
+                624.5879669189453,
+                474.0760192871094,
+                459.2297058105469
+            ],
+            "status": "success",
+            "width": 353,
+            "height": 166,
+            "is_diagram_candidate": true,
+            "extracted_text": "```text\nworker.log — smartops-worker-1\n\n2026-09-08 09:14:22 INFO  webhook  event 9f2b1c4e accepted sys_id=1c741bd7 -> 202\n2026-09-08 09:14:22 INFO  iden     claim ok event_id=9f2b1c4e\n2026-09-08 09:14:23 INFO  snow     PATCH incident u_ai_status=in_progress (204)\n2026-09-08 09:14:24 INFO  retrv    top_k=5 filter=state:published,category:network\n2026-09-08 09:14:24 INFO  retrv    hit#1 KB0001/Resolution score=0.847\n2026-09-08 09:14:24 INFO  retrv    hit#2 KB0001/Cause      score=0.812\n2026-09-08 09:14:24 INFO  retrv    hit#3 KB0005/Symptom    score=0.694\n2026-09-08 09:14:29 INFO  gen      prompt_version=v3 tokens_in=1842 tokens_out=214\n2026-09-08 09:14:29 WARN  gen      step 5 not matched to a chunk - dropped\n2026-09-08 09:14:30 INFO  conf     confidence=0.79 threshold=0.55 gate=pass\n2026-09-08 09:14:31 INFO  snow     PATCH suggestion + human_review=true (204)\n2026-09-08 09:14:31 ERROR trace    langfuse flush timeout after 3000ms - retrying\n2026-09-08 09:14:33 INFO  trace    flush ok trace_id=7c1f80e02e4021bd9\n2026-09-08 09:14:33 INFO  worker   run complete in 11.2s\n```"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_26 -->",
+            "image_index": 26,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_26.png",
+            "page_no": 43,
+            "bbox": [
+                238.3441925048828,
+                781.1594772338867,
+                333.328369140625,
+                467.62725830078125
+            ],
+            "status": "success",
+            "width": 95,
+            "height": 313,
+            "is_diagram_candidate": true,
+            "extracted_text": "```http\nPOST /api/v1/events/servicenow\nX-Signature: 4a7f19c2be08d5316f0a2c9d7e41b8a3\n\n{\n  \"event_id\" : \"9f2b1c4e7a5d4f8bb1e3c0762e6f4e19\",\n  \"sys_id\" : \"1c741bd70b2322007518478d83673ef3\",\n  \"number\" : \"INC0010023\",\n  \"event_type\" : \"incident.created\",\n  \"emitted_at\" : \"2026-09-08 09:14:22\"\n}\n```"
+        },
+        {
+            "image_id": "<!-- IMAGE_PLACEHOLDER_27 -->",
+            "image_index": 27,
+            "doc_prefix": "doc",
+            "image_path": "data/parsed/doc_001/images/image_27.png",
+            "page_no": 44,
+            "bbox": [
+                120.45268249511719,
+                282.5421142578125,
+                474.4515686035156,
+                121.26324462890625
+            ],
+            "status": "success",
+            "width": 354,
+            "height": 162,
+            "is_diagram_candidate": true,
+            "extracted_text": "| SmartOps · Run report | تقرير تشغيل النظام |\n| :--- | :--- |\n| **رقم البلاغ** | INC0010023 |\n| **الحالة** | مقترح — بانتظار مراجعة بشرية |\n| **درجة الثقة** | 0.79 |\n| **المقال المرجعي** | KB0001 (v2) |\n| **زمن المعالجة** | 11.2 ثانية |\n| **النتيجة** | تم كتابة الاقتراح في ملاحظات العمل |\n\n> **ملاحظة: النظام يقترح ولا يغلق البلاغ.**\n> القرار النهائي لموظف الدعم دائماً."
         }
     ]
 }

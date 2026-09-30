@@ -51,15 +51,16 @@ dependencies = [
     "pdfplumber>=0.11.10",
     "pillow>=12.3.0",
     "pymupdf>=1.28.2",
+    "onnxruntime-gpu>=1.19.0",
 ]
 
 [tool.uv.sources]
-torch = [{ index = "pytorch-cpu" }]
-torchvision = [{ index = "pytorch-cpu" }]
+torch = [{ index = "pytorch-cu124" }]
+torchvision = [{ index = "pytorch-cu124" }]
 
 [[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
 explicit = true
 
 [tool.pytest.ini_options]
