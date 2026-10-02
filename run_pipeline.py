@@ -72,6 +72,7 @@ def process_incident(ctx: IncidentContext) -> dict:
         run_ctx = new_run_context(ctx.sys_id, number)
         # Store clean search query in run context so tools have access
         run_ctx.initial_search_query = normalized.optimized_search_query
+        tools = build_agent_tools(run_ctx)  # S3.3 tools: searchKB, addworknote, suggestAnswer, requestHR
         try:
             result = run_agent(ctx.sys_id, ctx, tools, ctx=run_ctx)
             chunks = result.retrieved_chunks
