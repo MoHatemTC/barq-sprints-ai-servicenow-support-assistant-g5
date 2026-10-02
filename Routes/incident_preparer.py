@@ -1,5 +1,5 @@
 # input_processor.py
-from schemas.Incident_context import IncidentContext
+from Schemas.Incident_context import IncidentContext
 from utils.sanitizer import truncate_text, mask_pii
 from utils.tag_extract import extract_tags
 from utils.prompt_injection import secure_payload
