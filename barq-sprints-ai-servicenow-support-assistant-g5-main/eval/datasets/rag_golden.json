@@ -1,0 +1,200 @@
+[
+  {
+    "id": "eval_001",
+    "query": "My laptop keeps disconnecting from Wi-Fi every few minutes.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010174", "KB0010171"],
+    "provenance": "Derived from the Wi-Fi troubleshooting pattern used in the published KB family for connectivity drift and signal-quality checks; the case is framed generically rather than copying the article title.",
+    "source_context": "Knowledge article family on intermittent Wi-Fi and signal strength troubleshooting."
+  },
+  {
+    "id": "eval_002",
+    "query": "The office printer is offline even though it is powered on.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010155", "KB0010166"],
+    "provenance": "Built from printer offline and device-connection troubleshooting patterns in the KB; the case is a general symptom-based scenario, not a copied title.",
+    "source_context": "KB entries covering printer connectivity, queue state, and device reset checks."
+  },
+  {
+    "id": "eval_003",
+    "query": "I forgot my password and I am locked out of my account.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010153", "KB0010168"],
+    "provenance": "Derived from access recovery and credential-reset patterns in the KB; this is a general account-lockout case rather than a title match.",
+    "source_context": "Knowledge family covering self-service credential reset and account lockout rules."
+  },
+  {
+    "id": "eval_004",
+    "query": "VPN keeps dropping while I am working from home.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010172", "KB0010174"],
+    "provenance": "Created from the remote-access and connectivity troubleshooting articles; the query is symptom-based and does not reproduce article headlines verbatim.",
+    "source_context": "KB family on VPN reliability and home-network troubleshooting."
+  },
+  {
+    "id": "eval_005",
+    "query": "Email messages are stuck in the outbox and not syncing.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010168", "KB0010158"],
+    "provenance": "Derived from sync-failure troubleshooting around mail clients and sending queues. The scenario is intentionally described as a user issue rather than a title copy.",
+    "source_context": "KB content covering email sync and client queue failures."
+  },
+  {
+    "id": "eval_006",
+    "query": "My laptop is extremely slow during startup after the last update.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010156", "KB0010171"],
+    "provenance": "Based on the performance and boot-stability guidance in the KB; the case is written as a real incident description, not a source title.",
+    "source_context": "Performance troubleshooting and post-update startup delay guidance."
+  },
+  {
+    "id": "eval_007",
+    "query": "I cannot access a shared folder I am supposed to use for work files.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010165", "KB0010160"],
+    "provenance": "Derived from file-permission and access-control troubleshooting in the KB. The case is expressed as a user incident and not as a direct article headline.",
+    "source_context": "Folder access and permission resolution guidance."
+  },
+  {
+    "id": "eval_008",
+    "query": "My headset microphone is not picking up sound in calls.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010169", "KB0010161"],
+    "provenance": "Taken from device-audio troubleshooting patterns in the KB and described as a user-facing call symptom rather than a copied title.",
+    "source_context": "Audio device and call-quality troubleshooting articles."
+  },
+  {
+    "id": "eval_009",
+    "query": "Teams audio drops out every few minutes during meetings.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010161", "KB0010169"],
+    "provenance": "Built from the communication-app audio troubleshooting family and reframed as a typical meeting issue rather than a source heading.",
+    "source_context": "Call-quality troubleshooting steps for communication tools."
+  },
+  {
+    "id": "eval_010",
+    "query": "Our scanner is saying it is offline even though the network is working.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010155", "KB0010170"],
+    "provenance": "Derived from device-network troubleshooting content that covers offline scanners and peripheral resets. The query uses the user’s language, not the article wording.",
+    "source_context": "Peripheral device troubleshooting and offline-state remediation."
+  },
+  {
+    "id": "eval_011",
+    "query": "My phone hotspot is not letting my laptop connect.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010170", "KB0010171"],
+    "provenance": "Based on mobile tethering and network bridging guidance in the KB. The scenario is symptom-led and intentionally not titled like the article.",
+    "source_context": "Mobile hotspot and connectivity troubleshooting guidance."
+  },
+  {
+    "id": "eval_012",
+    "query": "The screen flickers after a Windows update and the image is unstable.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010164", "KB0010150"],
+    "provenance": "Created from display stability and post-update troubleshooting patterns; the issue is described as a general end-user symptom without copying article text.",
+    "source_context": "Display instability and post-update troubleshooting guidance."
+  },
+  {
+    "id": "eval_013",
+    "query": "I cannot add a second monitor because the display options are missing.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010152", "KB0010169"],
+    "provenance": "Derived from monitor setup and hardware-detection guidance in the KB. This is a symptom-driven scenario rather than a title copy.",
+    "source_context": "Display setup, device detection, and peripheral configuration troubleshooting."
+  },
+  {
+    "id": "eval_014",
+    "query": "I am getting a browser error when trying to open the help portal.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010157", "KB0010165"],
+    "provenance": "Derived from browser-access and portal troubleshooting patterns in the KB family; the case is framed as a typical end-user observation.",
+    "source_context": "Portal access and browser issue remediation."
+  },
+  {
+    "id": "eval_015",
+    "query": "My laptop battery drains very quickly while the device is idle.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010170", "KB0010156"],
+    "provenance": "Based on power management and idle-performance troubleshooting in the KB. The query describes a real-world symptom rather than the article heading.",
+    "source_context": "Battery drain and power-management remediation guidance."
+  },
+  {
+    "id": "eval_016",
+    "query": "My account was reset and now I cannot sign in to the portal from my phone.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010168", "KB0010153"],
+    "provenance": "Derived from access recovery and mobile-sign-in guidance in the KB; the case is a mixed access-and-device scenario built from support patterns.",
+    "source_context": "Account access and mobile sign-in troubleshooting."
+  },
+  {
+    "id": "eval_017",
+    "query": "أحتاج إلى حل مشكلة انقطاع الواي فاي أثناء العمل من المنزل.",
+    "answerable": true,
+    "language": "ar",
+    "expected_article_ids": ["KB0010174", "KB0010171"],
+    "provenance": "Arabic-language case derived from the same Wi-Fi troubleshooting KB family; the wording is a natural-language description, not a title copy.",
+    "source_context": "Wi-Fi instability and home-network troubleshooting in Arabic."
+  },
+  {
+    "id": "eval_018",
+    "query": "The portal is slow and the login page keeps timing out during business hours.",
+    "answerable": true,
+    "language": "en",
+    "expected_article_ids": ["KB0010156", "KB0010171"],
+    "provenance": "Derived from access-performance troubleshooting patterns in the KB; the query is a general incident description rather than a source heading.",
+    "source_context": "Portal responsiveness and timeout guidance."
+  },
+  {
+    "id": "eval_019",
+    "query": "أنا أبلغ عن مشكلة في الطابعة ولا يمكنني طباعة الملفات من جهاز المكتب.",
+    "answerable": true,
+    "language": "ar",
+    "expected_article_ids": ["KB0010155", "KB0010170"],
+    "provenance": "Arabic-language incident built from printer and peripheral troubleshooting guidance; it mirrors a user narrative instead of copying a KB article title.",
+    "source_context": "Printer connectivity and device offline troubleshooting in Arabic."
+  },
+  {
+    "id": "eval_020",
+    "query": "I need help with a problem that is not covered in the knowledge base and may not have a solution.",
+    "answerable": false,
+    "language": "en",
+    "expected_article_ids": [],
+    "provenance": "Deliberately unanswerable: the query is intentionally vague and not tied to a grounded KB troubleshooting pattern, so the correct behavior is to abstain and escalate.",
+    "source_context": "Out-of-scope / insufficient evidence case."
+  },
+  {
+    "id": "eval_021",
+    "query": "My issue is with a device that is not listed anywhere, and I need a fix immediately.",
+    "answerable": false,
+    "language": "en",
+    "expected_article_ids": [],
+    "provenance": "Deliberately unanswerable because it lacks a valid KB match, device category, and reproducible troubleshooting context; it should not trigger a false grounded answer.",
+    "source_context": "Insufficient incident specificity and no KB match."
+  },
+  {
+    "id": "eval_022",
+    "query": "أنا لا أملك تفاصيل عن الجهاز أو المشكلة، فقط أريد حلًا فوريًا.",
+    "answerable": false,
+    "language": "ar",
+    "expected_article_ids": [],
+    "provenance": "Deliberately unanswerable Arabic case with no grounded KB evidence; the correct system behavior is to refuse a confident answer and ask for clarification or escalate.",
+    "source_context": "Arabic vague-intent case without enough evidence for a legal KB answer."
+  }
+]

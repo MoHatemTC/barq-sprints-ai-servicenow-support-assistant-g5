@@ -1,0 +1,15 @@
+dataset_path: eval/datasets/rag_golden.json
+output_dir: eval/reports
+report_markdown: eval/reports/rag_report.md
+report_json: eval/reports/rag_report.json
+mode: live
+retrieval:
+  top_k: 3
+  min_score: 0.55
+  hit3_target: 0.80
+metrics:
+  retrieval_precision_threshold: 0.75
+  retrieval_recall_threshold: 0.60
+  answer_relevancy_threshold: 0.70
+  faithfulness_threshold: 0.75
+  g_eval_threshold: 0.80

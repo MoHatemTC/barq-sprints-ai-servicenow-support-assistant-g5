@@ -1,0 +1,132 @@
+services:
+
+  fastapi_app:
+
+    build: .
+
+    container_name: fastapi_support_assistant
+
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+    restart: always
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    environment:
+      QDRANT_HOST: qdrant_db
+      QDRANT_PORT: 6333
+      POSTGRES_HOST: postgres_db
+      POSTGRES_PORT: 5432
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
+      HF_HOME: /hf_cache
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+    volumes:
+      - .:/app
+      - hf_cache:/hf_cache
+
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+
+    networks:
+      - app_network
+
+
+  postgres_db:
+
+    image: postgres:15-alpine
+
+    container_name: postgres_relational_db
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-servicenow_ai}
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-servicenow_ai}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: barq_redis
+
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+    networks:
+      - app_network
+
+  celery_worker:
+    build: .
+    container_name: celery_worker
+
+    command: celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=2
+
+    restart: always
+
+    env_file:
+      - .env
+
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      HF_HOME: /hf_cache
+      POSTGRES_HOST: postgres_db
+      POSTGRES_PORT: 5432
+
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
+
+    volumes:
+      - .:/app
+      - hf_cache:/hf_cache
+
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+      postgres_db:
+        condition: service_healthy
+
+    networks:
+      - app_network
+
+volumes:
+
+  qdrant_storage:
+
+  postgres_data:
+  hf_cache:
+
+networks:
+
+  app_network:
+    driver: bridge

@@ -1,0 +1,258 @@
+{
+  "summary": {
+    "total_cases": 22,
+    "answerable_cases": 19,
+    "unanswerable_cases": 3,
+    "bilingual_cases": 3,
+    "hit3_accuracy": 0.13636363636363635,
+    "retrieval_precision": 0.0,
+    "retrieval_recall": 0.13636363636363635,
+    "answer_relevancy": 0.09163387117932573,
+    "faithfulness": 1.0,
+    "g_eval": 0.0
+  },
+  "case_rows": [
+    {
+      "id": "eval_001",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_002",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.14285714285714285,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_003",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_004",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_005",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.2222222222222222,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_006",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_007",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_008",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.16666666666666666,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_009",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_010",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_011",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.16666666666666666,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_012",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_013",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_014",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_015",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.1111111111111111,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_016",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.09090909090909091,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_017",
+      "answerable": true,
+      "language": "ar",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_018",
+      "answerable": true,
+      "language": "en",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.08333333333333333,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_019",
+      "answerable": true,
+      "language": "ar",
+      "hit3": 0.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 0.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_020",
+      "answerable": false,
+      "language": "en",
+      "hit3": 1.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 1.0,
+      "answer_relevancy": 0.2857142857142857,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_021",
+      "answerable": false,
+      "language": "en",
+      "hit3": 1.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 1.0,
+      "answer_relevancy": 0.09090909090909091,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    },
+    {
+      "id": "eval_022",
+      "answerable": false,
+      "language": "ar",
+      "hit3": 1.0,
+      "retrieval_precision": 0.0,
+      "retrieval_recall": 1.0,
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0,
+      "g_eval": 0.0
+    }
+  ]
+}
