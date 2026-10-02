@@ -24,6 +24,7 @@ from src.agent.factory import build_agent_tools, new_run_context
 from src.agent.react_agent import AgentFailure, AgentResult, run_agent
 from Schemas.Incident_context import IncidentContext
 from Services.exporters import to_html, to_json, to_markdown
+from Services.query_normalizer import normalize_incident
 from Services.incident_preparer import IncidentContextPreparer
 from Services.response_formatter import (
     FormattedResponse,
@@ -64,8 +65,13 @@ def process_incident(ctx: IncidentContext) -> dict:
         # Guardrail from Sprint 2: never let a flagged payload reach the agent
         response = build_escalation("The incident text was flagged as unsafe.", number)
     else:
+       # --- 3-Tier Defense: Normalize query before starting agent ---
+        raw_text = ctx.sanitized_query or ctx.truncated_description
+        normalized = normalize_incident(raw_text)
+        
         run_ctx = new_run_context(ctx.sys_id, number)
-        tools = build_agent_tools(run_ctx)  # S3.3 tools: searchKB, addworknote, suggestAnswer, requestHR
+        # Store clean search query in run context so tools have access
+        run_ctx.initial_search_query = normalized.optimized_search_query
         try:
             result = run_agent(ctx.sys_id, ctx, tools, ctx=run_ctx)
             chunks = result.retrieved_chunks
