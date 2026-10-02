@@ -27,67 +27,117 @@ The AI does not resolve, close, or reassign incidents. Customer-facing communica
 ```mermaid
 flowchart TD
 
-    SN[ServiceNow Incident]
-    BR[ServiceNow Business Rule]
-    API[FastAPI Webhook API]
-    DB[(PostgreSQL)]
-    REDIS[(Redis)]
-    WORKER[Celery Worker]
-    SNC[ServiceNow Client]
-    AGENT[ReAct AI Agent]
+    %% ServiceNow side
+    subgraph SN_SIDE["ServiceNow"]
+        SN[ServiceNow Incident]
+        BR[Business Rule]
+        REVIEW[Human Review]
+        APPROVE[Approve]
+        EDIT[Edit]
+        REJECT[Reject]
+        CUSTOMER[Customer-facing Communication]
+        HUMAN_ESC[Human Escalation]
 
-    KB[searchKB Tool]
-    QDRANT[(Qdrant Vector Database)]
+        SN --> BR
+        SN --> REVIEW
+        REVIEW --> APPROVE
+        REVIEW --> EDIT
+        REVIEW --> REJECT
+        APPROVE --> CUSTOMER
+        EDIT --> CUSTOMER
+        REJECT --> HUMAN_ESC
+    end
 
-    NOTE[addworknote Tool]
-    SUGGEST[suggestAnswer Tool]
-    HR[requestHR Tool]
+    %% Backend event processing
+    subgraph BACKEND["Backend Event Processing"]
+        API[FastAPI Webhook]
+        DB[(PostgreSQL)]
+        REDIS[(Redis)]
+        WORKER[Celery Worker]
+        SNC[ServiceNow Client]
+    end
 
-    WB[ServiceNow Write-back]
-    REVIEW[Human Review]
+    %% AI processing
+    subgraph AI["AI Processing"]
+        AGENT["ReAct AI Agent"]
 
-    APPROVE[Approve]
-    EDIT[Edit]
-    REJECT[Reject]
+        SEARCH["searchKB(query)"]
+        NOTE["addworknote(note)"]
+        SUGGEST["suggestAnswer(procedure, sources)"]
+        HR["requestHR(reason)"]
 
-    BR -->|Signed Webhook| API
+        EMB["BAAI/bge-base-en-v1.5"]
+        QDRANT[(Qdrant Vector Database)]
+    end
 
-    API -->|Verify HMAC + Validate + Idempotency| DB
-    API -->|Queue WorkerPayload| REDIS
+    %% Write-back
+    subgraph WRITEBACK["ServiceNow Write-back"]
+        WB["ServiceNow Write-back Client"]
+        FIELDS["AI Fields + Work Notes"]
+    end
 
+    %% Incident ingestion
+    BR -->|"Signed Webhook"| API
+
+    API -->|"HMAC + Validation + Guardrails"| DB
+    API -->|"Minimal WorkerPayload"| REDIS
     REDIS --> WORKER
 
-    WORKER -->|Fetch Fresh Incident| SNC
-    SNC -->|GET Incident| SN
+    %% Fresh incident retrieval
+    WORKER -->|"Fetch Fresh Incident"| SNC
+    SNC -->|"GET Incident"| SN
+    SNC -->|"Incident Data"| WORKER
 
-    WORKER -->|Process Incident| AGENT
+    %% Agent
+    WORKER -->|"Process Incident"| AGENT
 
-    AGENT --> KB
-    KB -->|Vector Search| QDRANT
+    %% ReAct tool loop
+    AGENT -->|"Tool Call"| SEARCH
+    SEARCH --> EMB
+    EMB -->|"Query Vector"| QDRANT
+    QDRANT -->|"Relevant Published Chunks"| SEARCH
+    SEARCH -->|"Observation"| AGENT
 
-    AGENT --> NOTE
-    AGENT --> SUGGEST
-    AGENT --> HR
+    AGENT -->|"Tool Call"| NOTE
+    NOTE -->|"Internal Note"| WB
 
-    NOTE --> WB
-    SUGGEST --> WB
-    HR --> WB
+    AGENT -->|"Tool Call"| SUGGEST
+    SUGGEST -->|"Grounded Suggestion"| WB
 
+    AGENT -->|"Tool Call"| HR
+    HR -->|"Escalation"| WB
+
+    %% Write-back
     WB --> SNC
-    SNC -->|Write AI Fields / Work Notes| SN
+    SNC -->|"PATCH Allowed AI Fields"| FIELDS
+    FIELDS --> SN
 
+    %% Human review
     SN --> REVIEW
 
-    REVIEW --> APPROVE
-    REVIEW --> EDIT
-    REVIEW --> REJECT
-
-    APPROVE --> SN
-    EDIT --> SN
-    REJECT --> SN
+    %% Review relationships
+    SUGGEST -.->|"Requires Human Review"| REVIEW
+    HR -.->|"Human Escalation"| REVIEW
 ```
 
-The architecture separates event reception, background processing, knowledge retrieval, AI reasoning, ServiceNow communication, and human review.
+The architecture separates the system into five main stages:
+
+1. **ServiceNow event generation** — the Business Rule sends a signed incident webhook.
+2. **Asynchronous backend processing** — FastAPI validates and queues the event through PostgreSQL and Redis/Celery.
+3. **AI reasoning and retrieval** — the Celery worker passes the fresh incident to the ReAct agent, which can use exactly four tools.
+4. **Controlled ServiceNow write-back** — the tools communicate through the write-back layer and ServiceNow Client rather than directly modifying ServiceNow.
+5. **Human review** — AI-generated suggestions or escalations are reviewed by a human before customer-facing communication.
+
+The ReAct agent does not directly communicate with the ServiceNow API. Its tool calls are executed through the application's service and write-back layers.
+
+The four agent tools are explicitly separated:
+
+* `searchKB` retrieves grounding material from Qdrant.
+* `addworknote` adds an internal work note.
+* `suggestAnswer` produces a grounded response suggestion.
+* `requestHR` escalates when the agent cannot safely produce a grounded response.
+
+The final customer-facing response remains under human control.
 
 ---
 
@@ -320,6 +370,30 @@ The agent is constrained by execution limits including:
 
 The LLM is responsible for producing tool calls, while the agent runtime executes the selected tools and returns their results to the LLM.
 
+The ReAct loop can be summarized as:
+
+```text
+Incident
+   |
+   v
+ReAct Agent
+   |
+   +---- searchKB ------> Qdrant
+   |                       |
+   |<------ Observation ---+
+   |
+   +---- addworknote ----> Write-back
+   |
+   +---- suggestAnswer --> Write-back
+   |
+   +---- requestHR ------> Write-back
+   |
+   v
+Next reasoning step
+```
+
+The agent can continue reasoning after a tool observation, subject to its configured iteration, time, token, search, and grounding limits.
+
 ---
 
 ## 12. Knowledge Base Retrieval
@@ -383,6 +457,8 @@ The tool generates an embedding for the query and searches Qdrant.
 
 The returned results provide the grounding material used by the agent.
 
+The tool is the agent's main knowledge-retrieval mechanism.
+
 ---
 
 ### `addworknote(note)`
@@ -390,6 +466,8 @@ The returned results provide the grounding material used by the agent.
 Adds an internal AI work note to the ServiceNow incident.
 
 This is intended for internal incident processing information and is not the same as customer-facing communication.
+
+Work notes remain internal to the ServiceNow support workflow.
 
 ---
 
@@ -430,6 +508,28 @@ After the configured grounding rejection limit is reached, the incident can be e
 
 The system does not treat retrieval similarity as proof that an answer is correct. Retrieved KB content must provide sufficient supporting evidence for the proposed response.
 
+The grounding flow can be summarized as:
+
+```text
+Agent
+  |
+  v
+searchKB
+  |
+  v
+Retrieved KB Chunks
+  |
+  v
+Grounding Validation
+  |
+  +---- Sufficient ----> suggestAnswer
+  |
+  +---- Insufficient --> Continue Search / Reasoning
+                              |
+                              v
+                       requestHR if limits reached
+```
+
 ---
 
 ## 15. ServiceNow Write-back
@@ -456,6 +556,24 @@ The AI write-back intentionally does not control incident fields such as:
 * Close notes
 
 This keeps incident lifecycle and ownership under human/ServiceNow control.
+
+The write-back path is:
+
+```text
+ReAct Agent
+     |
+     v
+Agent Tool
+     |
+     v
+ServiceNow Write-back Client
+     |
+     v
+ServiceNow Client
+     |
+     v
+ServiceNow AI Fields / Work Notes
+```
 
 ---
 
@@ -484,6 +602,32 @@ The fulfiller can modify the suggested response before using it as customer-faci
 The AI suggestion is rejected and the incident is moved into the configured human-escalation flow.
 
 The AI itself does not directly write customer-facing comments.
+
+The review flow is:
+
+```mermaid
+flowchart TD
+
+    AI_RESULT[AI Result]
+    REVIEW[Human Review]
+
+    APPROVE[Approve AI Suggestion]
+    EDIT[Edit AI Suggestion]
+    REJECT[Reject AI Suggestion]
+
+    COMMENTS[Customer-facing Comments]
+    ESCALATE[Human Escalation]
+
+    AI_RESULT --> REVIEW
+
+    REVIEW --> APPROVE
+    REVIEW --> EDIT
+    REVIEW --> REJECT
+
+    APPROVE --> COMMENTS
+    EDIT --> COMMENTS
+    REJECT --> ESCALATE
+```
 
 ---
 
@@ -517,7 +661,6 @@ flowchart TD
 
     WB --> SNC
     SNC --> FIELDS
-
     FIELDS --> REVIEW
 
     REVIEW -->|Approve / Edit| COMMENTS
@@ -529,6 +672,8 @@ The write-back operation is designed as an atomic update for the AI-controlled f
 Transient ServiceNow write failures can be retried.
 
 The write-back client uses a restricted field allow-list so the AI cannot modify protected incident lifecycle fields.
+
+Customer-facing comments are intentionally outside the AI write-back allow-list and are controlled by the human review workflow.
 
 ---
 
@@ -566,6 +711,30 @@ The ServiceNow write-back client restricts AI modifications to an explicit allow
 
 Customer-facing communication requires human review.
 
+The combined security boundary is:
+
+```text
+ServiceNow
+    |
+    v
+Signed Webhook
+    |
+    v
+FastAPI Validation
+    |
+    v
+Input Guardrails
+    |
+    v
+ReAct Agent Limits + Grounding
+    |
+    v
+Restricted Write-back
+    |
+    v
+Human Review
+```
+
 ---
 
 ## 19. Reliability Architecture
@@ -586,7 +755,6 @@ flowchart LR
     API --> DB
     API --> REDIS
     REDIS --> WORKER
-
     WORKER -->|Permanent / exhausted failure| DLQ
 ```
 
@@ -634,6 +802,30 @@ Published ServiceNow knowledge articles are cleaned, chunked, embedded, and stor
 
 During incident processing, the same embedding model is used to convert the search query into a vector before searching Qdrant.
 
+The ingestion and retrieval paths are therefore connected through the same embedding model and Qdrant collection:
+
+```text
+ServiceNow KB
+     |
+     v
+Cleaning
+     |
+     v
+Chunking
+     |
+     v
+BGE Embeddings
+     |
+     v
+Qdrant
+     ^
+     |
+BGE Embedding
+     ^
+     |
+Agent searchKB Query
+```
+
 ---
 
 ## 21. Complete Processing Sequence
@@ -642,69 +834,74 @@ The complete incident lifecycle can be summarized as:
 
 ```text
 1. ServiceNow creates/updates an incident
-                |
-                v
+                    |
+                    v
 2. Business Rule sends signed webhook
-                |
-                v
+                    |
+                    v
 3. FastAPI verifies signature
-                |
-                v
+                    |
+                    v
 4. Payload validation + guardrails
-                |
-                v
+                    |
+                    v
 5. PostgreSQL idempotency check
-                |
-                v
+                    |
+                    v
 6. Minimal event queued in Redis
-                |
-                v
+                    |
+                    v
 7. Celery worker receives event
-                |
-                v
+                    |
+                    v
 8. Worker uses ServiceNow Client
    to fetch fresh incident
-                |
-                v
+                    |
+                    v
 9. Guardrails run again
-                |
-                v
+                    |
+                    v
 10. ReAct agent starts
-                |
-                v
+                    |
+                    v
 11. searchKB retrieves published KB content
-                |
-                v
+                    |
+                    v
 12. Agent evaluates grounding
-                |
-          +-----+-----+
-          |           |
-          v           v
-    Sufficient    Insufficient
-    knowledge     knowledge
-          |           |
-          v           v
-   suggestAnswer   requestHR
-          |           |
-          +-----+-----+
-                |
-                v
+                    |
+              +-----+-----+
+              |           |
+              v           v
+        Sufficient    Insufficient
+        knowledge     knowledge
+              |           |
+              v           v
+       suggestAnswer   Continue reasoning
+              |           |
+              |           v
+              |       requestHR
+              |           |
+              +-----+-----+
+                    |
+                    v
 13. ServiceNow write-back
-                |
-                v
+                    |
+                    v
 14. Human review
-                |
-          +-----+-----+
-          |     |     |
-          v     v     v
-       Approve Edit Reject
-          |     |     |
-          +-----+-----+
-                |
-                v
+                    |
+              +-----+-----+
+              |     |     |
+              v     v     v
+           Approve Edit Reject
+              |     |     |
+              +-----+-----+
+                    |
+                    v
 15. Customer-facing response
     or human escalation
 ```
+
+The important architectural boundary is that the AI processing stage ends with a controlled ServiceNow state update. The final customer-facing action remains a human decision.
 
 ---
 
@@ -726,7 +923,7 @@ The complete incident lifecycle can be summarized as:
 | `requestHR`       | Escalates the incident to a human                                                                  |
 | Qdrant            | Stores and retrieves KB vectors                                                                    |
 | BGE Embeddings    | Converts KB content and search queries into vectors                                                |
-| Write-back Client | Coordinates permitted AI fields and work notes updates                                             |
+| Write-back Client | Coordinates permitted AI fields and work note updates                                              |
 | Human Review      | Controls customer-facing communication                                                             |
 
 ---
