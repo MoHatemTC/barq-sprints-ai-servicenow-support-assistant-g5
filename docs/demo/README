@@ -1,0 +1,63 @@
+# End-to-End Demo — AI ServiceNow Support Assistant (S4.6)
+
+## Demo details
+
+| Item | Value |
+|---|---|
+| **Demo link** | https://drive.google.com/file/d/19xI7KQIJJ45jNIe3XSQuXjVrFtUZuYLZ/view?usp=sharing |
+| **Format** | Screen recording, MP4 (no voice-over / notes) |
+| **Duration** | 2:04 |
+| **Access** | Anyone with the link can view it; no login required |
+| **Data** | Test incidents only; no keys, tokens, passwords or internal URLs shown |
+
+**Access instructions:** open the link in any browser and press play. (If the MP4 is committed instead: `docs/demo/<file>.mp4`, download or view it from the GitHub file page.)
+
+## What the demo proves
+
+1. A signed ServiceNow event reaches the FastAPI webhook and is accepted with **HTTP 202**.
+2. A Celery worker runs the ReAct agent, which searches the knowledge base in Qdrant.
+3. A **grounded, cited** suggestion is written back to the incident for human review.
+4. A human approves, edits or rejects the suggestion.
+5. An out-of-scope incident is **handed off to a human** with no guessing.
+
+## Walkthrough
+
+Timestamps are approximate; adjust them to match the recording.
+
+### Part 1: Success flow (answerable incident)
+
+1. **Create the incident (0:00).** In ServiceNow, create a new incident with test data: a caller, a category (for example *Software*), a short description and a description of an issue that the knowledge base covers. Submit it.
+2. **Event delivery (0:20).** The ServiceNow outbound event posts to `POST /api/webhook`. The FastAPI log shows the request received and `202 Accepted`. The signature (`X-ServiceNow-Signature`, HMAC-SHA256) is verified, the event is stored in Postgres, and the guardrails (PII masking, injection check) pass.
+3. **Queued (0:30).** FastAPI puts only the IDs in Redis and returns immediately. No model runs inside the request.
+4. **Celery worker picks it up (0:35).** The worker log shows the task received. It fetches the current incident from ServiceNow and runs the guardrails again.
+5. **ReAct agent (0:45).** The trace shows the loop: the agent calls `searchKB`, Qdrant returns chunks above the score threshold, and the agent calls `suggestAnswer` with numbered steps. Every step ends with `[Article: <id>]`. The grounding gate accepts it because every cited article was actually retrieved.
+6. **Write-back (1:00).** One PATCH updates the incident: AI Status `suggested`, AI Confidence, AI Suggested Response, Human Review Required checked, AI Processed checked.
+7. **Suggestion on the form (1:05).** Refresh the incident. The AI fields are read-only, and the suggestion shows its numbered steps and sources.
+8. **Human review (1:15).** The fulfiller uses the review actions:
+    - **Approve** copies the suggestion (without the internal header line) into customer-visible *Additional comments*, clears Human Review Required and saves.
+    - **Edit** copies it into comments so the fulfiller can change it before saving.
+    - **Reject** sets AI Status to `escalated`, clears the review flag and adds an internal work note.
+
+### Part 2: Human hand-off (out-of-scope incident)
+
+9. **Create an out-of-scope incident (1:25).** Use test data about something the knowledge base does not cover.
+10. **Same pipeline (1:35).** The webhook returns 202 and the worker starts the agent. `searchKB` finds nothing above the threshold.
+11. **No guessing (1:45).** The agent calls `requestHR` with a reason and does not call `suggestAnswer`.
+12. **Hand-off on the incident (1:55).** The incident shows AI Status `escalated`, AI Suggested Response empty, Human Review Required still checked, and an internal work note `AI escalation reason: ...`. A human takes over.
+
+## Frames
+
+Screenshots are in [`frames/`](frames/):
+
+| File | What it shows |
+|---|---|
+| `01_incident_created.png` | Test incident created in ServiceNow |
+| `02_webhook_202.png` | FastAPI log: webhook received, `202 Accepted` |
+| `03_agent_trace.png` | Worker log: ReAct steps (`searchKB`, `suggestAnswer`) |
+| `04_suggestion_on_incident.png` | Incident form with the cited suggestion, confidence and review flag |
+| `05_human_review.png` | Result after Approve / Edit / Reject |
+| `06_handoff_escalated.png` | Out-of-scope incident with `escalated` status and the escalation work note |
+
+## Data hygiene
+
+Only test incidents are used. The instance URL, credentials, API keys, webhook secret and Qdrant cluster URL are not shown in the video or the frames.
