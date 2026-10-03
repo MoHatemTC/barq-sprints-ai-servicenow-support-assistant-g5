@@ -1,0 +1,3113 @@
+{
+  "meta": {
+    "generated_at": "2026-10-03T16:46:03+00:00",
+    "adapter": {
+      "mode": "snapshot",
+      "file": "eval/fixtures/rag_snapshot.json",
+      "recorded_at": "2026-10-03T16:03:23+00:00",
+      "top_k": 5,
+      "score_threshold": 0.7,
+      "embedding_model": "BAAI/bge-m3",
+      "llm_model": "gemini/gemini-3.6-flash",
+      "dataset_sha256": "650c644702e3f8a1622e1eaf4f40d87b873082efb05b0fb11ac870a87d75deb1"
+    },
+    "cases": 43,
+    "answerable": 36,
+    "unanswerable": 7,
+    "dataset_sha256": "650c644702e3f8a1622e1eaf4f40d87b873082efb05b0fb11ac870a87d75deb1",
+    "judge_model": "gemini/gemini-3.6-flash",
+    "thresholds": {
+      "hit_at_3": 0.8,
+      "contextual_precision": 0.6,
+      "contextual_recall": 0.6,
+      "contextual_relevancy": 0.3,
+      "faithfulness": 0.8,
+      "answer_relevancy": 0.7,
+      "procedure_citation": 0.7,
+      "refusal_rate": 0.8
+    }
+  },
+  "summary": {
+    "hit_at_3": {
+      "value": 1.0,
+      "hits": 36,
+      "total": 36,
+      "threshold": 0.8,
+      "pass": true
+    },
+    "hit_at_3_by_language": {
+      "english": {
+        "hits": 29,
+        "total": 29
+      },
+      "arabic_or_mixed": {
+        "hits": 7,
+        "total": 7
+      }
+    },
+    "refusal_rate": {
+      "value": 1.0,
+      "correct": 7,
+      "total": 7,
+      "threshold": 0.8,
+      "pass": true
+    },
+    "false_refusal_rate": {
+      "value": 0.75,
+      "count": 27,
+      "total": 36
+    },
+    "citation_grounded": {
+      "value": 1.0,
+      "valid": 9,
+      "total": 9
+    },
+    "deepeval": {
+      "contextual_precision": {
+        "mean": 0.9226,
+        "n": 36,
+        "errors": 0,
+        "case_pass_rate": 0.9444,
+        "threshold": 0.6,
+        "pass": true
+      },
+      "contextual_recall": {
+        "mean": 0.9491,
+        "n": 36,
+        "errors": 0,
+        "case_pass_rate": 0.9722,
+        "threshold": 0.6,
+        "pass": true
+      },
+      "contextual_relevancy": {
+        "mean": 0.6419,
+        "n": 36,
+        "errors": 0,
+        "case_pass_rate": 0.9722,
+        "threshold": 0.3,
+        "pass": true
+      },
+      "faithfulness": {
+        "mean": 1.0,
+        "n": 9,
+        "errors": 0,
+        "case_pass_rate": 1.0,
+        "threshold": 0.8,
+        "pass": true
+      },
+      "answer_relevancy": {
+        "mean": 0.9722,
+        "n": 9,
+        "errors": 0,
+        "case_pass_rate": 1.0,
+        "threshold": 0.7,
+        "pass": true
+      },
+      "procedure_citation": {
+        "mean": 1.0,
+        "n": 9,
+        "errors": 0,
+        "case_pass_rate": 1.0,
+        "threshold": 0.7,
+        "pass": true
+      }
+    },
+    "separation": {
+      "answerable": {
+        "n": 36,
+        "mean": 0.63,
+        "median": 0.6317,
+        "min": 0.4869,
+        "max": 0.7447
+      },
+      "unanswerable": {
+        "n": 7,
+        "mean": 0.5268,
+        "median": 0.5439,
+        "min": 0.3922,
+        "max": 0.6238
+      },
+      "auc": 0.841,
+      "sweep": [
+        {
+          "threshold": 0.2,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.25,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.3,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.35,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.4,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.143,
+          "balanced_accuracy": 0.571
+        },
+        {
+          "threshold": 0.45,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.143,
+          "balanced_accuracy": 0.571
+        },
+        {
+          "threshold": 0.5,
+          "answerable_kept": 0.972,
+          "unanswerable_rejected": 0.286,
+          "balanced_accuracy": 0.629
+        },
+        {
+          "threshold": 0.55,
+          "answerable_kept": 0.944,
+          "unanswerable_rejected": 0.571,
+          "balanced_accuracy": 0.758
+        },
+        {
+          "threshold": 0.6,
+          "answerable_kept": 0.611,
+          "unanswerable_rejected": 0.857,
+          "balanced_accuracy": 0.734
+        },
+        {
+          "threshold": 0.65,
+          "answerable_kept": 0.417,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.708
+        },
+        {
+          "threshold": 0.7,
+          "answerable_kept": 0.139,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.569
+        },
+        {
+          "threshold": 0.75,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.8,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.85,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.9,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        }
+      ],
+      "best_threshold": {
+        "threshold": 0.55,
+        "answerable_kept": 0.944,
+        "unanswerable_rejected": 0.571,
+        "balanced_accuracy": 0.758
+      },
+      "at_production_threshold": {
+        "threshold": 0.7,
+        "answerable_kept": 0.139,
+        "unanswerable_rejected": 1.0
+      }
+    },
+    "separation_agent": {
+      "answerable": {
+        "n": 36,
+        "mean": 0.6381,
+        "median": 0.6395,
+        "min": 0.5069,
+        "max": 0.7496
+      },
+      "unanswerable": {
+        "n": 7,
+        "mean": 0.4632,
+        "median": 0.4665,
+        "min": 0.3967,
+        "max": 0.5122
+      },
+      "auc": 0.992,
+      "sweep": [
+        {
+          "threshold": 0.2,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.25,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.3,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.35,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.4,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.143,
+          "balanced_accuracy": 0.571
+        },
+        {
+          "threshold": 0.45,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.286,
+          "balanced_accuracy": 0.643
+        },
+        {
+          "threshold": 0.5,
+          "answerable_kept": 1.0,
+          "unanswerable_rejected": 0.714,
+          "balanced_accuracy": 0.857
+        },
+        {
+          "threshold": 0.55,
+          "answerable_kept": 0.861,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.931
+        },
+        {
+          "threshold": 0.6,
+          "answerable_kept": 0.75,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.875
+        },
+        {
+          "threshold": 0.65,
+          "answerable_kept": 0.389,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.694
+        },
+        {
+          "threshold": 0.7,
+          "answerable_kept": 0.25,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.625
+        },
+        {
+          "threshold": 0.75,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.8,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.85,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        },
+        {
+          "threshold": 0.9,
+          "answerable_kept": 0.0,
+          "unanswerable_rejected": 1.0,
+          "balanced_accuracy": 0.5
+        }
+      ],
+      "best_threshold": {
+        "threshold": 0.55,
+        "answerable_kept": 0.861,
+        "unanswerable_rejected": 1.0,
+        "balanced_accuracy": 0.931
+      },
+      "at_production_threshold": {
+        "threshold": 0.7,
+        "answerable_kept": 0.25,
+        "unanswerable_rejected": 1.0
+      }
+    }
+  },
+  "failing_cases": [
+    {
+      "id": "rag_002",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.56)"
+      ]
+    },
+    {
+      "id": "rag_003",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.61)"
+      ]
+    },
+    {
+      "id": "rag_004",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.59)"
+      ]
+    },
+    {
+      "id": "rag_005",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.59)"
+      ]
+    },
+    {
+      "id": "rag_008",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.72)"
+      ]
+    },
+    {
+      "id": "rag_009",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "contextual_precision=0.33 < 0.6"
+      ]
+    },
+    {
+      "id": "rag_010",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.58)",
+        "contextual_precision=0.37 < 0.6"
+      ]
+    },
+    {
+      "id": "rag_011",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.63)"
+      ]
+    },
+    {
+      "id": "rag_012",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.58)"
+      ]
+    },
+    {
+      "id": "rag_013",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.63)"
+      ]
+    },
+    {
+      "id": "rag_014",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.57)"
+      ]
+    },
+    {
+      "id": "rag_015",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.69)"
+      ]
+    },
+    {
+      "id": "rag_016",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.50)",
+        "contextual_recall=0.50 < 0.6",
+        "contextual_relevancy=0.17 < 0.3"
+      ]
+    },
+    {
+      "id": "rag_017",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.73)"
+      ]
+    },
+    {
+      "id": "rag_018",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.65)"
+      ]
+    },
+    {
+      "id": "rag_019",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.65)"
+      ]
+    },
+    {
+      "id": "rag_020",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.49)"
+      ]
+    },
+    {
+      "id": "rag_021",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.68)"
+      ]
+    },
+    {
+      "id": "rag_022",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.56)"
+      ]
+    },
+    {
+      "id": "rag_023",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.65)"
+      ]
+    },
+    {
+      "id": "rag_024",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.60)"
+      ]
+    },
+    {
+      "id": "rag_025",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.58)"
+      ]
+    },
+    {
+      "id": "rag_026",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.56)"
+      ]
+    },
+    {
+      "id": "rag_027",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.68)"
+      ]
+    },
+    {
+      "id": "rag_028",
+      "category": "answerable",
+      "language": "en",
+      "reasons": [
+        "escalated instead of answering (best score 0.68)"
+      ]
+    },
+    {
+      "id": "rag_031",
+      "category": "answerable",
+      "language": "ar",
+      "reasons": [
+        "escalated instead of answering (best score 0.65)"
+      ]
+    },
+    {
+      "id": "rag_034",
+      "category": "answerable",
+      "language": "ar",
+      "reasons": [
+        "escalated instead of answering (best score 0.60)"
+      ]
+    },
+    {
+      "id": "rag_035",
+      "category": "answerable",
+      "language": "mixed",
+      "reasons": [
+        "escalated instead of answering (best score 0.61)"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "rag_001",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "easy",
+      "query": "Laptop drops off home Wi-Fi every 10-15 minutes\nWorking from home on a consumer router. Roughly every 10-15 minutes my laptop loses the wireless connection, then reconnects by itself a minute later. It is wrecking my calls. Phone on the same Wi-Fi seems fine.",
+      "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device forget the Wi-Fi network, then reconnect from scratch. [Article: KB0010174]\n3. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n4. As a remote worker on a consumer router, check for signal interference or an overloaded connection. [Article: KB0010174]",
+      "expected_ids": [
+        "KB0010174"
+      ],
+      "confusable_ids": [
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010174",
+        "KB0010174",
+        "KB0010171",
+        "KB0010171",
+        "KB0010171"
+      ],
+      "retrieved_scores": [
+        0.6795,
+        0.6551,
+        0.636,
+        0.6078,
+        0.5876
+      ],
+      "best_score": 0.6795,
+      "agent_best_score": 0.7035,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Check router settings to confirm the network is broadcasting correctly with proper security settings. [Article: KB0010174]\n2. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n3. Check for signal interference or an overloaded connection when working remotely on a consumer router. [Article: KB0010174]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010174"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all the relevant nodes are perfectly ranked at the top! The first node in retrieval contexts directly addresses the issue with instructions to \"Restart the router to clear temporary glitches causing repeated drops\", and the second node in retrieval contexts provides useful troubleshooting steps like \"Restart the PC first\", correctly placing all pertinent information before any irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly supported by the context! Sentences 1 and 2 are directly backed by node 2 in retrieval context, while sentences 3 and 4 are fully matched by node 1.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because while the context provides helpful advice like \"Restart the PC first when Wi-Fi keeps disconnecting.\", it includes irrelevant suggestions such as instructing to \"Inspect cable connections for damage or looseness\" and check for \"ISP outages\" despite the issue being specific to a single laptop on a working wireless network.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output is completely aligned with the retrieval context, showing no contradictions at all! Excellent work!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the Wi-Fi dropping issue with completely relevant details and contains zero irrelevant statements. Great job!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The output strictly follows all evaluation criteria: it is formatted as a numbered procedure with three steps, each step includes a valid citation in the exact required format [Article: KB0010174], and every step describes concrete, actionable troubleshooting steps.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_002",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Pages crawl although Wi-Fi shows full bars\nConnection never drops, but websites take ages to load and a speed test gives about 4 Mbps while our plan is 50 Mbps. Happens on the laptop and the desktop.",
+      "expected_answer": "1. Restart the PC, then run a speed test and compare it to the plan's expected speed. [Article: KB0010171]\n2. Restart the router and modem to clear temporary network issues. [Article: KB0010171]\n3. Check Wi-Fi signal strength; move closer to the router, reposition the access point, or use a wired connection. [Article: KB0010171]\n4. For remote workers, test the modem and check for ISP outages; escalate to the ISP if it persists. [Article: KB0010171]",
+      "expected_ids": [
+        "KB0010171"
+      ],
+      "confusable_ids": [
+        "KB0010174",
+        "KB0010172"
+      ],
+      "retrieved_ids": [
+        "KB0010171",
+        "KB0010171",
+        "KB0010174",
+        "KB0010171",
+        "KB0010156"
+      ],
+      "retrieved_scores": [
+        0.5596,
+        0.5556,
+        0.5409,
+        0.5377,
+        0.5304
+      ],
+      "best_score": 0.5596,
+      "agent_best_score": 0.6409,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for troubleshooting slow Wi-Fi throughput and speed test discrepancies despite strong signal strength.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.9167,
+          "success": true,
+          "reason": "The score is 0.92 because while the first node and second node in retrieval contexts are relevant, the third node in retrieval contexts is an irrelevant node since 'This context discusses router settings, signal interference, and repeated drops, none of which were included in the expected output.' and is ranked above the fourth node in retrieval contexts, which is relevant as 'The context directly supports step 4 of the expected output: 'For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting''.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the retrieved context! Sentences 1 and 2 are backed by node 1 and node 2 in retrieval context, sentence 3 is found in node 2, and sentence 4 aligns perfectly with node 4.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6429,
+          "success": true,
+          "reason": "The score is 0.64 because while the context contains useful steps like 'Restart the router and modem to clear temporary network issues' and 'Restart the PC, then run a speed test and compare it to the plan's expected speed.', it also includes irrelevant details such as recommending 'a hardware upgrade (RAM/SSD)' and addressing glitches 'causing repeated drops' even though the user explicitly stated 'Connection never drops'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_003",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Downloads crawl and Teams lags only when I am on the company VPN\nFrom the home network everything is quick. The moment I connect to the corporate VPN, file downloads crawl and Teams video stutters. Disconnecting the VPN fixes it immediately.",
+      "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to you. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor across servers and protocols. [Article: KB0010172]",
+      "expected_ids": [
+        "KB0010172"
+      ],
+      "confusable_ids": [
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010172",
+        "KB0010172",
+        "KB0010165",
+        "KB0010171",
+        "KB0010161"
+      ],
+      "retrieved_scores": [
+        0.6131,
+        0.6126,
+        0.5754,
+        0.5517,
+        0.5503
+      ],
+      "best_score": 0.6131,
+      "agent_best_score": 0.6891,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base article was found above the confidence threshold for VPN speed and Teams performance issues.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all the relevant nodes in retrieval contexts are perfectly ranked right at the top (ranks 1 and 2), coming before all irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the context! Sentences 1 and 2 align with node 1 in retrieval context, sentence 3 is backed by both node 1 and node 2, and sentence 4 is directly confirmed by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.4286,
+          "success": true,
+          "reason": "The score is 0.43 because while the context contains relevant advice like \"Connect to a VPN server location closer to the user for better performance\" and \"Try switching VPN protocols if the client supports more than one\", much of the retrieved content is off-topic, offering inapplicable suggestions such as \"Inspect cable connections for damage or looseness\" and \"test the modem and check for ISP outages\" despite the user's home network working quickly outside the VPN.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_004",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Wireless printer ignores my jobs since I moved to the guest network\nPrint jobs sit in the queue and never come out of the 2nd-floor wireless printer. Last week my laptop was moved onto the guest Wi-Fi. Printer has paper and no error lights.",
+      "expected_answer": "1. Confirm both the laptop and the wireless printer are on the same Wi-Fi network. [Article: KB0010155]\n2. For network printers, troubleshoot the Wi-Fi/network connection separately if needed. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog if the configuration looks off. [Article: KB0010155]",
+      "expected_ids": [
+        "KB0010155"
+      ],
+      "confusable_ids": [
+        "KB0010174"
+      ],
+      "retrieved_ids": [
+        "KB0010155",
+        "KB0010155",
+        "KB0010155",
+        "KB0010174",
+        "KB0010174"
+      ],
+      "retrieved_scores": [
+        0.5911,
+        0.587,
+        0.5417,
+        0.5171,
+        0.5142
+      ],
+      "best_score": 0.5911,
+      "agent_best_score": 0.5357,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for resolving wireless printing issues on the guest Wi-Fi network.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts are perfectly ranked at the top! The first node in retrieval contexts explicitly states to 'confirm both devices are on the same Wi-Fi network', the second node mentions 'Re-map the printer or reselect the correct device in the print dialog if configuration looks off' and 'For network printers, troubleshoot the Wi-Fi/network connection separately if needed', and the third node contains 'Re-map the printer or reselect the correct device in the print dialog if configuration looks off'. These relevant nodes are correctly positioned above the irrelevant nodes at ranks 4 and 5.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because sentences 2 and 3 in the expected output are supported by nodes in retrieval context (nodes 2 and 3), whereas sentence 1 is not fully supported because node 1 does not explicitly mention a 'laptop'.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.3571,
+          "success": true,
+          "reason": "The score is 0.36 because while the context includes relevant advice such as \"Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network.\", much of it is irrelevant, focusing on non-applicable troubleshooting like \"Check for and clear any paper jams following the manufacturer's guidance\" and general \"Wi-Fi Keeps Disconnecting\" issues.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_005",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Access denied when printing to the shared floor printer\nI joined the finance team last week. I can print to my own desk printer fine, but the shared printer on our floor rejects every job with an access denied message.",
+      "expected_answer": "1. Confirm the user has the required permissions on shared/office printers. [Article: KB0010155]\n2. Re-map the printer or reselect the correct device in the print dialog if configuration looks off. [Article: KB0010155]",
+      "expected_ids": [
+        "KB0010155"
+      ],
+      "confusable_ids": [
+        "KB0010165"
+      ],
+      "retrieved_ids": [
+        "KB0010155",
+        "KB0010155",
+        "KB0010165",
+        "KB0010155",
+        "KB0010165"
+      ],
+      "retrieved_scores": [
+        0.5888,
+        0.5303,
+        0.5185,
+        0.5087,
+        0.5061
+      ],
+      "best_score": 0.5888,
+      "agent_best_score": 0.624,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found to resolve the shared printer access denied issue.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because the first node in retrieval contexts is relevant as 'This context contains both steps listed in the expected output: 'Re-map the printer or reselect the correct device in the print dialog if configuration looks off' and 'Confirm the user has the required permissions on shared/office printers''. However, the score is not higher because irrelevant nodes were ranked ahead of a relevant node: the second node in retrieval contexts 'discusses verifying cable connections, Wi-Fi networks, and clearing paper jams, which is not relevant to resolving the access denied issue or matching the expected output' and the third node in retrieval contexts 'focuses on accessing shared network drives and resources, not printing issue resolutions outlined in the expected output' were ranked above the fourth node in retrieval contexts, which 'includes the second step of the expected output: 'Re-map the printer or reselect the correct device in the print dialog if configuration looks off''.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all statements in the expected output are perfectly captured by the context! Sentence 1 is supported by node 1 in retrieval context, and sentence 2 is backed by both nodes 1 and 4.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6154,
+          "success": true,
+          "reason": "The score is 0.62 because while the retrieval context includes helpful information such as 'Confirm the user has the required permissions on shared/office printers.', it also contains irrelevant details regarding hardware and network fixes, such as 'Check for and clear any paper jams following the manufacturer's guidance' and advice to 'troubleshoot the Wi-Fi/network connection separately if needed'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_006",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Password reset email never arrives\nI forgot my password and clicked the reset link, but no email has come in 30 minutes. I also changed phones recently so I am not sure my authenticator still works.",
+      "expected_answer": "1. Use the self-service password reset (email link or security questions). [Article: KB0010168]\n2. If the reset email does not arrive, check spam/junk and confirm the correct email address is on file. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]\n4. If self-service is not available, escalate to the help desk for manual identity verification. [Article: KB0010168]",
+      "expected_ids": [
+        "KB0010168"
+      ],
+      "confusable_ids": [
+        "KB0010153",
+        "KB0010162"
+      ],
+      "retrieved_ids": [
+        "KB0010168",
+        "KB0010168",
+        "KB0010153",
+        "KB0010153",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.7261,
+        0.7057,
+        0.6758,
+        0.6237,
+        0.6226
+      ],
+      "best_score": 0.7261,
+      "agent_best_score": 0.7216,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Direct the user to self-service password reset via email link or security questions. [Article: KB0010168]\n2. Check spam or junk folders and confirm the correct email is on file if the reset email does not arrive. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010168"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.8875,
+          "success": true,
+          "reason": "The score is 0.89 because the third node in retrieval contexts is an irrelevant node that focuses on 'Lost Username and Password' recovery rather than password reset or email arrival issues, making it irrelevant to the specific instructions needed, and it was ranked above the relevant fourth and fifth nodes in retrieval contexts. However, the score is relatively high because the top two nodes in retrieval contexts are relevant, with the first node mentioning 'self-service password reset (email link or security questions)' and the second node mentioning 'Re-register MFA if the reset invalidates the previous token'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all statements in the expected output are perfectly backed by the retrieved information! Specifically, sentence 1 is supported by the 1st node in retrieval context, sentence 2 by the 1st and 2nd nodes, sentence 3 by the 2nd and 5th nodes, and sentence 4 by the 5th node.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because while the context includes relevant statements like \"If the password reset email doesn't arrive, check spam/junk folders and confirm the correct email address is on file.\", it also contains irrelevant information such as \"username recovery\" and instructions to \"Sign out of all active sessions and log back in fresh once the new password is set\".",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output contains no contradictions and perfectly aligns with the provided retrieval context!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response perfectly addresses the user's issue with password reset emails and authenticator concerns, containing no irrelevant information. Great job!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response perfectly follows all evaluation criteria. It is formatted as a numbered procedure with three steps, each containing concrete, actionable instructions and exact per-step article citations in the required '[Article: KBxxxxxxx]' format.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_007",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Back from long leave and cannot remember my login at all\nReturned after three months of leave. I do not remember my username or my password, so I cannot even start the reset process.",
+      "expected_answer": "1. Attempt username recovery first, usually via the account's registered email. [Article: KB0010153]\n2. If that fails, escalate to the help desk for manual identity verification. [Article: KB0010153]\n3. Once identity is confirmed, a temporary password is issued and you must change it at next login. [Article: KB0010153]",
+      "expected_ids": [
+        "KB0010153"
+      ],
+      "confusable_ids": [
+        "KB0010168"
+      ],
+      "retrieved_ids": [
+        "KB0010153",
+        "KB0010168",
+        "KB0010153",
+        "KB0010168",
+        "KB0010162"
+      ],
+      "retrieved_scores": [
+        0.6753,
+        0.6414,
+        0.6145,
+        0.6097,
+        0.5955
+      ],
+      "best_score": 0.6753,
+      "agent_best_score": 0.7162,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Attempt username recovery first, usually via the account's registered email. [Article: KB0010153]\n2. If username recovery fails, escalate to the help desk for manual identity verification. [Article: KB0010153]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010153"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.8333,
+          "success": true,
+          "reason": "The score is 0.83 because the first node in retrieval contexts is relevant as it states to \"Attempt username recovery first, usually via the account's registered email\" and \"If that fails, escalate to the help desk for manual identity verification\". However, the score is not higher because the second node in retrieval contexts is irrelevant as it \"focuses on MFA re-registration and signing out of sessions, which is not included in the expected output.\", yet it is ranked above the relevant third node in retrieval contexts which explicitly mentions \"escalate to the help desk for manual identity verification\" and \"Once identity is confirmed, issue a temporary password and require an immediate change on next login\".",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all information in the expected output is fully supported by the context! Sentence 1 is grounded in node 1 in retrieval context, sentence 2 is backed by nodes 1, 2, and 3, and sentence 3 is directly supported by node 3.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6364,
+          "success": true,
+          "reason": "The score is 0.64 because while the context includes helpful steps such as \"For lost username and password, attempt username recovery first, usually via the account's registered email\", it also contains irrelevant information regarding post-reset procedures like \"Re-register MFA if the reset invalidates the previous token\" and instructions for \"If suspicious activity is suspected\".",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output is completely faithful to the retrieval context with no contradictions found! Keep up the fantastic work!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the user's issue with logging in after leave without containing any irrelevant information. Excellent job keeping the answer completely focused and relevant!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The output perfectly adheres to all requirements: it is formatted as a numbered procedure with two steps, each step includes a properly formatted citation ([Article: KB0010153]), and the steps outline clear, concrete actions for recovery and escalation.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_008",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Locked out after wrong password attempts and an odd sign-in alert\nAfter typing my password wrong several times the account is now locked. I am fairly sure it was me, but I also got a strange sign-in alert from another country this morning.",
+      "expected_answer": "1. Confirm whether the lockout came from the legitimate user or a suspicious login attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or security questions. [Article: KB0010162]\n3. If legitimate, reset the password and choose a new, unique one. [Article: KB0010162]\n4. If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication. [Article: KB0010162]",
+      "expected_ids": [
+        "KB0010162"
+      ],
+      "confusable_ids": [
+        "KB0010168"
+      ],
+      "retrieved_ids": [
+        "KB0010162",
+        "KB0010162",
+        "KB0010162",
+        "KB0010158",
+        "KB0010153"
+      ],
+      "retrieved_scores": [
+        0.7172,
+        0.7078,
+        0.6968,
+        0.6664,
+        0.6591
+      ],
+      "best_score": 0.7172,
+      "agent_best_score": 0.6253,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No knowledge base articles met the confidence threshold for resolving account lockout and suspicious sign-in alerts.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant context is perfectly ranked at the top! The first node in retrieval contexts 'directly provides steps 3 and 4 of the expected output', the second node in retrieval contexts 'provides information about resetting the password if legitimate', and the third node in retrieval contexts 'directly provides steps 1 and 2 of the expected output', placing all useful information prior to the irrelevant fourth and fifth nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the context! Sentences 1 and 2 are retrieved directly from node 3 in retrieval context, sentence 3 is supported by nodes 1 and 2, and sentence 4 aligns perfectly with node 1.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.8462,
+          "success": true,
+          "reason": "The score is 0.85 because while the context contains relevant statements such as 'Account Locked After Failed Login Attempts' and 'Confirm whether the lockout came from the legitimate user or a suspicious login attempt', it includes irrelevant details like 'Report the message through the official phishing-report channel' and 'Isolate the device if a malicious link was already clicked'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_009",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Clicked a fake 'mailbox full' email and typed my password\nAn email from 'IT-Helpdesk' said my mailbox was full and asked me to verify. I clicked the link and entered my password before I noticed the sender address looked wrong. What now?",
+      "expected_answer": "1. Reset the affected password immediately and review recent account activity. [Article: KB0010158]\n2. Isolate the device because a malicious link was already clicked. [Article: KB0010158]\n3. Report the message through the official phishing-report channel. [Article: KB0010158]",
+      "expected_ids": [
+        "KB0010158"
+      ],
+      "confusable_ids": [
+        "KB0010159",
+        "KB0010162"
+      ],
+      "retrieved_ids": [
+        "KB0010168",
+        "KB0010168",
+        "KB0010158",
+        "KB0010153",
+        "KB0010153"
+      ],
+      "retrieved_scores": [
+        0.6512,
+        0.6481,
+        0.6234,
+        0.6063,
+        0.6059
+      ],
+      "best_score": 0.6512,
+      "agent_best_score": 0.73,
+      "hit": true,
+      "rank": 2,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Report the message through the official phishing-report channel. [Article: KB0010158]\n2. Reset the affected password immediately and review recent account activity if credentials may have already been entered. [Article: KB0010158]\n3. Isolate the device if a malicious link was already clicked. [Article: KB0010158]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010158"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.3333,
+          "success": false,
+          "reason": "The score is 0.33 because irrelevant nodes are ranked above the relevant node in the retrieval contexts. Specifically, the first node in the retrieval contexts is irrelevant because it \"discusses handling a standard 'Forgotten Password' request, which is not relevant to responding to a phishing incident\", and the second node in the retrieval contexts is irrelevant because it \"continues troubleshooting standard password resets and MFA re-registration, which is not useful for the phishing expected output.\" These precede the third node in the retrieval contexts, which is relevant as it gives essential steps, stating to \"'Report the message through the official phishing-report channel', 'reset the affected password immediately and review recent account activity', and 'Isolate the device if a malicious link was already clicked'.\"",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all three sentences (1, 2, and 3) in the expected output are perfectly backed by node 3 in retrieval context!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.4167,
+          "success": true,
+          "reason": "The score is 0.42 because while the context provides relevant advice such as 'Report the message through the official phishing-report channel' and 'reset the affected password immediately', much of it irrelevantly focuses on a 'Forgotten Password' scenario, including guidance like 'If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file'.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output aligns perfectly with the retrieval context and contains no contradictions!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output directly addresses the user's situation with completely relevant advice and contains no irrelevant statements. Great job!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The output perfectly follows all evaluation criteria. It is a numbered procedure with three steps, each containing concrete actionable instructions and properly formatted article citations ([Article: KB0010158]) at the end of every step.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_010",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "PC acting strange after installing a free PDF converter, antivirus flagged a trojan\nAfter installing a free PDF converter my PC is slow, desktop icons changed, and the antivirus popped up a trojan warning. The laptop is also connected to the office network and mapped drives.",
+      "expected_answer": "1. Disconnect the affected device from the network to contain any spread. [Article: KB0010159]\n2. Update antivirus definitions if out of date, then run a full scan. [Article: KB0010159]\n3. Review logs for signs of spread to shared drives or other systems. [Article: KB0010159]\n4. Escalate to a security specialist if the infection persists after cleanup. [Article: KB0010159]",
+      "expected_ids": [
+        "KB0010159"
+      ],
+      "confusable_ids": [
+        "KB0010167",
+        "KB0010156"
+      ],
+      "retrieved_ids": [
+        "KB0010156",
+        "KB0010156",
+        "KB0010159",
+        "KB0010156",
+        "KB0010159"
+      ],
+      "retrieved_scores": [
+        0.5849,
+        0.5552,
+        0.549,
+        0.5472,
+        0.5449
+      ],
+      "best_score": 0.5849,
+      "agent_best_score": 0.5149,
+      "hit": true,
+      "rank": 2,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "Escalating incident to human service desk agent due to potential malware/trojan infection and lack of relevant KB documentation.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.3667,
+          "success": false,
+          "reason": "The score is 0.37 because irrelevant nodes are ranked higher than relevant nodes. Specifically, the first node in retrieval contexts \"focuses on hardware wear, which is not useful for dealing with an active, flagged Trojan infection\", and the second node \"suggests restarting for hung services and rescheduling Windows updates\". The relevant nodes are placed lower in the ranking: the third node provides actionable steps to \"'Update antivirus definitions first if they're out of date, then rescan'\", and the fifth node includes critical instructions to \"'Disconnect the affected device from the network to contain any spread'\", positioned after the fourth node which \"focuses entirely on checking hardware wear\".",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because sentences 1, 2, and 3 can be attributed to node(s) in retrieval context (specifically nodes 3 and 5), whereas sentence 4 is not supported by any node in the retrieval context.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6154,
+          "success": true,
+          "reason": "The score is 0.62 because while the context includes relevant guidance such as 'Disconnect the affected device from the network to contain any spread in case of a suspected virus or malware infection' and 'Run an antivirus/anti-malware scan to rule out infection.', it contains irrelevant advice like checking for 'dust buildup, an aging drive, a failing battery, or thermal throttling' and recommending a 'hardware upgrade (RAM/SSD)' for a malware infection.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_011",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "easy",
+      "query": "Ads and banners keep appearing even with the browser closed\nSpammy advertisement banners keep showing up on my screen all day, including when I am not browsing. It started after visiting a free streaming site.",
+      "expected_answer": "1. Avoid suspicious sites and links, and use trusted sites only. [Article: KB0010167]\n2. Keep the browser updated. [Article: KB0010167]\n3. Install or verify anti-malware software that blocks pop-ups and filters spam. [Article: KB0010167]",
+      "expected_ids": [
+        "KB0010167"
+      ],
+      "confusable_ids": [
+        "KB0010159"
+      ],
+      "retrieved_ids": [
+        "KB0010167",
+        "KB0010158",
+        "KB0010161",
+        "KB0010159",
+        "KB0010158"
+      ],
+      "retrieved_scores": [
+        0.6345,
+        0.4959,
+        0.4953,
+        0.482,
+        0.4818
+      ],
+      "best_score": 0.6345,
+      "agent_best_score": 0.6355,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found regarding persistent ad banners appearing when the browser is closed.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The contextual precision score is 1.00 because the relevant information is perfectly prioritized at the top! The first node in retrieval contexts is relevant as \"This document directly contains all the recommendations in the expected output, including recognizing/avoiding suspicious sites, keeping the browser updated, using trusted sites, and installing/verifying anti-malware software that blocks pop-ups and filters spam.\", placing it above all subsequent irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because sentences 1, 2, and 3 in the expected output are all fully supported by node 1 in retrieval context, showing complete and accurate retrieval context coverage!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.4286,
+          "success": true,
+          "reason": "The score is 0.43 because while the context includes relevant instructions such as 'Install or verify anti-malware software that blocks pop-ups and filters spam' and 'Run a full scan with up-to-date antivirus or anti-malware software', much of the context focuses on irrelevant phishing email guidance like looking for 'common red flags: urgency, spelling errors, requests for credentials or personal data' and unrelated tasks like 'Close background programs that are consuming bandwidth'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_012",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Laptop takes 10 minutes to boot and disk sits at 94%\nTask Manager shows the disk at 94% right after login and everything lags. The laptop is 4 years old and has a lot of leftover installers on it.",
+      "expected_answer": "1. Check Task Manager for processes spiking CPU or disk use and stop the ones that do not matter. [Article: KB0010156]\n2. Free up disk space by clearing temp files and removing unused programs. [Article: KB0010156]\n3. Check for hardware wear such as an aging drive. [Article: KB0010156]\n4. Recommend a hardware upgrade (RAM/SSD) if software fixes do not resolve it. [Article: KB0010156]",
+      "expected_ids": [
+        "KB0010156"
+      ],
+      "confusable_ids": [
+        "KB0010151",
+        "KB0010163"
+      ],
+      "retrieved_ids": [
+        "KB0010156",
+        "KB0010156",
+        "KB0010156",
+        "KB0010156",
+        "KB0010156"
+      ],
+      "retrieved_scores": [
+        0.581,
+        0.5518,
+        0.5467,
+        0.5271,
+        0.5268
+      ],
+      "best_score": 0.581,
+      "agent_best_score": 0.6135,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found to resolve the high disk usage and slow boot issue.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.95,
+          "success": true,
+          "reason": "The score is 0.95 because the top three nodes in retrieval contexts (1st, 2nd, and 3rd nodes) are relevant and properly ranked higher. However, it is not higher because an irrelevant node in retrieval contexts is positioned at rank 4 above a relevant node at rank 5, which contains useful information regarding checking for hardware wear such as 'an aging drive'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully aligned with the context! Sentence 1 is supported by node 1 and node 3 in retrieval context, sentence 2 by node 1, sentence 3 by nodes 2 and 5, and sentence 4 by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the context provides completely relevant solutions for the high disk usage and boot lag, accurately recommending to \"Check Task Manager for processes spiking CPU or disk use\" and \"Free up disk space by clearing temp files and removing unused programs.\" Excellent alignment!",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_013",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Laptop too hot to touch and shuts down during video calls\nThe base of my laptop is burning hot, the fan screams, and it switches itself off in the middle of long calls.",
+      "expected_answer": "1. Confirm the vents are not blocked and the device has room to breathe. [Article: KB0010151]\n2. Clean dust from vents and internal components with compressed air, with the device powered off and unplugged. [Article: KB0010151]\n3. Check fan operation and replace any fan that is noisy or not spinning. [Article: KB0010151]\n4. Watch for CPU throttling as a sign temperatures are too high. [Article: KB0010151]",
+      "expected_ids": [
+        "KB0010151"
+      ],
+      "confusable_ids": [
+        "KB0010156",
+        "KB0010166"
+      ],
+      "retrieved_ids": [
+        "KB0010151",
+        "KB0010151",
+        "KB0010161",
+        "KB0010166",
+        "KB0010169"
+      ],
+      "retrieved_scores": [
+        0.6289,
+        0.6226,
+        0.5596,
+        0.5417,
+        0.54
+      ],
+      "best_score": 0.6289,
+      "agent_best_score": 0.6415,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for laptop overheating and thermal shutdown during video calls.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts are perfectly prioritized at the top! The first node directly addresses the issue by detailing how to 'Check fan operation and replace any fan that's noisy or not spinning' and 'Watch for CPU throttling as a sign temperatures are climbing too high', and the second node provides essential steps to 'Confirm vents aren't blocked and the device has room to breathe'. These relevant nodes correctly rank above irrelevant nodes, such as the third node which off-targetly mentions 'closing background programs consuming bandwidth'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all statements in the expected output are perfectly aligned with the retrieved context! Sentences 1 and 2 are directly supported by node 2 in retrieval context, sentence 3 is backed by both nodes 1 and 2, and sentence 4 is clearly grounded in node 1.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because while the context contains helpful guidance such as 'Confirm vents are not blocked and the device has room to breathe to address computer overheating', it also includes irrelevant details like suggesting to 'Try a different outlet or power cable' and checking 'app-level and OS-level permissions for microphone/camera access'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_014",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "easy",
+      "query": "Desktop completely dead after the power cut yesterday\nNo lights, no fan, nothing happens when I press the power button since the building lost power yesterday.",
+      "expected_answer": "1. Check that the power cable is firmly connected at both the wall outlet and the machine. [Article: KB0010166]\n2. Test the outlet with another device. [Article: KB0010166]\n3. Try a different outlet or power cable. [Article: KB0010166]\n4. If there is still no response, escalate for hardware diagnostics (PSU/motherboard). [Article: KB0010166]",
+      "expected_ids": [
+        "KB0010166"
+      ],
+      "confusable_ids": [
+        "KB0010151"
+      ],
+      "retrieved_ids": [
+        "KB0010166",
+        "KB0010166",
+        "KB0010166",
+        "KB0010170",
+        "KB0010164"
+      ],
+      "retrieved_scores": [
+        0.5703,
+        0.5634,
+        0.5547,
+        0.5024,
+        0.4995
+      ],
+      "best_score": 0.5703,
+      "agent_best_score": 0.638,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found above the threshold to address a desktop computer failing to turn on after a power outage.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all the relevant nodes in the retrieval contexts (the first, second, and third nodes) are perfectly ranked at the top before any irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly matched by the context! Sentence 1 is fully supported by node 3 in retrieval context, sentence 2 by nodes 1 and 3, sentence 3 by nodes 1 and 2, and sentence 4 by node 2. Great job!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.5833,
+          "success": true,
+          "reason": "The score is 0.58 because while the context provides useful steps like \"Test the outlet with another device to rule out a dead outlet.\" and \"Try a different outlet or power cable.\", it also contains irrelevant details regarding \"docking stations\", \"checking 'hubs'\", and troubleshooting a \"Blue Screen of Death (Windows Crash)\" for a system that has no power.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_015",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Blue screen with CRITICAL_PROCESS_DIED twice today\nMy laptop crashed to a blue screen showing CRITICAL_PROCESS_DIED, then did it again an hour later after restarting.",
+      "expected_answer": "1. Restart the computer; a one-off blue screen can be a temporary glitch. [Article: KB0010164]\n2. Install pending Windows updates. [Article: KB0010164]\n3. Note the stop code shown on the blue screen (CRITICAL_PROCESS_DIED) for escalation. [Article: KB0010164]\n4. Since it repeated, escalate for hardware diagnostics (RAM, disk, drivers). [Article: KB0010164]",
+      "expected_ids": [
+        "KB0010164"
+      ],
+      "confusable_ids": [
+        "KB0010150"
+      ],
+      "retrieved_ids": [
+        "KB0010164",
+        "KB0010164",
+        "KB0010150",
+        "KB0010166",
+        "KB0010166"
+      ],
+      "retrieved_scores": [
+        0.6921,
+        0.6915,
+        0.5771,
+        0.57,
+        0.5662
+      ],
+      "best_score": 0.6921,
+      "agent_best_score": 0.6563,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for the CRITICAL_PROCESS_DIED blue screen error.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are perfectly positioned at the top! The first node in retrieval contexts is relevant as it mentions 'Note the stop code shown on the blue screen for troubleshooting/escalation' and 'If BSODs repeat, escalate for hardware diagnostics (RAM, disk, drivers)', and the second node in retrieval contexts is relevant because it explicitly states to 'Restart the computer; a one-off BSOD can be a temporary glitch', 'Install pending Windows updates', and 'Note the stop code shown on the blue screen'. Meanwhile, irrelevant nodes—such as the third node in retrieval contexts, which 'deals with application crashes rather than Blue Screen of Death (BSOD) or system-level crashes'—are correctly ranked lower.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because sentences 1 and 2 are supported by node 2 in retrieval context, and sentence 4 is supported by node 1 in retrieval context, while sentence 3 contains the specific stop code (CRITICAL_PROCESS_DIED) which is not mentioned in any node in the retrieval context.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.5833,
+          "success": true,
+          "reason": "The score is 0.58 because while the context includes helpful steps like 'Note the stop code shown on the blue screen for troubleshooting/escalation.' and 'If BSODs repeat, escalate for hardware diagnostics (RAM, disk, drivers).', it also includes irrelevant content addressing 'Application Crashes or Behaves Unexpectedly' and power issues like 'Test the outlet with another device to rule out a dead outlet'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_016",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Excel keeps closing by itself on large files after adding a PDF add-in\nSince installing a PDF add-in, Excel closes without warning whenever I open a large workbook. Other Office apps are fine.",
+      "expected_answer": "1. Close and reopen the application to clear temporary glitches. [Article: KB0010150]\n2. Check for and install available updates. [Article: KB0010150]\n3. Identify other running software (such as the new add-in) that might conflict and disable it. [Article: KB0010150]\n4. Document the exact error and steps to reproduce it before escalating. [Article: KB0010150]",
+      "expected_ids": [
+        "KB0010150"
+      ],
+      "confusable_ids": [
+        "KB0010163",
+        "KB0010164"
+      ],
+      "retrieved_ids": [
+        "KB0010150",
+        "KB0010167",
+        "KB0010154",
+        "KB0010154",
+        "KB0010160"
+      ],
+      "retrieved_scores": [
+        0.5002,
+        0.4975,
+        0.4957,
+        0.4951,
+        0.4937
+      ],
+      "best_score": 0.5002,
+      "agent_best_score": 0.5069,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for Excel crashing or closing automatically due to a PDF add-in.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the first node in retrieval contexts is relevant as it directly contains statements like 'Identify other running software that might conflict and disable it' and 'Document the exact error and steps to reproduce it before escalating', placing the relevant information right at the top above all irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.5,
+          "success": false,
+          "reason": "The score is 0.50 because sentences 3 and 4 in the expected output are supported by node 1 in retrieval context, whereas sentences 1 and 2 could not be attributed to any node.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.1667,
+          "success": false,
+          "reason": "The score is 0.17 because most of the context deals with unrelated topics such as pop-ups ('Excessive Pop-ups or Spam Educate the user') and file recovery ('Check the application's autosave/recovery folder for a recent draft') rather than resolving Excel crashes. Only a few general steps, like 'Identify other running software that might conflict and disable it.', are relevant to the input.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_017",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Accounting software installer demands admin rights then fails halfway\nThe installer says it needs administrator permission. After I retried, it stopped at about 60% and now will not start again. My C: drive is nearly full.",
+      "expected_answer": "1. Check that the account has the admin rights the installer needs, and route through IT if elevation is required. [Article: KB0010163]\n2. Free up disk space because the drive is near capacity. [Article: KB0010163]\n3. Remove leftover files from the previous install attempt before retrying. [Article: KB0010163]\n4. Reinstall the application, and escalate to a specialist if the issue persists. [Article: KB0010163]",
+      "expected_ids": [
+        "KB0010163"
+      ],
+      "confusable_ids": [
+        "KB0010157",
+        "KB0010150"
+      ],
+      "retrieved_ids": [
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010157"
+      ],
+      "retrieved_scores": [
+        0.7332,
+        0.6783,
+        0.6494,
+        0.6133,
+        0.597
+      ],
+      "best_score": 0.7332,
+      "agent_best_score": 0.5626,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for resolving the accounting software installation failure due to insufficient disk space or administrative rights.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly ranked right at the top! The first node in retrieval contexts addresses 'admin rights the installer needs' and to 'Free up disk space if the drive is near capacity', the second node guides to 'Check that the account has the admin rights the installer needs, and route through IT', and the third node outlines how to 'Free up disk space' and 'Remove leftover files from a previous install attempt', leaving all irrelevant nodes ranked appropriately at the bottom.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because sentences 1, 2, and 3 in the expected output are attributed to nodes in retrieval context (sentence 1 to nodes 1 and 2, sentence 2 to nodes 1 and 3, and sentence 3 to node 3), whereas sentence 4 includes details about escalating to a specialist that are not present in any node.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because while the context includes relevant statements like 'Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant' and 'Free up disk space if the drive is near capacity, since installs can fail without room for temp files.', it also contains irrelevant details such as 'Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit)' and 'Confirm the internet connection is stable'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_018",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Windows update stuck failing with error 0x800f0922 every day\nThe monthly Windows update keeps trying and failing every night with error 0x800f0922. Internet is fine.",
+      "expected_answer": "1. Free up disk space, since updates often need room for temporary files. [Article: KB0010157]\n2. Restart the update service or troubleshoot it using OS-specific support tools. [Article: KB0010157]\n3. Retry the update after a full restart. [Article: KB0010157]",
+      "expected_ids": [
+        "KB0010157"
+      ],
+      "confusable_ids": [
+        "KB0010163",
+        "KB0010156"
+      ],
+      "retrieved_ids": [
+        "KB0010157",
+        "KB0010157",
+        "KB0010161",
+        "KB0010156",
+        "KB0010174"
+      ],
+      "retrieved_scores": [
+        0.6538,
+        0.6462,
+        0.5444,
+        0.5416,
+        0.5374
+      ],
+      "best_score": 0.6538,
+      "agent_best_score": 0.5821,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for resolving Windows Update error 0x800f0922.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant context is perfectly ranked at the top! The first node in retrieval contexts provides essential troubleshooting steps to 'Free up disk space, since updates often need room for temporary files', while the second node in retrieval contexts offers the remaining guidance to 'Retry the update after a full restart', ensuring all useful information is prioritized above the irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly backed by the context! Sentence 1 is fully supported by node 1 in retrieval context, sentence 2 is captured by both nodes 1 and 2, and sentence 3 is grounded in node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.4615,
+          "success": true,
+          "reason": "The score is 0.46 because while the context contains relevant advice like \"Restart the update service or troubleshoot it using OS-specific support tools\" and \"Free up disk space, since updates often need room for temporary files.\", much of it includes irrelevant guidance such as \"Update the conferencing app to the latest version, since outdated versions often lose camera/mic support\" and redundant network checks despite the input stating \"Internet is fine\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_019",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Second screen stays black with 'No signal' at my new desk\nAt the new desk I plug my laptop into the extra HDMI monitor but it just shows 'No signal'. The laptop screen works normally.",
+      "expected_answer": "1. Check the video cable connection at both ends and try a different cable. [Article: KB0010152]\n2. Update the graphics/display drivers. [Article: KB0010152]\n3. Restart the computer to clear a temporary detection issue. [Article: KB0010152]\n4. Confirm the correct display mode (extend/duplicate) in display settings. [Article: KB0010152]",
+      "expected_ids": [
+        "KB0010152"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010152",
+        "KB0010152",
+        "KB0010170",
+        "KB0010170",
+        "KB0010166"
+      ],
+      "retrieved_scores": [
+        0.649,
+        0.6133,
+        0.6034,
+        0.581,
+        0.5612
+      ],
+      "best_score": 0.649,
+      "agent_best_score": 0.6816,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base article was found to resolve the issue with the external monitor showing 'No signal'.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly positioned at the top! The first node in retrieval contexts includes essential guidance to 'Check the video cable connection at both ends and try a different cable', and the second node correctly adds to 'Confirm the correct display mode (extend/duplicate) is selected in display settings', placing all useful information ahead of the irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the retrieved information! Sentences 1, 2, and 3 align perfectly with node 1 in retrieval context, while sentences 3 and 4 are backed by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.7273,
+          "success": true,
+          "reason": "The score is 0.73 because while the context provides relevant steps such as 'Check the video cable connection at both ends and try a different cable if an external monitor is not detected.', it includes irrelevant details such as advice concerning 'docking stations' and determining if 'the dock is the weak link' for a direct HDMI connection, as well as suggesting to 'escalate for hardware diagnostics (PSU/motherboard)'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_020",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "easy",
+      "query": "Flash drive with my presentation does not appear in Explorer\nI plugged in a flash drive with my presentation and its light blinks, but nothing shows up in File Explorer.",
+      "expected_answer": "1. Restart the computer to clear a temporary detection glitch. [Article: KB0010173]\n2. Try the device in a different USB port. [Article: KB0010173]\n3. Update the relevant USB/storage controller drivers. [Article: KB0010173]\n4. Test the device on another computer to confirm whether the device itself is faulty. [Article: KB0010173]",
+      "expected_ids": [
+        "KB0010173"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010152",
+        "KB0010173",
+        "KB0010173",
+        "KB0010173",
+        "KB0010152"
+      ],
+      "retrieved_scores": [
+        0.4869,
+        0.4811,
+        0.4804,
+        0.4699,
+        0.4663
+      ],
+      "best_score": 0.4869,
+      "agent_best_score": 0.5254,
+      "hit": true,
+      "rank": 2,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for troubleshooting a USB flash drive not appearing in File Explorer.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.6389,
+          "success": true,
+          "reason": "The score is 0.64 because the first node in the retrieval contexts is an irrelevant node that focuses on 'External Monitor Not Detected' and display drivers, placing an irrelevant node above relevant ones. However, the score is at 0.64 because the second node in retrieval contexts correctly provides instructions to 'Update the relevant USB/storage controller drivers', the third node addresses 'USB or External Storage Device Not Recognized', and the fourth node suggests to 'Test the device on another computer to confirm whether the device itself is faulty'. Lastly, the fifth node in retrieval contexts is also an irrelevant node as it 'deals with display mode settings for display detection issues'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully backed by the retrieved context! Sentences 1 and 2 match node 3 in retrieval context, while sentences 3 and 4 align perfectly with nodes 2 and 4, respectively.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because while the context contains helpful information such as 'USB or External Storage Device Not Recognized' and 'Try the device in a different USB port', it also includes irrelevant content about display issues like 'External Monitor Not Detected' and updating 'graphics/display drivers'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_021",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Keyboard and mouse on the dock are dead but the laptop keys work\nSince this morning the wireless mouse and keyboard receiver plugged into the docking station do nothing. The laptop's built-in keyboard works fine.",
+      "expected_answer": "1. Test the peripheral in a different port to rule out a port-level fault. [Article: KB0010170]\n2. For docking stations, test the devices directly on the laptop to isolate whether the dock is the weak link. [Article: KB0010170]\n3. Swap in a known-working device to confirm whether the original has failed. [Article: KB0010170]\n4. Update or reinstall the relevant driver if the device is detected but not functioning. [Article: KB0010170]",
+      "expected_ids": [
+        "KB0010170"
+      ],
+      "confusable_ids": [
+        "KB0010173"
+      ],
+      "retrieved_ids": [
+        "KB0010170",
+        "KB0010170",
+        "KB0010170",
+        "KB0010170",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.6842,
+        0.6708,
+        0.5945,
+        0.5871,
+        0.5767
+      ],
+      "best_score": 0.6842,
+      "agent_best_score": 0.6299,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found to resolve the issue with the USB keyboard and mouse receiver connected to the docking station.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all retrieved nodes in the retrieval contexts are completely relevant to troubleshooting the docking station issue and are perfectly ranked!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the context! Sentence 1 is backed by node 3 in retrieval context, sentence 2 by nodes 1 and 2, sentence 3 by nodes 3 and 5, and sentence 4 by nodes 1 and 4. Great job!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the context provides perfectly matching troubleshooting advice, directly addressing 'Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)' and recommending to 'test devices directly on the laptop to isolate whether the dock is the weak link'!",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_022",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Nobody can hear me in meetings although my headset worked yesterday\nIn Teams calls colleagues say they cannot hear me. The headset worked yesterday and still shows up in the device list. I recently changed some Windows privacy settings.",
+      "expected_answer": "1. Restart the computer first. [Article: KB0010169]\n2. Confirm the correct input device is selected in the app's settings. [Article: KB0010169]\n3. Check app-level and OS-level permissions for microphone access. [Article: KB0010169]\n4. If the issue persists, inspect for a hardware fault and consider replacement. [Article: KB0010169]",
+      "expected_ids": [
+        "KB0010169",
+        "KB0010161"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010169",
+        "KB0010169",
+        "KB0010165",
+        "KB0010161",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.5601,
+        0.5304,
+        0.5273,
+        0.5241,
+        0.5196
+      ],
+      "best_score": 0.5601,
+      "agent_best_score": 0.5324,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found regarding microphone privacy settings and Teams audio issues.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts are perfectly placed at the very top (the first and second nodes) ahead of any irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every step in the expected output is fully backed by the context! Sentences 1 and 2 match node 1 in retrieval context, sentence 3 is covered by nodes 1 and 2, and sentence 4 is verified by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.5385,
+          "success": true,
+          "reason": "The score is 0.54 because while the context contains relevant guidance such as \"Check app-level and OS-level permissions for microphone/camera access\" and \"Confirm the correct input device is selected in the app's settings\", it also includes irrelevant details like \"Check firewall rules and recent VPN rule changes that might be blocking access\" and hardware port troubleshooting for \"Keyboard, Mouse, Docking Station\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_023",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Cannot share my screen in the browser meeting and the call keeps freezing\nJoining the meeting through the browser, the screen-share button does nothing and the video keeps freezing. Someone else is downloading a large update on our connection.",
+      "expected_answer": "1. Restart the browser and clear cached data if joining via a browser. [Article: KB0010161]\n2. Disable or update browser plugins that may be blocking screen sharing. [Article: KB0010161]\n3. Close background programs consuming bandwidth. [Article: KB0010161]\n4. Update the conferencing app to the latest version. [Article: KB0010161]",
+      "expected_ids": [
+        "KB0010161"
+      ],
+      "confusable_ids": [
+        "KB0010169",
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010161",
+        "KB0010161",
+        "KB0010161",
+        "KB0010169",
+        "KB0010169"
+      ],
+      "retrieved_scores": [
+        0.6509,
+        0.6073,
+        0.6063,
+        0.5718,
+        0.5552
+      ],
+      "best_score": 0.6509,
+      "agent_best_score": 0.6363,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for browser meeting screen sharing and video freezing issues.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all the relevant nodes in retrieval contexts are perfectly ranked at the top! The first node in retrieval contexts offers direct steps like 'Restart the browser and clear cached data', the second node in retrieval contexts correctly addresses issues by suggesting to 'Close background programs that are consuming bandwidth', and the third node in retrieval contexts advises to 'Update the conferencing app to the latest version'. Meanwhile, the irrelevant nodes discussing microphone and camera access are correctly ranked lower at positions 4 and 5.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported! Sentences 1 and 2 are directly backed by the 1st node in retrieval context, sentence 3 is supported by the 1st and 2nd nodes, and sentence 4 is aligned with the 3rd node.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.3571,
+          "success": true,
+          "reason": "The score is 0.36 because much of the retrieval context incorrectly focuses on mic and camera troubleshooting, such as suggesting to \"Confirm the correct microphone/camera/speaker is selected in the app's settings\" and checking \"permissions for microphone/camera access\". Only a small portion is actually relevant, such as recommending to \"Disable or update browser plugins that may be blocking screen sharing\" and \"Close background programs that are consuming bandwidth\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_024",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Mapped Z: drive shows a red X since I started working from home\nThe Z: shared drive shows a red X when I work remotely and the folder will not open. My credentials work for other things.",
+      "expected_answer": "1. Ping or verify the server or shared resource is actually reachable. [Article: KB0010165]\n2. Check the drive mapping and whether the mapped path dropped after a network change. [Article: KB0010165]\n3. Check firewall rules and recent VPN rule changes that might be blocking access. [Article: KB0010165]\n4. Escalate to network admins if access should be granted but is not. [Article: KB0010165]",
+      "expected_ids": [
+        "KB0010165"
+      ],
+      "confusable_ids": [
+        "KB0010172",
+        "KB0010153"
+      ],
+      "retrieved_ids": [
+        "KB0010165",
+        "KB0010165",
+        "KB0010165",
+        "KB0010165",
+        "KB0010173"
+      ],
+      "retrieved_scores": [
+        0.5985,
+        0.5902,
+        0.5206,
+        0.517,
+        0.5105
+      ],
+      "best_score": 0.5985,
+      "agent_best_score": 0.5571,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for troubleshooting the mapped Z: drive showing a red X while working remotely.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all the relevant nodes in the retrieval contexts are perfectly ranked at the top (ranks 1 through 4) before the single irrelevant node at rank 5!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the retrieved context! Sentence 1 is matched with nodes 1 and 2 in retrieval context, sentence 2 with node 1, sentence 3 with nodes 1 and 4, and sentence 4 with node 3. Great retrieval performance!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.7857,
+          "success": true,
+          "reason": "The score is 0.79 because while the context contains relevant guidance like 'Ping/verify the server or shared resource is actually reachable' and 'Check firewall rules and recent VPN rule changes that might be blocking access', it also includes irrelevant suggestions such as to 'Check cables, hubs, and docking stations for a loose connection or faulty link' and 'Update the relevant USB/storage controller drivers'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_025",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Budget spreadsheet disappeared from my Documents folder\nI cannot find the Q3 budget spreadsheet that was in my Documents folder yesterday. I did not delete it and I use OneDrive, so maybe something did not sync.",
+      "expected_answer": "1. Search for the file by name across local and cloud locations. [Article: KB0010154]\n2. Check the Recycle Bin. [Article: KB0010154]\n3. Look for an autosave/version history snapshot in the source app. [Article: KB0010154]\n4. Check cloud sync status for a paused or partial upload that might explain the missing file. [Article: KB0010154]",
+      "expected_ids": [
+        "KB0010154"
+      ],
+      "confusable_ids": [
+        "KB0010160"
+      ],
+      "retrieved_ids": [
+        "KB0010154",
+        "KB0010154",
+        "KB0010160",
+        "KB0010160",
+        "KB0010154"
+      ],
+      "retrieved_scores": [
+        0.5828,
+        0.5743,
+        0.5397,
+        0.499,
+        0.4787
+      ],
+      "best_score": 0.5828,
+      "agent_best_score": 0.6069,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found above the confidence threshold for recovering missing files in OneDrive or the Documents folder.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly ranked right at the top! The first node in retrieval contexts provides key steps like 'Search for the file by name across local and cloud locations', and the second node in retrieval contexts reinforces this by suggesting to 'Check cloud sync status for a paused or partial upload that might explain a \"missing\" file', placing all useful information ahead of any irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all information in the expected output is perfectly supported by the context! Sentences 1 and 2 are fully backed by node 1 in retrieval context, sentence 3 is supported by both nodes 1 and 2, and sentence 4 aligns completely with node 2. Fantastic job!",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.8462,
+          "success": true,
+          "reason": "The score is 0.85 because while the context includes helpful guidance like \"Search for missing or accidentally deleted files by name across local and cloud locations\" and \"Check cloud sync status for a paused or partial upload that might explain a 'missing' file\", it contains irrelevant points such as addressing \"Unsaved Work Lost After a Crash or Closure\" and searching for \"temporary files the application may have created during the session\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_026",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Word crashed after two hours of writing and I never saved\nI was writing a long report in Word, the application froze and closed, and when I reopened it there was nothing. I never pressed save.",
+      "expected_answer": "1. Check the application's autosave/recovery folder for a recent draft. [Article: KB0010160]\n2. Look for temporary files the application may have created during the session. [Article: KB0010160]\n3. Use data recovery tools only as a last resort; success is not guaranteed. [Article: KB0010160]",
+      "expected_ids": [
+        "KB0010160"
+      ],
+      "confusable_ids": [
+        "KB0010154"
+      ],
+      "retrieved_ids": [
+        "KB0010160",
+        "KB0010150",
+        "KB0010160",
+        "KB0010162",
+        "KB0010154"
+      ],
+      "retrieved_scores": [
+        0.5569,
+        0.5249,
+        0.5242,
+        0.4921,
+        0.4903
+      ],
+      "best_score": 0.5569,
+      "agent_best_score": 0.6411,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for recovering unsaved Word documents after an application crash.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.8333,
+          "success": true,
+          "reason": "The score is 0.83 because while the 1st node in retrieval contexts is relevant for instructing to \"Check the application's autosave/recovery folder for a recent draft\", an irrelevant node appears at rank 2 as it \"focuses on general application crash troubleshooting (reopening, updating, checking conflicting software) rather than recovering lost unsaved work\", placing it above the relevant 3rd node in retrieval contexts which suggests using \"data recovery tools as a last resort; note that success isn't guaranteed\".",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are fully backed by the retrieved context! Sentence 1 is directly supported by node 1 in retrieval context, sentence 2 is verified by nodes 1 and 3, and sentence 3 aligns perfectly with node 3.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.5833,
+          "success": true,
+          "reason": "The score is 0.58 because while the context contains helpful advice like \"If unsaved work is lost after a crash or closure, check the application's autosave/recovery folder for a recent draft.\", it also includes irrelevant details regarding general updates like \"Check for and install available updates, since many crashes are fixed in newer releases\" and unrelated security topics such as \"If legitimate, reset the password and advise the user to pick a new, unique one\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_027",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Cannot open the shared drive and the VPN is painfully slow\nWorking remotely: the team shared drive will not open, and the VPN I use to reach it is extremely slow compared with my normal home internet.",
+      "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server closer to you or switch VPN protocols. [Article: KB0010172]\n3. Verify the shared resource is reachable and check firewall rules and recent VPN rule changes. [Article: KB0010165]\n4. Escalate to network admins if access should be granted but is not. [Article: KB0010165]",
+      "expected_ids": [
+        "KB0010165",
+        "KB0010172"
+      ],
+      "confusable_ids": [
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010172",
+        "KB0010172",
+        "KB0010165",
+        "KB0010165",
+        "KB0010165"
+      ],
+      "retrieved_scores": [
+        0.6758,
+        0.6415,
+        0.6386,
+        0.6193,
+        0.6119
+      ],
+      "best_score": 0.6758,
+      "agent_best_score": 0.6491,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found above the confidence threshold to resolve the VPN slowness and shared drive access issues.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all nodes in retrieval contexts are relevant and perfectly ranked! The first node in retrieval contexts directly helps resolve the issue by suggesting to 'Check the base internet connection speed outside the VPN to isolate the bottleneck', while node 2 advises to 'Try switching VPN protocols', and nodes 3, 4, and 5 provide essential follow-up actions like to 'Ping/verify the server or shared resource is actually reachable'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because sentences 1 and 2 are supported by node 1 in retrieval context and sentence 3 is supported by node 3, whereas sentence 4 regarding escalation to network admins is not supported by any node.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the context is fully relevant and provides actionable troubleshooting steps for both issues, such as suggesting to 'Check the base internet connection speed outside the VPN' and 'Check the drive mapping'!",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_028",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "internet disconnected again\nMy internet is disconnected again this morning. Modem lights look normal.",
+      "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Restart the router and modem to clear temporary network issues. [Article: KB0010171]\n3. Have the device forget the network and reconnect from scratch. [Article: KB0010174]\n4. Test the modem and check for ISP outages. [Article: KB0010171]",
+      "expected_ids": [
+        "KB0010174",
+        "KB0010171"
+      ],
+      "confusable_ids": [
+        "KB0010172"
+      ],
+      "retrieved_ids": [
+        "KB0010174",
+        "KB0010171",
+        "KB0010171",
+        "KB0010174",
+        "KB0010171"
+      ],
+      "retrieved_scores": [
+        0.6758,
+        0.6698,
+        0.6545,
+        0.6463,
+        0.6431
+      ],
+      "best_score": 0.6758,
+      "agent_best_score": 0.6522,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for the internet disconnection issue.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.95,
+          "success": true,
+          "reason": "The score is 0.95 because most relevant nodes in retrieval contexts are ranked at the top, including the first node providing 'Restart the PC first', the second and third nodes containing 'Restart the router and modem to clear temporary network issues', and the fifth node offering to 'test the modem and check for ISP outages'. However, the score is not higher because the fourth node in retrieval contexts is an irrelevant node that 'provides general advice on checking router settings and signal interference, but none of its unique text was used in the expected output steps', causing it to be ranked higher than the relevant fifth node.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly supported by the context! Sentences 1 and 3 are supported by node 1 in retrieval context, sentence 2 by nodes 2 and 3, and sentence 4 by node 5.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.9333,
+          "success": true,
+          "reason": "The score is 0.93 because while the context contains helpful troubleshooting steps like 'Restart the router and modem to clear temporary network issues', it includes off-topic guidance on 'troubleshooting a 'Slow Internet Connection' and running a 'speed test', which is not relevant to the user whose 'internet is disconnected'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_029",
+      "category": "answerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "printr not workng\nprintr wont print anythin, shows in the list tho",
+      "expected_answer": "1. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n2. Re-map the printer or reselect the correct device in the print dialog. [Article: KB0010155]\n3. Verify the cable connection, or for wireless printers confirm both devices are on the same Wi-Fi. [Article: KB0010155]",
+      "expected_ids": [
+        "KB0010155"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010155",
+        "KB0010155",
+        "KB0010155",
+        "KB0010166",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.5702,
+        0.567,
+        0.5306,
+        0.4789,
+        0.4766
+      ],
+      "best_score": 0.5702,
+      "agent_best_score": 0.7199,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Check for and clear any paper jams following the manufacturer's guidance. [Article: KB0010155]\n2. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog if configuration looks off. [Article: KB0010155]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010155"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly positioned at the top! The first node in retrieval contexts contains 'Reinstall or update the printer driver for the exact model and OS', the second node provides 'Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network', and the third node includes 'Re-map the printer or reselect the correct device in the print dialog if configuration looks off'. These relevant nodes are correctly ranked ahead of the irrelevant nodes at ranks 4 and 5, which discuss power cables and general peripheral devices.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every statement in the expected output is perfectly supported by the retrieved information! Sentence 1 is backed by node 1 in retrieval context, sentence 2 aligns with nodes 1 and 3, and sentence 3 is fully confirmed by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6667,
+          "success": true,
+          "reason": "The score is 0.67 because while the context includes relevant statements like to \"Reinstall or update the printer driver for the exact model and OS\" and \"Re-map the printer or reselect the correct device in the print dialog if configuration looks off\", it also contains irrelevant information, such as troubleshooting steps for \"Keyboard, Mouse, Docking Station\" and advice to try a \"different outlet or power cable\" despite the printer already showing in the system list.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output aligns perfectly with the retrieval context and contains no contradictions! Keep up the great work!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly and completely addresses the printer issue with no irrelevant information included. Great job!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response perfectly adheres to all requirements: it is formatted as a numbered procedure with three steps, each step provides concrete and actionable instructions, and every step includes a correctly formatted citation ([Article: KB0010155]).",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_030",
+      "category": "answerable",
+      "language": "ar",
+      "difficulty": "medium",
+      "query": "الواي فاي بيفصل كل شوية\nبشتغل من البيت من يومين، واللاب توب بيفصل من الواي فاي كل ١٠ أو ١٥ دقيقة وبيرجع لوحده بعد شوية، وده بيقطع الاجتماعات.",
+      "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device forget the Wi-Fi network, then reconnect from scratch. [Article: KB0010174]\n3. Restart the router to clear temporary glitches. [Article: KB0010174]\n4. For remote workers, check for signal interference or an overloaded connection. [Article: KB0010174]",
+      "expected_ids": [
+        "KB0010174"
+      ],
+      "confusable_ids": [
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010174",
+        "KB0010174",
+        "KB0010171",
+        "KB0010170",
+        "KB0010171"
+      ],
+      "retrieved_scores": [
+        0.5881,
+        0.5801,
+        0.5694,
+        0.5556,
+        0.5544
+      ],
+      "best_score": 0.5881,
+      "agent_best_score": 0.7324,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device \"forget\" the network, then reconnect from scratch. [Article: KB0010174]\n3. Check router settings to confirm the network is broadcasting correctly with proper security settings. [Article: KB0010174]\n4. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n5. For remote workers on consumer routers, check for signal interference or an overloaded connection. [Article: KB0010174]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010174"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly ranked at the top! The first node, second node, and third node contain key relevant steps like 'Restart the PC first' and 'Restart the router to clear temporary glitches', placing them ahead of all irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are completely supported by the retrieval context! Sentences 1 and 2 are directly backed by node 2 in retrieval context, while sentences 3 and 4 are fully verified by node 1.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.8667,
+          "success": true,
+          "reason": "The score is 0.87 because while most of the context directly addresses the issue with relevant guidance like 'Restart the PC first if Wi-Fi keeps disconnecting.' and 'Restart the router to clear temporary glitches causing repeated drops', it includes irrelevant steps such as checking 'cables and hubs for a loose or damaged connection' and instructions regarding 'docking stations'.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output aligns perfectly with the retrieval context and contains no contradictions! Keep up the great work!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly and accurately addresses the user's Wi-Fi disconnection issue without including any irrelevant information. Keep up the great work!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response fully meets all evaluation criteria. It is formatted as a numbered procedure with five steps, each containing a concrete, actionable task and an appropriately formatted article citation ([Article: KB0010174]).",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_031",
+      "category": "answerable",
+      "language": "ar",
+      "difficulty": "medium",
+      "query": "الطابعة مش بتطبع\nبعمل Print من الشغل والمستند بيفضل واقف في الطابور ومفيش حاجة بتخرج من الطابعة، والطابعة شغالة وفيها ورق.",
+      "expected_answer": "1. Verify the cable connection, or for wireless printers confirm both devices are on the same Wi-Fi network. [Article: KB0010155]\n2. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog. [Article: KB0010155]",
+      "expected_ids": [
+        "KB0010155"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010155",
+        "KB0010155",
+        "KB0010155",
+        "KB0010170",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.6454,
+        0.6423,
+        0.641,
+        0.5006,
+        0.4944
+      ],
+      "best_score": 0.6454,
+      "agent_best_score": 0.5594,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "Escalating to a human service desk agent because no knowledge base articles met the relevance threshold for print jobs stuck in the queue.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts are perfectly ranked at the top! The first node contains 'key troubleshooting steps included in the expected output', the second node provides 'the exact text for step 1 of the expected output', and the third node contains 'advice on re-mapping the printer or reselecting the device in the print dialog', successfully prioritizing all helpful information ahead of the fourth node about 'peripheral devices like keyboards, mice, and docking stations' and the fifth node offering 'general advice for failing peripheral devices'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are fully backed by the retrieved context! Sentence 1 aligns perfectly with node 2 in retrieval context, sentence 2 corresponds to node 1, and sentence 3 is captured by nodes 1 and 3.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.7692,
+          "success": true,
+          "reason": "The score is 0.77 because while the context includes relevant advice such as 'Reinstall or update the printer driver for the exact model and OS', it also contains irrelevant details referring to 'Keyboard, Mouse, Docking Station' and advising to 'Swap in a known-working device to confirm whether the original device has failed'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_032",
+      "category": "answerable",
+      "language": "ar",
+      "difficulty": "medium",
+      "query": "نسيت كلمة السر ومش جايلي إيميل الاستعادة\nضغطت على نسيت كلمة المرور أكتر من مرة بس الرسالة مش بتوصل على الإيميل، وغيرت موبايلي من فترة.",
+      "expected_answer": "1. Use the self-service password reset (email link or security questions). [Article: KB0010168]\n2. If the reset email does not arrive, check spam/junk and confirm the correct email is on file. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]\n4. If self-service is not available, escalate to the help desk. [Article: KB0010168]",
+      "expected_ids": [
+        "KB0010168"
+      ],
+      "confusable_ids": [
+        "KB0010153"
+      ],
+      "retrieved_ids": [
+        "KB0010168",
+        "KB0010153",
+        "KB0010168",
+        "KB0010153",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.6953,
+        0.6771,
+        0.6712,
+        0.6197,
+        0.6129
+      ],
+      "best_score": 0.6953,
+      "agent_best_score": 0.7169,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Direct the user to self-service password reset using an email link or security questions. [Article: KB0010168]\n2. If the reset email does not arrive, check the spam or junk folder and confirm that the correct email is on file. [Article: KB0010168]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010168"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 0.7556,
+          "success": true,
+          "reason": "The score is 0.76 because irrelevant nodes are ranked higher than relevant nodes in the retrieval contexts. Specifically, the 2nd node in retrieval contexts is irrelevant as it focuses on lost username recovery rather than forgotten password recovery, yet it is ranked ahead of the 3rd node, which is relevant as it explicitly mentions 'Re-register MFA if the reset invalidates the previous token'. Additionally, the 4th node in retrieval contexts is irrelevant because it discusses actions following identity confirmation and temporary password issuance, but it is ranked ahead of the relevant 5th node, which states 'If self-service isn't available, escalate to the help desk'. The score remains relatively high because the 1st node in retrieval contexts is correctly ranked at the top, mentioning 'self-service password reset (email link or security questions)' and checking 'spam/junk and confirm the correct email is on file'.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly aligned with the retrieval context! Sentence 1 is supported by node 1 in retrieval context, sentence 2 by nodes 1 and 3, sentence 3 by nodes 3 and 5, and sentence 4 by node 5.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.5833,
+          "success": true,
+          "reason": "The score is 0.58 because while the retrieval context includes relevant guidance such as \"If the reset email doesn't arrive, check the spam/junk folder and confirm that the correct email is on file\", it also contains several irrelevant details like \"Attempt username recovery first, usually via the account's registered email\" and post-reset instructions such as \"Sign out of all active sessions and log back in fresh once the new password is set\".",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output aligns perfectly with the retrieval context and contains no contradictions!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 0.75,
+          "success": true,
+          "reason": "The score is 0.75 because while the output mostly addresses the user's issue with resetting their password and missing recovery emails, it includes unnecessary administrative/system metadata about the source article.",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response fully complies with all evaluation steps: it provides a numbered procedure with two distinct steps, includes the required citation format '[Article: KB0010168]' for every step, and details concrete, actionable steps for password reset.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_033",
+      "category": "answerable",
+      "language": "mixed",
+      "difficulty": "hard",
+      "query": "VPN بطيء جدًا بس النت العادي سريع\nأول ما بتصل بالـ VPN كل حاجة بتبقى slow والـ downloads بتاخد وقت كبير، لكن من غير VPN النت عادي وسريع.",
+      "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to you. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor. [Article: KB0010172]",
+      "expected_ids": [
+        "KB0010172"
+      ],
+      "confusable_ids": [
+        "KB0010171"
+      ],
+      "retrieved_ids": [
+        "KB0010172",
+        "KB0010172",
+        "KB0010171",
+        "KB0010171",
+        "KB0010171"
+      ],
+      "retrieved_scores": [
+        0.7214,
+        0.6824,
+        0.5979,
+        0.5771,
+        0.5701
+      ],
+      "best_score": 0.7214,
+      "agent_best_score": 0.7338,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Check the base internet connection speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to the user for better performance. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor across servers/protocols. [Article: KB0010172]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010172"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in retrieval contexts are perfectly ranked at the top! The first node in retrieval contexts directly addresses the issue by 'checking the base internet speed outside the VPN', and the second node in retrieval contexts provides essential next steps such as 'Escalate to network admins if performance stays poor', ensuring all irrelevant nodes are correctly placed at lower ranks.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported! Sentences 1 and 2 are directly backed by node 1 in retrieval context, sentence 3 is found in both node 1 and node 2, and sentence 4 aligns perfectly with node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.3571,
+          "success": true,
+          "reason": "The score is 0.36 because a large portion of the context incorrectly focuses on general internet troubleshooting, such as advising to 'Restart the router and modem to clear temporary network issues' and 'Inspect cable connections for damage or looseness', which is irrelevant given that regular internet is already fast. Only a small part of the context is relevant, offering useful VPN advice like to 'Connect to a VPN server location closer to the user for better performance' and 'Try switching VPN protocols if the client supports more than one'.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output is completely faithful to the retrieval context with no contradictions found! Great job!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly and accurately addresses the issue with the slow VPN connection without any irrelevant details. Excellent work!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response perfectly follows all evaluation criteria. It is formatted as a four-step numbered procedure, provides concrete and actionable troubleshooting steps, and includes the exact required citation format ([Article: KB0010172]) at the end of every step.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_034",
+      "category": "answerable",
+      "language": "ar",
+      "difficulty": "medium",
+      "query": "اللاب توب سخن جدًا وبيقفل لوحده\nالجهاز بيسخن بشكل مبالغ فيه وصوت المروحة عالي، وبيطفي فجأة وأنا في وسط الاجتماع.",
+      "expected_answer": "1. Confirm the vents are not blocked and the device has room to breathe. [Article: KB0010151]\n2. Clean dust from vents using compressed air with the device powered off and unplugged. [Article: KB0010151]\n3. Check fan operation and replace a noisy or non-spinning fan. [Article: KB0010151]\n4. Watch for CPU throttling as a sign temperatures are too high. [Article: KB0010151]",
+      "expected_ids": [
+        "KB0010151"
+      ],
+      "confusable_ids": [
+        "KB0010156"
+      ],
+      "retrieved_ids": [
+        "KB0010151",
+        "KB0010151",
+        "KB0010166",
+        "KB0010166",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.6045,
+        0.5859,
+        0.5504,
+        0.5258,
+        0.523
+      ],
+      "best_score": 0.6045,
+      "agent_best_score": 0.6796,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base article was found regarding laptop overheating and unexpected shutdowns.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes are perfectly ranked at the top! The first node in retrieval contexts is relevant because \"This context directly supports points 1, 2, and 3 of the expected output, mentioning that vents shouldn't be blocked, cleaning dust using compressed air with the device powered off/unplugged, and checking fan operation.\", and the second node in retrieval contexts is also relevant as it mentions to \"Watch for CPU throttling as a sign temperatures are climbing too high\", ensuring all relevant information precedes any irrelevant nodes.",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is fully supported by the context! Sentences 1 and 2 are covered by node 1 in retrieval context, sentence 3 is supported by nodes 1 and 2, and sentence 4 is confirmed by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.4615,
+          "success": true,
+          "reason": "The score is 0.46 because while the context includes relevant instructions such as \"To address computer overheating, confirm vents aren't blocked and the device has room to breathe\", a large portion contains irrelevant power and connectivity advice like \"Test the outlet with another device to rule out a dead outlet\" and evaluating whether \"the dock is the weak link\".",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_035",
+      "category": "answerable",
+      "language": "mixed",
+      "difficulty": "hard",
+      "query": "الميكروفون مش شغال في Teams (others can't hear me)\nالميكروفون كان شغال إمبارح، النهاردة في الاجتماع الناس بتقول إنهم مش سامعيني، وجربت أقفل وأفتح Teams من غير فايدة.",
+      "expected_answer": "1. Restart the computer first. [Article: KB0010169]\n2. Confirm the correct input device is selected in the app's settings. [Article: KB0010169]\n3. Check app-level and OS-level permissions for microphone access. [Article: KB0010169]\n4. If the issue persists, inspect for a hardware fault. [Article: KB0010169]",
+      "expected_ids": [
+        "KB0010169",
+        "KB0010161"
+      ],
+      "confusable_ids": [
+        "KB0010170"
+      ],
+      "retrieved_ids": [
+        "KB0010169",
+        "KB0010169",
+        "KB0010161",
+        "KB0010161",
+        "KB0010170"
+      ],
+      "retrieved_scores": [
+        0.607,
+        0.5906,
+        0.5257,
+        0.5224,
+        0.5209
+      ],
+      "best_score": 0.607,
+      "agent_best_score": 0.6318,
+      "hit": true,
+      "rank": 1,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found above the confidence threshold for resolving Microsoft Teams microphone issues.",
+      "citations": null,
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts are perfectly ranked at the top ahead of any irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all sentences in the expected output are fully supported by the retrieved context! Specifically, sentences 1, 2, and 3 are clearly grounded in node 1 in retrieval context (with sentence 3 also appearing in node 2), while sentence 4 is directly backed by node 2.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.8182,
+          "success": true,
+          "reason": "The score is 0.82 because while the context contains helpful troubleshooting steps such as 'Confirm the correct input device is selected in the app's settings' and 'Check app-level and OS-level permissions for microphone/camera access', it includes irrelevant information like 'Close background programs that are consuming bandwidth' and discussions on unrelated peripherals like 'Keyboard, Mouse, Docking Station'.",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_036",
+      "category": "answerable",
+      "language": "ar",
+      "difficulty": "hard",
+      "query": "تم قفل حسابي بعد عدة محاولات دخول فاشلة\nظهرت لي رسالة أن الحساب مقفل بعد عدة محاولات فاشلة لتسجيل الدخول. أعتقد أنني أخطأت في كتابة كلمة المرور، لكن لا أستطيع الدخول الآن.",
+      "expected_answer": "1. Confirm whether the lockout came from the legitimate user or a suspicious attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or security questions. [Article: KB0010162]\n3. If legitimate, reset the password and choose a new, unique one. [Article: KB0010162]",
+      "expected_ids": [
+        "KB0010162"
+      ],
+      "confusable_ids": [
+        "KB0010168"
+      ],
+      "retrieved_ids": [
+        "KB0010162",
+        "KB0010162",
+        "KB0010162",
+        "KB0010153",
+        "KB0010158"
+      ],
+      "retrieved_scores": [
+        0.7447,
+        0.7203,
+        0.6985,
+        0.6785,
+        0.6686
+      ],
+      "best_score": 0.7447,
+      "agent_best_score": 0.7496,
+      "hit": true,
+      "rank": 1,
+      "outcome": "suggested",
+      "answered": true,
+      "answer_text": "1. Confirm whether the lockout came from the legitimate user or a suspicious login attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or pre-set security questions. [Article: KB0010162]\n3. Check system logs/event viewer for the source of the failed attempts. [Article: KB0010162]\n4. If legitimate, reset the password and advise the user to pick a new, unique one. [Article: KB0010162]",
+      "escalation_reason": null,
+      "citations": {
+        "cited": [
+          "KB0010162"
+        ],
+        "valid": true
+      },
+      "deepeval": {
+        "contextual_precision": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because all relevant nodes in the retrieval contexts—the first, second, and third nodes—are perfectly positioned at the top ahead of all irrelevant nodes!",
+          "error": null
+        },
+        "contextual_recall": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because every sentence in the expected output is perfectly supported! Sentences 1 and 2 are directly aligned with node 2 in retrieval context, while sentence 3 is fully backed by nodes 1 and 3.",
+          "error": null
+        },
+        "contextual_relevancy": {
+          "score": 0.6154,
+          "success": true,
+          "reason": "The score is 0.62 because while the context contains relevant statements regarding 'Account Locked After Failed Login Attempts' and instructions to 'reset the password and advise the user to pick a new, unique one.', it also includes irrelevant information such as 'Attempt username recovery first, usually via the account's registered email' and 'Report the message through the official phishing-report channel'.",
+          "error": null
+        },
+        "faithfulness": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the actual output is completely faithful to the retrieval context, with no contradictions found! Keep up the great work!",
+          "error": null
+        },
+        "answer_relevancy": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The score is 1.00 because the response directly addresses the user's issue with their locked account without including any irrelevant statements. Excellent work!",
+          "error": null
+        },
+        "procedure_citation": {
+          "score": 1.0,
+          "success": true,
+          "reason": "The response fully satisfies all evaluation steps. It provides a numbered procedure with four concrete, actionable steps, and every step includes a correctly formatted source article citation ([Article: KB0010162]).",
+          "error": null
+        }
+      }
+    },
+    {
+      "id": "rag_037",
+      "category": "unanswerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Company email stuck in the outbox on my iPhone\nEmails I send from the Mail app on my iPhone sit in the outbox and never go out, though incoming mail works.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010168",
+        "KB0010174"
+      ],
+      "retrieved_ids": [
+        "KB0010168",
+        "KB0010158",
+        "KB0010157",
+        "KB0010169",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.4637,
+        0.4492,
+        0.4476,
+        0.4447,
+        0.4406
+      ],
+      "best_score": 0.4637,
+      "agent_best_score": 0.509,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for resolving emails stuck in the iOS Mail app outbox.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_038",
+      "category": "unanswerable",
+      "language": "en",
+      "difficulty": "hard",
+      "query": "Need Adobe Acrobat Pro licence approved and installed\nPlease approve and install a licensed copy of Adobe Acrobat Pro on my workstation. My manager has agreed verbally.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010163"
+      ],
+      "retrieved_ids": [
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010155"
+      ],
+      "retrieved_scores": [
+        0.5898,
+        0.5723,
+        0.5664,
+        0.5338,
+        0.504
+      ],
+      "best_score": 0.5898,
+      "agent_best_score": 0.4663,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for approving and installing Adobe Acrobat Pro licenses.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_039",
+      "category": "unanswerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Cannot see my payslip in the HR portal\nThe payslip section of the HR portal shows an empty page for me since the payroll cut-off. Other colleagues can see theirs.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010153",
+        "KB0010162"
+      ],
+      "retrieved_ids": [
+        "KB0010160",
+        "KB0010165",
+        "KB0010154",
+        "KB0010154",
+        "KB0010165"
+      ],
+      "retrieved_scores": [
+        0.5037,
+        0.5011,
+        0.4989,
+        0.4855,
+        0.4831
+      ],
+      "best_score": 0.5037,
+      "agent_best_score": 0.4237,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for resolving payslip visibility issues in the HR portal.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_040",
+      "category": "unanswerable",
+      "language": "en",
+      "difficulty": "medium",
+      "query": "Badge does not open the server room door\nMy access badge beeps red at the server room door although I was granted access last week.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010162"
+      ],
+      "retrieved_ids": [
+        "KB0010165",
+        "KB0010165",
+        "KB0010165",
+        "KB0010165",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.5439,
+        0.5334,
+        0.4983,
+        0.498,
+        0.4952
+      ],
+      "best_score": 0.5439,
+      "agent_best_score": 0.4665,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No knowledge base articles were found addressing physical access badge or door reader issues.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_041",
+      "category": "unanswerable",
+      "language": "ar",
+      "difficulty": "hard",
+      "query": "عايز أطلب تركيب برنامج أوتوكاد وتفعيل الرخصة\nمحتاج AutoCAD على جهازي وعايز أعرف إزاي أحصل على الترخيص وموافقة المدير.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010163"
+      ],
+      "retrieved_ids": [
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010163",
+        "KB0010163"
+      ],
+      "retrieved_scores": [
+        0.6238,
+        0.6184,
+        0.5748,
+        0.5724,
+        0.545
+      ],
+      "best_score": 0.6238,
+      "agent_best_score": 0.5122,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for requesting and licensing AutoCAD software.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_042",
+      "category": "unanswerable",
+      "language": "mixed",
+      "difficulty": "medium",
+      "query": "عايز أضبط الرد التلقائي (out-of-office) على الإيميل\nHow do I set my out-of-office automatic reply and email signature? مش لاقي الإعداد في Outlook.",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [
+        "KB0010168"
+      ],
+      "retrieved_ids": [
+        "KB0010168",
+        "KB0010153",
+        "KB0010153",
+        "KB0010168",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.5706,
+        0.5325,
+        0.527,
+        0.5131,
+        0.4918
+      ],
+      "best_score": 0.5706,
+      "agent_best_score": 0.4682,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No relevant knowledge base articles were found for configuring out-of-office automatic replies or email signatures in Outlook.",
+      "citations": null,
+      "deepeval": {}
+    },
+    {
+      "id": "rag_043",
+      "category": "unanswerable",
+      "language": "en",
+      "difficulty": "easy",
+      "query": "What is the sick leave policy?\nHow many sick days am I entitled to per year and who do I notify?",
+      "expected_answer": "",
+      "expected_ids": [],
+      "confusable_ids": [],
+      "retrieved_ids": [
+        "KB0010158",
+        "KB0010168",
+        "KB0010168",
+        "KB0010158",
+        "KB0010168"
+      ],
+      "retrieved_scores": [
+        0.3922,
+        0.3818,
+        0.3674,
+        0.366,
+        0.3655
+      ],
+      "best_score": 0.3922,
+      "agent_best_score": 0.3967,
+      "hit": null,
+      "rank": null,
+      "outcome": "escalated",
+      "answered": false,
+      "answer_text": "",
+      "escalation_reason": "No knowledge base articles found regarding the sick leave policy and entitlement details.",
+      "citations": null,
+      "deepeval": {}
+    }
+  ]
+}

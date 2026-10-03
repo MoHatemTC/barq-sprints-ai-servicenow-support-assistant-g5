@@ -1,0 +1,101 @@
+Mode=snapshot cases=43 top_k=5
+[1/43] rag_001 hit=True outcome=suggested best=0.68
+[2/43] rag_002 hit=True outcome=escalated best=0.56
+[3/43] rag_003 hit=True outcome=escalated best=0.61
+[4/43] rag_004 hit=True outcome=escalated best=0.59
+[5/43] rag_005 hit=True outcome=escalated best=0.59
+[6/43] rag_006 hit=True outcome=suggested best=0.73
+[7/43] rag_007 hit=True outcome=suggested best=0.68
+[8/43] rag_008 hit=True outcome=escalated best=0.72
+[9/43] rag_009 hit=True outcome=suggested best=0.65
+[10/43] rag_010 hit=True outcome=escalated best=0.58
+[11/43] rag_011 hit=True outcome=escalated best=0.63
+[12/43] rag_012 hit=True outcome=escalated best=0.58
+[13/43] rag_013 hit=True outcome=escalated best=0.63
+[14/43] rag_014 hit=True outcome=escalated best=0.57
+[15/43] rag_015 hit=True outcome=escalated best=0.69
+[16/43] rag_016 hit=True outcome=escalated best=0.50
+[17/43] rag_017 hit=True outcome=escalated best=0.73
+[18/43] rag_018 hit=True outcome=escalated best=0.65
+[19/43] rag_019 hit=True outcome=escalated best=0.65
+[20/43] rag_020 hit=True outcome=escalated best=0.49
+[21/43] rag_021 hit=True outcome=escalated best=0.68
+[22/43] rag_022 hit=True outcome=escalated best=0.56
+[23/43] rag_023 hit=True outcome=escalated best=0.65
+[24/43] rag_024 hit=True outcome=escalated best=0.60
+[25/43] rag_025 hit=True outcome=escalated best=0.58
+[26/43] rag_026 hit=True outcome=escalated best=0.56
+[27/43] rag_027 hit=True outcome=escalated best=0.68
+[28/43] rag_028 hit=True outcome=escalated best=0.68
+[29/43] rag_029 hit=True outcome=suggested best=0.57
+[30/43] rag_030 hit=True outcome=suggested best=0.59
+[31/43] rag_031 hit=True outcome=escalated best=0.65
+[32/43] rag_032 hit=True outcome=suggested best=0.70
+[33/43] rag_033 hit=True outcome=suggested best=0.72
+[34/43] rag_034 hit=True outcome=escalated best=0.60
+[35/43] rag_035 hit=True outcome=escalated best=0.61
+[36/43] rag_036 hit=True outcome=suggested best=0.74
+[37/43] rag_037 hit=None outcome=escalated best=0.46
+[38/43] rag_038 hit=None outcome=escalated best=0.59
+[39/43] rag_039 hit=None outcome=escalated best=0.50
+[40/43] rag_040 hit=None outcome=escalated best=0.54
+[41/43] rag_041 hit=None outcome=escalated best=0.62
+[42/43] rag_042 hit=None outcome=escalated best=0.57
+[43/43] rag_043 hit=None outcome=escalated best=0.39
+DeepEval judge=gemini/gemini-3.6-flash: 0 cached, 43 to run (concurrency 3)
+  judged 1/43 rag_003
+  judged 2/43 rag_002
+  judged 3/43 rag_001
+  judged 4/43 rag_004
+  judged 5/43 rag_005
+  judged 6/43 rag_008
+  judged 7/43 rag_006
+  judged 8/43 rag_007
+  judged 9/43 rag_011
+  judged 10/43 rag_009
+  judged 11/43 rag_010
+  judged 12/43 rag_014
+  judged 13/43 rag_012
+  judged 14/43 rag_013
+  judged 15/43 rag_015
+  judged 16/43 rag_016
+  judged 17/43 rag_017
+  judged 18/43 rag_018
+  judged 19/43 rag_019
+  judged 20/43 rag_020
+  judged 21/43 rag_021
+  judged 22/43 rag_023
+  judged 23/43 rag_022
+  judged 24/43 rag_024
+  judged 25/43 rag_025
+  judged 26/43 rag_026
+  judged 27/43 rag_027
+  judged 28/43 rag_028
+  judged 29/43 rag_029
+  judged 30/43 rag_031
+  judged 31/43 rag_030
+  judged 32/43 rag_032
+  judged 33/43 rag_034
+  judged 34/43 rag_033
+  judged 35/43 rag_037
+  judged 36/43 rag_038
+  judged 37/43 rag_039
+  judged 38/43 rag_040
+  judged 39/43 rag_041
+  judged 40/43 rag_042
+  judged 41/43 rag_043
+  judged 42/43 rag_035
+  judged 43/43 rag_036
+
+=== SUMMARY ===
+Hit@3: 1.000 (36/36) threshold 0.8 -> PASS
+Refusal on unanswerable: 1.000 (7/7) -> PASS
+contextual_precision: 0.923 threshold 0.6 -> PASS
+contextual_recall: 0.949 threshold 0.6 -> PASS
+contextual_relevancy: 0.642 threshold 0.3 -> PASS
+faithfulness: 1.000 threshold 0.8 -> PASS
+answer_relevancy: 0.972 threshold 0.7 -> PASS
+procedure_citation: 1.000 threshold 0.7 -> PASS
+Separation AUC: 0.841 | flagged cases: 28
+Reports: eval\reports\rag_report.md and rag_report.json
+Run complete.

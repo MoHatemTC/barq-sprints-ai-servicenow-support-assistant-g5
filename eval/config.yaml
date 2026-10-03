@@ -1,0 +1,43 @@
+# Central evaluation configuration. Thresholds live HERE, not in code.
+# NOTE: values below are a first proposal; docs/eval_findings.md validates them
+# against real scores and records any change.
+#
+# Secrets and model names are never stored here. This file only names the
+# environment variables the runner reads.
+
+paths:
+  dataset: eval/datasets/rag_golden.json
+  kb_index: eval/datasets/kb_index.json
+  snapshot: eval/fixtures/rag_snapshot.json
+  report_dir: eval/reports
+  report_md: rag_report.md
+  report_json: rag_report.json
+
+retrieval:
+  top_k: 5            # chunks fetched per query (contextual metrics see all of them)
+  hit_k: 3            # k for the deterministic Hit@k metric
+  dedupe_docs: true   # several chunks of one article count as one article in Hit@k
+
+thresholds:
+  # deterministic (no LLM)
+  hit_at_3: 0.80
+  # DeepEval retrieval metrics (LLM-judged, 0..1)
+  contextual_precision: 0.60
+  contextual_recall: 0.60
+  contextual_relevancy: 0.30   # low on purpose: chunks are small, most of the top 5 is off-topic by design
+  # DeepEval generation metrics
+  faithfulness: 0.80
+  answer_relevancy: 0.70
+  # custom G-Eval: numbered procedure + [Article: KBxxxx] citations
+  procedure_citation: 0.70
+  # unanswerable cases: share that must be escalated instead of answered
+  refusal_rate: 0.80
+
+judge:
+  # names of environment variables (values come from .env / the shell)
+  model_env: EVAL_JUDGE_MODEL        # falls back to fallback_model_env if unset
+  fallback_model_env: LLM_MODEL
+  base_url_env: LITELLM_BASE_URL
+  api_key_env: LITELLM_API_KEY
+  temperature: 0
+  max_concurrency: 3                 # keep low: the shared LiteLLM proxy may rate-limit
