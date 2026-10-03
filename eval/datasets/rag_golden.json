@@ -1,0 +1,1448 @@
+[
+  {
+    "id": "rag_001",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "easy",
+    "tags": [
+      "paraphrase",
+      "remote-work"
+    ],
+    "short_description": "Laptop drops off home Wi-Fi every 10-15 minutes",
+    "description": "Working from home on a consumer router. Roughly every 10-15 minutes my laptop loses the wireless connection, then reconnects by itself a minute later. It is wrecking my calls. Phone on the same Wi-Fi seems fine.",
+    "expected_article_ids": [
+      "KB0010174"
+    ],
+    "primary_article_id": "KB0010174",
+    "confusable_article_ids": [
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device forget the Wi-Fi network, then reconnect from scratch. [Article: KB0010174]\n3. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n4. As a remote worker on a consumer router, check for signal interference or an overloaded connection. [Article: KB0010174]",
+    "provenance": {
+      "source_articles": [
+        "KB0010174"
+      ],
+      "source_steps": {
+        "KB0010174": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "derivation": "Symptom (periodic drops, home worker, consumer router) written from scratch; maps to the restart / forget-network / restart-router / remote-worker-interference bullets. Title words ('keeps disconnecting') deliberately not reused."
+    }
+  },
+  {
+    "id": "rag_002",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "numeric-detail"
+    ],
+    "short_description": "Pages crawl although Wi-Fi shows full bars",
+    "description": "Connection never drops, but websites take ages to load and a speed test gives about 4 Mbps while our plan is 50 Mbps. Happens on the laptop and the desktop.",
+    "expected_article_ids": [
+      "KB0010171"
+    ],
+    "primary_article_id": "KB0010171",
+    "confusable_article_ids": [
+      "KB0010174",
+      "KB0010172"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the PC, then run a speed test and compare it to the plan's expected speed. [Article: KB0010171]\n2. Restart the router and modem to clear temporary network issues. [Article: KB0010171]\n3. Check Wi-Fi signal strength; move closer to the router, reposition the access point, or use a wired connection. [Article: KB0010171]\n4. For remote workers, test the modem and check for ISP outages; escalate to the ISP if it persists. [Article: KB0010171]",
+    "provenance": {
+      "source_articles": [
+        "KB0010171"
+      ],
+      "source_steps": {
+        "KB0010171": [
+          1,
+          2,
+          3,
+          6,
+          7
+        ]
+      },
+      "derivation": "Built from the speed-test-vs-plan bullet; deliberately says the connection does NOT drop so Wi-Fi Keeps Disconnecting (KB0010174) is a hard negative."
+    }
+  },
+  {
+    "id": "rag_003",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "multi-symptom"
+    ],
+    "short_description": "Downloads crawl and Teams lags only when I am on the company VPN",
+    "description": "From the home network everything is quick. The moment I connect to the corporate VPN, file downloads crawl and Teams video stutters. Disconnecting the VPN fixes it immediately.",
+    "expected_article_ids": [
+      "KB0010172"
+    ],
+    "primary_article_id": "KB0010172",
+    "confusable_article_ids": [
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to you. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor across servers and protocols. [Article: KB0010172]",
+    "provenance": {
+      "source_articles": [
+        "KB0010172"
+      ],
+      "source_steps": {
+        "KB0010172": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "Scenario isolates the VPN as the variable (fast without it), matching the 'check base speed outside the VPN' bullet; slow-internet article is the confusable."
+    }
+  },
+  {
+    "id": "rag_004",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "single-bullet",
+      "context-clue"
+    ],
+    "short_description": "Wireless printer ignores my jobs since I moved to the guest network",
+    "description": "Print jobs sit in the queue and never come out of the 2nd-floor wireless printer. Last week my laptop was moved onto the guest Wi-Fi. Printer has paper and no error lights.",
+    "expected_article_ids": [
+      "KB0010155"
+    ],
+    "primary_article_id": "KB0010155",
+    "confusable_article_ids": [
+      "KB0010174"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm both the laptop and the wireless printer are on the same Wi-Fi network. [Article: KB0010155]\n2. For network printers, troubleshoot the Wi-Fi/network connection separately if needed. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog if the configuration looks off. [Article: KB0010155]",
+    "provenance": {
+      "source_articles": [
+        "KB0010155"
+      ],
+      "source_steps": {
+        "KB0010155": [
+          1,
+          6
+        ]
+      },
+      "derivation": "Root cause hinted only indirectly (different network) so retrieval must connect it to the 'both devices on the same Wi-Fi network' bullet."
+    }
+  },
+  {
+    "id": "rag_005",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "single-bullet",
+      "permissions"
+    ],
+    "short_description": "Access denied when printing to the shared floor printer",
+    "description": "I joined the finance team last week. I can print to my own desk printer fine, but the shared printer on our floor rejects every job with an access denied message.",
+    "expected_article_ids": [
+      "KB0010155"
+    ],
+    "primary_article_id": "KB0010155",
+    "confusable_article_ids": [
+      "KB0010165"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm the user has the required permissions on shared/office printers. [Article: KB0010155]\n2. Re-map the printer or reselect the correct device in the print dialog if configuration looks off. [Article: KB0010155]",
+    "provenance": {
+      "source_articles": [
+        "KB0010155"
+      ],
+      "source_steps": {
+        "KB0010155": [
+          5,
+          4
+        ]
+      },
+      "derivation": "Only one bullet (permissions on shared/office printers) answers this; shared-drive access (KB0010165) is the confusable because of 'permissions' wording."
+    }
+  },
+  {
+    "id": "rag_006",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "multi-step",
+      "mfa"
+    ],
+    "short_description": "Password reset email never arrives",
+    "description": "I forgot my password and clicked the reset link, but no email has come in 30 minutes. I also changed phones recently so I am not sure my authenticator still works.",
+    "expected_article_ids": [
+      "KB0010168"
+    ],
+    "primary_article_id": "KB0010168",
+    "confusable_article_ids": [
+      "KB0010153",
+      "KB0010162"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Use the self-service password reset (email link or security questions). [Article: KB0010168]\n2. If the reset email does not arrive, check spam/junk and confirm the correct email address is on file. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]\n4. If self-service is not available, escalate to the help desk for manual identity verification. [Article: KB0010168]",
+    "provenance": {
+      "source_articles": [
+        "KB0010168"
+      ],
+      "source_steps": {
+        "KB0010168": [
+          1,
+          2,
+          4,
+          6
+        ]
+      },
+      "derivation": "Combines the reset-email-missing bullet with the MFA re-registration bullet from a single narrative."
+    }
+  },
+  {
+    "id": "rag_007",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "identity"
+    ],
+    "short_description": "Back from long leave and cannot remember my login at all",
+    "description": "Returned after three months of leave. I do not remember my username or my password, so I cannot even start the reset process.",
+    "expected_article_ids": [
+      "KB0010153"
+    ],
+    "primary_article_id": "KB0010153",
+    "confusable_article_ids": [
+      "KB0010168"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Attempt username recovery first, usually via the account's registered email. [Article: KB0010153]\n2. If that fails, escalate to the help desk for manual identity verification. [Article: KB0010153]\n3. Once identity is confirmed, a temporary password is issued and you must change it at next login. [Article: KB0010153]",
+    "provenance": {
+      "source_articles": [
+        "KB0010153"
+      ],
+      "source_steps": {
+        "KB0010153": [
+          1,
+          2,
+          3
+        ]
+      },
+      "derivation": "Both credentials are lost, which is the distinguishing condition vs Forgotten Password (KB0010168); wording avoids the article title."
+    }
+  },
+  {
+    "id": "rag_008",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "security-ambiguity",
+      "multi-step"
+    ],
+    "short_description": "Locked out after wrong password attempts and an odd sign-in alert",
+    "description": "After typing my password wrong several times the account is now locked. I am fairly sure it was me, but I also got a strange sign-in alert from another country this morning.",
+    "expected_article_ids": [
+      "KB0010162"
+    ],
+    "primary_article_id": "KB0010162",
+    "confusable_article_ids": [
+      "KB0010168"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm whether the lockout came from the legitimate user or a suspicious login attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or security questions. [Article: KB0010162]\n3. If legitimate, reset the password and choose a new, unique one. [Article: KB0010162]\n4. If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication. [Article: KB0010162]",
+    "provenance": {
+      "source_articles": [
+        "KB0010162"
+      ],
+      "source_steps": {
+        "KB0010162": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "derivation": "Mixes the legitimate-lockout and suspicious-activity branches of the article in one incident."
+    }
+  },
+  {
+    "id": "rag_009",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "security",
+      "user-already-clicked"
+    ],
+    "short_description": "Clicked a fake 'mailbox full' email and typed my password",
+    "description": "An email from 'IT-Helpdesk' said my mailbox was full and asked me to verify. I clicked the link and entered my password before I noticed the sender address looked wrong. What now?",
+    "expected_article_ids": [
+      "KB0010158"
+    ],
+    "primary_article_id": "KB0010158",
+    "confusable_article_ids": [
+      "KB0010159",
+      "KB0010162"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Reset the affected password immediately and review recent account activity. [Article: KB0010158]\n2. Isolate the device because a malicious link was already clicked. [Article: KB0010158]\n3. Report the message through the official phishing-report channel. [Article: KB0010158]",
+    "provenance": {
+      "source_articles": [
+        "KB0010158"
+      ],
+      "source_steps": {
+        "KB0010158": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "derivation": "Scenario places the user at the 'credentials may have been entered / link clicked' branch of the phishing article."
+    }
+  },
+  {
+    "id": "rag_010",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "security",
+      "multi-symptom"
+    ],
+    "short_description": "PC acting strange after installing a free PDF converter, antivirus flagged a trojan",
+    "description": "After installing a free PDF converter my PC is slow, desktop icons changed, and the antivirus popped up a trojan warning. The laptop is also connected to the office network and mapped drives.",
+    "expected_article_ids": [
+      "KB0010159"
+    ],
+    "primary_article_id": "KB0010159",
+    "confusable_article_ids": [
+      "KB0010167",
+      "KB0010156"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Disconnect the affected device from the network to contain any spread. [Article: KB0010159]\n2. Update antivirus definitions if out of date, then run a full scan. [Article: KB0010159]\n3. Review logs for signs of spread to shared drives or other systems. [Article: KB0010159]\n4. Escalate to a security specialist if the infection persists after cleanup. [Article: KB0010159]",
+    "provenance": {
+      "source_articles": [
+        "KB0010159"
+      ],
+      "source_steps": {
+        "KB0010159": [
+          1,
+          2,
+          3,
+          5,
+          7
+        ]
+      },
+      "derivation": "Network connection plus mapped drives is written in so the 'disconnect to contain spread' and 'review logs for spread' bullets apply."
+    }
+  },
+  {
+    "id": "rag_011",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "easy",
+    "tags": [
+      "paraphrase",
+      "hard-negative"
+    ],
+    "short_description": "Ads and banners keep appearing even with the browser closed",
+    "description": "Spammy advertisement banners keep showing up on my screen all day, including when I am not browsing. It started after visiting a free streaming site.",
+    "expected_article_ids": [
+      "KB0010167"
+    ],
+    "primary_article_id": "KB0010167",
+    "confusable_article_ids": [
+      "KB0010159"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Avoid suspicious sites and links, and use trusted sites only. [Article: KB0010167]\n2. Keep the browser updated. [Article: KB0010167]\n3. Install or verify anti-malware software that blocks pop-ups and filters spam. [Article: KB0010167]",
+    "provenance": {
+      "source_articles": [
+        "KB0010167"
+      ],
+      "source_steps": {
+        "KB0010167": [
+          1,
+          2,
+          3
+        ]
+      },
+      "derivation": "Written around the 'avoid suspicious sites, anti-malware that blocks pop-ups' bullets; malware article is the confusable."
+    }
+  },
+  {
+    "id": "rag_012",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "symptom-only",
+      "numeric-detail"
+    ],
+    "short_description": "Laptop takes 10 minutes to boot and disk sits at 94%",
+    "description": "Task Manager shows the disk at 94% right after login and everything lags. The laptop is 4 years old and has a lot of leftover installers on it.",
+    "expected_article_ids": [
+      "KB0010156"
+    ],
+    "primary_article_id": "KB0010156",
+    "confusable_article_ids": [
+      "KB0010151",
+      "KB0010163"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check Task Manager for processes spiking CPU or disk use and stop the ones that do not matter. [Article: KB0010156]\n2. Free up disk space by clearing temp files and removing unused programs. [Article: KB0010156]\n3. Check for hardware wear such as an aging drive. [Article: KB0010156]\n4. Recommend a hardware upgrade (RAM/SSD) if software fixes do not resolve it. [Article: KB0010156]",
+    "provenance": {
+      "source_articles": [
+        "KB0010156"
+      ],
+      "source_steps": {
+        "KB0010156": [
+          2,
+          3,
+          7,
+          8
+        ]
+      },
+      "derivation": "Disk-usage figure and old-hardware hints map to Task Manager, disk-space, hardware-wear and upgrade bullets without mentioning 'slow performance'."
+    }
+  },
+  {
+    "id": "rag_013",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "symptom-only",
+      "hard-negative"
+    ],
+    "short_description": "Laptop too hot to touch and shuts down during video calls",
+    "description": "The base of my laptop is burning hot, the fan screams, and it switches itself off in the middle of long calls.",
+    "expected_article_ids": [
+      "KB0010151"
+    ],
+    "primary_article_id": "KB0010151",
+    "confusable_article_ids": [
+      "KB0010156",
+      "KB0010166"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm the vents are not blocked and the device has room to breathe. [Article: KB0010151]\n2. Clean dust from vents and internal components with compressed air, with the device powered off and unplugged. [Article: KB0010151]\n3. Check fan operation and replace any fan that is noisy or not spinning. [Article: KB0010151]\n4. Watch for CPU throttling as a sign temperatures are too high. [Article: KB0010151]",
+    "provenance": {
+      "source_articles": [
+        "KB0010151"
+      ],
+      "source_steps": {
+        "KB0010151": [
+          1,
+          2,
+          3,
+          5
+        ]
+      },
+      "derivation": "Physical symptoms described without the word 'overheating'; slow-computer and power-on articles are confusable."
+    }
+  },
+  {
+    "id": "rag_014",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "easy",
+    "tags": [
+      "context-clue"
+    ],
+    "short_description": "Desktop completely dead after the power cut yesterday",
+    "description": "No lights, no fan, nothing happens when I press the power button since the building lost power yesterday.",
+    "expected_article_ids": [
+      "KB0010166"
+    ],
+    "primary_article_id": "KB0010166",
+    "confusable_article_ids": [
+      "KB0010151"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check that the power cable is firmly connected at both the wall outlet and the machine. [Article: KB0010166]\n2. Test the outlet with another device. [Article: KB0010166]\n3. Try a different outlet or power cable. [Article: KB0010166]\n4. If there is still no response, escalate for hardware diagnostics (PSU/motherboard). [Article: KB0010166]",
+    "provenance": {
+      "source_articles": [
+        "KB0010166"
+      ],
+      "source_steps": {
+        "KB0010166": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "derivation": "Power-cut context points to cable/outlet checks; title not reused."
+    }
+  },
+  {
+    "id": "rag_015",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "error-code"
+    ],
+    "short_description": "Blue screen with CRITICAL_PROCESS_DIED twice today",
+    "description": "My laptop crashed to a blue screen showing CRITICAL_PROCESS_DIED, then did it again an hour later after restarting.",
+    "expected_article_ids": [
+      "KB0010164"
+    ],
+    "primary_article_id": "KB0010164",
+    "confusable_article_ids": [
+      "KB0010150"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the computer; a one-off blue screen can be a temporary glitch. [Article: KB0010164]\n2. Install pending Windows updates. [Article: KB0010164]\n3. Note the stop code shown on the blue screen (CRITICAL_PROCESS_DIED) for escalation. [Article: KB0010164]\n4. Since it repeated, escalate for hardware diagnostics (RAM, disk, drivers). [Article: KB0010164]",
+    "provenance": {
+      "source_articles": [
+        "KB0010164"
+      ],
+      "source_steps": {
+        "KB0010164": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "Uses a real-looking stop code and the 'repeats twice' condition that triggers the escalate-for-hardware-diagnostics bullet."
+    }
+  },
+  {
+    "id": "rag_016",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "context-clue"
+    ],
+    "short_description": "Excel keeps closing by itself on large files after adding a PDF add-in",
+    "description": "Since installing a PDF add-in, Excel closes without warning whenever I open a large workbook. Other Office apps are fine.",
+    "expected_article_ids": [
+      "KB0010150"
+    ],
+    "primary_article_id": "KB0010150",
+    "confusable_article_ids": [
+      "KB0010163",
+      "KB0010164"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Close and reopen the application to clear temporary glitches. [Article: KB0010150]\n2. Check for and install available updates. [Article: KB0010150]\n3. Identify other running software (such as the new add-in) that might conflict and disable it. [Article: KB0010150]\n4. Document the exact error and steps to reproduce it before escalating. [Article: KB0010150]",
+    "provenance": {
+      "source_articles": [
+        "KB0010150"
+      ],
+      "source_steps": {
+        "KB0010150": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "Conflicting-software clue (new add-in) maps to the 'disable conflicting software' bullet; install-failure and BSOD articles are confusable."
+    }
+  },
+  {
+    "id": "rag_017",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "multi-step",
+      "admin-rights"
+    ],
+    "short_description": "Accounting software installer demands admin rights then fails halfway",
+    "description": "The installer says it needs administrator permission. After I retried, it stopped at about 60% and now will not start again. My C: drive is nearly full.",
+    "expected_article_ids": [
+      "KB0010163"
+    ],
+    "primary_article_id": "KB0010163",
+    "confusable_article_ids": [
+      "KB0010157",
+      "KB0010150"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check that the account has the admin rights the installer needs, and route through IT if elevation is required. [Article: KB0010163]\n2. Free up disk space because the drive is near capacity. [Article: KB0010163]\n3. Remove leftover files from the previous install attempt before retrying. [Article: KB0010163]\n4. Reinstall the application, and escalate to a specialist if the issue persists. [Article: KB0010163]",
+    "provenance": {
+      "source_articles": [
+        "KB0010163"
+      ],
+      "source_steps": {
+        "KB0010163": [
+          3,
+          4,
+          5,
+          6,
+          9
+        ]
+      },
+      "derivation": "Composite of admin-rights, disk-space and leftover-files bullets from one article; update-failure article is the confusable."
+    }
+  },
+  {
+    "id": "rag_018",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "error-code",
+      "hard-negative"
+    ],
+    "short_description": "Windows update stuck failing with error 0x800f0922 every day",
+    "description": "The monthly Windows update keeps trying and failing every night with error 0x800f0922. Internet is fine.",
+    "expected_article_ids": [
+      "KB0010157"
+    ],
+    "primary_article_id": "KB0010157",
+    "confusable_article_ids": [
+      "KB0010163",
+      "KB0010156"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Free up disk space, since updates often need room for temporary files. [Article: KB0010157]\n2. Restart the update service or troubleshoot it using OS-specific support tools. [Article: KB0010157]\n3. Retry the update after a full restart. [Article: KB0010157]",
+    "provenance": {
+      "source_articles": [
+        "KB0010157"
+      ],
+      "source_steps": {
+        "KB0010157": [
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "Error code is noise; the relevant guidance is disk space, restarting the update service and retrying after a full restart."
+    }
+  },
+  {
+    "id": "rag_019",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "context-clue"
+    ],
+    "short_description": "Second screen stays black with 'No signal' at my new desk",
+    "description": "At the new desk I plug my laptop into the extra HDMI monitor but it just shows 'No signal'. The laptop screen works normally.",
+    "expected_article_ids": [
+      "KB0010152"
+    ],
+    "primary_article_id": "KB0010152",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check the video cable connection at both ends and try a different cable. [Article: KB0010152]\n2. Update the graphics/display drivers. [Article: KB0010152]\n3. Restart the computer to clear a temporary detection issue. [Article: KB0010152]\n4. Confirm the correct display mode (extend/duplicate) in display settings. [Article: KB0010152]",
+    "provenance": {
+      "source_articles": [
+        "KB0010152"
+      ],
+      "source_steps": {
+        "KB0010152": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "HDMI / No-signal wording replaces the article title; docking/peripheral article is the confusable."
+    }
+  },
+  {
+    "id": "rag_020",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "easy",
+    "tags": [
+      "paraphrase"
+    ],
+    "short_description": "Flash drive with my presentation does not appear in Explorer",
+    "description": "I plugged in a flash drive with my presentation and its light blinks, but nothing shows up in File Explorer.",
+    "expected_article_ids": [
+      "KB0010173"
+    ],
+    "primary_article_id": "KB0010173",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the computer to clear a temporary detection glitch. [Article: KB0010173]\n2. Try the device in a different USB port. [Article: KB0010173]\n3. Update the relevant USB/storage controller drivers. [Article: KB0010173]\n4. Test the device on another computer to confirm whether the device itself is faulty. [Article: KB0010173]",
+    "provenance": {
+      "source_articles": [
+        "KB0010173"
+      ],
+      "source_steps": {
+        "KB0010173": [
+          1,
+          2,
+          4,
+          6
+        ]
+      },
+      "derivation": "Colloquial 'flash drive' and 'Explorer' used in place of the article's 'USB or External Storage Device Not Recognized'."
+    }
+  },
+  {
+    "id": "rag_021",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "docking"
+    ],
+    "short_description": "Keyboard and mouse on the dock are dead but the laptop keys work",
+    "description": "Since this morning the wireless mouse and keyboard receiver plugged into the docking station do nothing. The laptop's built-in keyboard works fine.",
+    "expected_article_ids": [
+      "KB0010170"
+    ],
+    "primary_article_id": "KB0010170",
+    "confusable_article_ids": [
+      "KB0010173"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Test the peripheral in a different port to rule out a port-level fault. [Article: KB0010170]\n2. For docking stations, test the devices directly on the laptop to isolate whether the dock is the weak link. [Article: KB0010170]\n3. Swap in a known-working device to confirm whether the original has failed. [Article: KB0010170]\n4. Update or reinstall the relevant driver if the device is detected but not functioning. [Article: KB0010170]",
+    "provenance": {
+      "source_articles": [
+        "KB0010170"
+      ],
+      "source_steps": {
+        "KB0010170": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "derivation": "Docking station isolation bullet is the key; USB-storage article is the confusable because of USB ports."
+    }
+  },
+  {
+    "id": "rag_022",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "permissions"
+    ],
+    "short_description": "Nobody can hear me in meetings although my headset worked yesterday",
+    "description": "In Teams calls colleagues say they cannot hear me. The headset worked yesterday and still shows up in the device list. I recently changed some Windows privacy settings.",
+    "expected_article_ids": [
+      "KB0010169",
+      "KB0010161"
+    ],
+    "primary_article_id": "KB0010169",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the computer first. [Article: KB0010169]\n2. Confirm the correct input device is selected in the app's settings. [Article: KB0010169]\n3. Check app-level and OS-level permissions for microphone access. [Article: KB0010169]\n4. If the issue persists, inspect for a hardware fault and consider replacement. [Article: KB0010169]",
+    "provenance": {
+      "source_articles": [
+        "KB0010169",
+        "KB0010161"
+      ],
+      "source_steps": {
+        "KB0010169": [
+          1,
+          3,
+          4
+        ],
+        "KB0010161": [
+          2
+        ]
+      },
+      "derivation": "Privacy-settings clue maps to app/OS permission bullet; input-device selection exists in both the mic article and the meeting-app article, so both are acceptable."
+    }
+  },
+  {
+    "id": "rag_023",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "multi-symptom",
+      "browser"
+    ],
+    "short_description": "Cannot share my screen in the browser meeting and the call keeps freezing",
+    "description": "Joining the meeting through the browser, the screen-share button does nothing and the video keeps freezing. Someone else is downloading a large update on our connection.",
+    "expected_article_ids": [
+      "KB0010161"
+    ],
+    "primary_article_id": "KB0010161",
+    "confusable_article_ids": [
+      "KB0010169",
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the browser and clear cached data if joining via a browser. [Article: KB0010161]\n2. Disable or update browser plugins that may be blocking screen sharing. [Article: KB0010161]\n3. Close background programs consuming bandwidth. [Article: KB0010161]\n4. Update the conferencing app to the latest version. [Article: KB0010161]",
+    "provenance": {
+      "source_articles": [
+        "KB0010161"
+      ],
+      "source_steps": {
+        "KB0010161": [
+          3,
+          4,
+          5
+        ]
+      },
+      "derivation": "Blocked screen share (plugin bullet) plus bandwidth contention bullet from the same article; mic article is the confusable."
+    }
+  },
+  {
+    "id": "rag_024",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "vpn-context"
+    ],
+    "short_description": "Mapped Z: drive shows a red X since I started working from home",
+    "description": "The Z: shared drive shows a red X when I work remotely and the folder will not open. My credentials work for other things.",
+    "expected_article_ids": [
+      "KB0010165"
+    ],
+    "primary_article_id": "KB0010165",
+    "confusable_article_ids": [
+      "KB0010172",
+      "KB0010153"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Ping or verify the server or shared resource is actually reachable. [Article: KB0010165]\n2. Check the drive mapping and whether the mapped path dropped after a network change. [Article: KB0010165]\n3. Check firewall rules and recent VPN rule changes that might be blocking access. [Article: KB0010165]\n4. Escalate to network admins if access should be granted but is not. [Article: KB0010165]",
+    "provenance": {
+      "source_articles": [
+        "KB0010165"
+      ],
+      "source_steps": {
+        "KB0010165": [
+          3,
+          4,
+          5,
+          7
+        ]
+      },
+      "derivation": "Remote-work context points to the mapped-path / VPN-rule bullets; slow-VPN article is the confusable."
+    }
+  },
+  {
+    "id": "rag_025",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "cloud",
+      "hard-negative"
+    ],
+    "short_description": "Budget spreadsheet disappeared from my Documents folder",
+    "description": "I cannot find the Q3 budget spreadsheet that was in my Documents folder yesterday. I did not delete it and I use OneDrive, so maybe something did not sync.",
+    "expected_article_ids": [
+      "KB0010154"
+    ],
+    "primary_article_id": "KB0010154",
+    "confusable_article_ids": [
+      "KB0010160"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Search for the file by name across local and cloud locations. [Article: KB0010154]\n2. Check the Recycle Bin. [Article: KB0010154]\n3. Look for an autosave/version history snapshot in the source app. [Article: KB0010154]\n4. Check cloud sync status for a paused or partial upload that might explain the missing file. [Article: KB0010154]",
+    "provenance": {
+      "source_articles": [
+        "KB0010154"
+      ],
+      "source_steps": {
+        "KB0010154": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "OneDrive sync hint maps to the cloud-sync-status bullet; unsaved-work article is the confusable."
+    }
+  },
+  {
+    "id": "rag_026",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "hard-negative",
+      "urgent"
+    ],
+    "short_description": "Word crashed after two hours of writing and I never saved",
+    "description": "I was writing a long report in Word, the application froze and closed, and when I reopened it there was nothing. I never pressed save.",
+    "expected_article_ids": [
+      "KB0010160"
+    ],
+    "primary_article_id": "KB0010160",
+    "confusable_article_ids": [
+      "KB0010154"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check the application's autosave/recovery folder for a recent draft. [Article: KB0010160]\n2. Look for temporary files the application may have created during the session. [Article: KB0010160]\n3. Use data recovery tools only as a last resort; success is not guaranteed. [Article: KB0010160]",
+    "provenance": {
+      "source_articles": [
+        "KB0010160"
+      ],
+      "source_steps": {
+        "KB0010160": [
+          1,
+          2,
+          3
+        ]
+      },
+      "derivation": "Never-saved condition separates this from the deleted-files article."
+    }
+  },
+  {
+    "id": "rag_027",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "multi-article",
+      "multi-intent"
+    ],
+    "short_description": "Cannot open the shared drive and the VPN is painfully slow",
+    "description": "Working remotely: the team shared drive will not open, and the VPN I use to reach it is extremely slow compared with my normal home internet.",
+    "expected_article_ids": [
+      "KB0010165",
+      "KB0010172"
+    ],
+    "primary_article_id": "KB0010165",
+    "confusable_article_ids": [
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server closer to you or switch VPN protocols. [Article: KB0010172]\n3. Verify the shared resource is reachable and check firewall rules and recent VPN rule changes. [Article: KB0010165]\n4. Escalate to network admins if access should be granted but is not. [Article: KB0010165]",
+    "provenance": {
+      "source_articles": [
+        "KB0010165",
+        "KB0010172"
+      ],
+      "source_steps": {
+        "KB0010165": [
+          3,
+          5
+        ],
+        "KB0010172": [
+          1,
+          2,
+          3
+        ]
+      },
+      "derivation": "Two intents in one incident; the correct answer needs chunks from both articles, so either article counts for Hit@3 but both are needed for full contextual recall."
+    }
+  },
+  {
+    "id": "rag_028",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "vague",
+      "ambiguous"
+    ],
+    "short_description": "internet disconnected again",
+    "description": "My internet is disconnected again this morning. Modem lights look normal.",
+    "expected_article_ids": [
+      "KB0010174",
+      "KB0010171"
+    ],
+    "primary_article_id": "KB0010174",
+    "confusable_article_ids": [
+      "KB0010172"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Restart the router and modem to clear temporary network issues. [Article: KB0010171]\n3. Have the device forget the network and reconnect from scratch. [Article: KB0010174]\n4. Test the modem and check for ISP outages. [Article: KB0010171]",
+    "provenance": {
+      "source_articles": [
+        "KB0010174",
+        "KB0010171"
+      ],
+      "source_steps": {
+        "KB0010174": [
+          1,
+          2,
+          4
+        ],
+        "KB0010171": [
+          2,
+          6
+        ]
+      },
+      "derivation": "Very short, generic 'connectivity lost' wording with no symptom detail. Either the Wi-Fi-drop article or the slow-internet article (restart router/modem, ISP outage check) can legitimately answer it, so both are accepted for Hit@3."
+    }
+  },
+  {
+    "id": "rag_029",
+    "language": "en",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "typos",
+      "short"
+    ],
+    "short_description": "printr not workng",
+    "description": "printr wont print anythin, shows in the list tho",
+    "expected_article_ids": [
+      "KB0010155"
+    ],
+    "primary_article_id": "KB0010155",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n2. Re-map the printer or reselect the correct device in the print dialog. [Article: KB0010155]\n3. Verify the cable connection, or for wireless printers confirm both devices are on the same Wi-Fi. [Article: KB0010155]",
+    "provenance": {
+      "source_articles": [
+        "KB0010155"
+      ],
+      "source_steps": {
+        "KB0010155": [
+          3,
+          4,
+          1
+        ]
+      },
+      "derivation": "Deliberately misspelled, very short incident to test robustness of the embedding model."
+    }
+  },
+  {
+    "id": "rag_030",
+    "language": "ar",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "arabic-egyptian",
+      "paraphrase"
+    ],
+    "short_description": "الواي فاي بيفصل كل شوية",
+    "description": "بشتغل من البيت من يومين، واللاب توب بيفصل من الواي فاي كل ١٠ أو ١٥ دقيقة وبيرجع لوحده بعد شوية، وده بيقطع الاجتماعات.",
+    "expected_article_ids": [
+      "KB0010174"
+    ],
+    "primary_article_id": "KB0010174",
+    "confusable_article_ids": [
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device forget the Wi-Fi network, then reconnect from scratch. [Article: KB0010174]\n3. Restart the router to clear temporary glitches. [Article: KB0010174]\n4. For remote workers, check for signal interference or an overloaded connection. [Article: KB0010174]",
+    "provenance": {
+      "source_articles": [
+        "KB0010174"
+      ],
+      "source_steps": {
+        "KB0010174": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "derivation": "Egyptian-Arabic rewrite of the Wi-Fi drop scenario; tests cross-lingual retrieval against English-only KB text (bge-m3 vs earlier English model). Expected answer given in English because the KB is English."
+    }
+  },
+  {
+    "id": "rag_031",
+    "language": "ar",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "arabic-egyptian",
+      "paraphrase"
+    ],
+    "short_description": "الطابعة مش بتطبع",
+    "description": "بعمل Print من الشغل والمستند بيفضل واقف في الطابور ومفيش حاجة بتخرج من الطابعة، والطابعة شغالة وفيها ورق.",
+    "expected_article_ids": [
+      "KB0010155"
+    ],
+    "primary_article_id": "KB0010155",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Verify the cable connection, or for wireless printers confirm both devices are on the same Wi-Fi network. [Article: KB0010155]\n2. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog. [Article: KB0010155]",
+    "provenance": {
+      "source_articles": [
+        "KB0010155"
+      ],
+      "source_steps": {
+        "KB0010155": [
+          1,
+          3,
+          4
+        ]
+      },
+      "derivation": "Arabic incident for the printer article, with a Latin-script word (Print) as is common in real tickets."
+    }
+  },
+  {
+    "id": "rag_032",
+    "language": "ar",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "arabic-egyptian",
+      "mfa"
+    ],
+    "short_description": "نسيت كلمة السر ومش جايلي إيميل الاستعادة",
+    "description": "ضغطت على نسيت كلمة المرور أكتر من مرة بس الرسالة مش بتوصل على الإيميل، وغيرت موبايلي من فترة.",
+    "expected_article_ids": [
+      "KB0010168"
+    ],
+    "primary_article_id": "KB0010168",
+    "confusable_article_ids": [
+      "KB0010153"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Use the self-service password reset (email link or security questions). [Article: KB0010168]\n2. If the reset email does not arrive, check spam/junk and confirm the correct email is on file. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]\n4. If self-service is not available, escalate to the help desk. [Article: KB0010168]",
+    "provenance": {
+      "source_articles": [
+        "KB0010168"
+      ],
+      "source_steps": {
+        "KB0010168": [
+          1,
+          2,
+          4,
+          6
+        ]
+      },
+      "derivation": "Arabic version of the missing-reset-email scenario, including the phone-change clue for MFA re-registration."
+    }
+  },
+  {
+    "id": "rag_033",
+    "language": "mixed",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "code-switching",
+      "hard-negative"
+    ],
+    "short_description": "VPN بطيء جدًا بس النت العادي سريع",
+    "description": "أول ما بتصل بالـ VPN كل حاجة بتبقى slow والـ downloads بتاخد وقت كبير، لكن من غير VPN النت عادي وسريع.",
+    "expected_article_ids": [
+      "KB0010172"
+    ],
+    "primary_article_id": "KB0010172",
+    "confusable_article_ids": [
+      "KB0010171"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Check the base internet speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to you. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor. [Article: KB0010172]",
+    "provenance": {
+      "source_articles": [
+        "KB0010172"
+      ],
+      "source_steps": {
+        "KB0010172": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "derivation": "Arabic/English code-switched ticket; 'fast without VPN' clue distinguishes it from the general slow-internet article."
+    }
+  },
+  {
+    "id": "rag_034",
+    "language": "ar",
+    "category": "answerable",
+    "difficulty": "medium",
+    "tags": [
+      "arabic-egyptian",
+      "symptom-only"
+    ],
+    "short_description": "اللاب توب سخن جدًا وبيقفل لوحده",
+    "description": "الجهاز بيسخن بشكل مبالغ فيه وصوت المروحة عالي، وبيطفي فجأة وأنا في وسط الاجتماع.",
+    "expected_article_ids": [
+      "KB0010151"
+    ],
+    "primary_article_id": "KB0010151",
+    "confusable_article_ids": [
+      "KB0010156"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm the vents are not blocked and the device has room to breathe. [Article: KB0010151]\n2. Clean dust from vents using compressed air with the device powered off and unplugged. [Article: KB0010151]\n3. Check fan operation and replace a noisy or non-spinning fan. [Article: KB0010151]\n4. Watch for CPU throttling as a sign temperatures are too high. [Article: KB0010151]",
+    "provenance": {
+      "source_articles": [
+        "KB0010151"
+      ],
+      "source_steps": {
+        "KB0010151": [
+          1,
+          2,
+          3,
+          5
+        ]
+      },
+      "derivation": "Physical overheating symptoms in Egyptian Arabic; the English word 'overheating' never appears."
+    }
+  },
+  {
+    "id": "rag_035",
+    "language": "mixed",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "code-switching",
+      "permissions"
+    ],
+    "short_description": "الميكروفون مش شغال في Teams (others can't hear me)",
+    "description": "الميكروفون كان شغال إمبارح، النهاردة في الاجتماع الناس بتقول إنهم مش سامعيني، وجربت أقفل وأفتح Teams من غير فايدة.",
+    "expected_article_ids": [
+      "KB0010169",
+      "KB0010161"
+    ],
+    "primary_article_id": "KB0010169",
+    "confusable_article_ids": [
+      "KB0010170"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Restart the computer first. [Article: KB0010169]\n2. Confirm the correct input device is selected in the app's settings. [Article: KB0010169]\n3. Check app-level and OS-level permissions for microphone access. [Article: KB0010169]\n4. If the issue persists, inspect for a hardware fault. [Article: KB0010169]",
+    "provenance": {
+      "source_articles": [
+        "KB0010169",
+        "KB0010161"
+      ],
+      "source_steps": {
+        "KB0010169": [
+          1,
+          3,
+          4
+        ],
+        "KB0010161": [
+          2
+        ]
+      },
+      "derivation": "Bilingual incident mixing an English parenthetical with Egyptian Arabic; both mic and meeting-app articles are acceptable."
+    }
+  },
+  {
+    "id": "rag_036",
+    "language": "ar",
+    "category": "answerable",
+    "difficulty": "hard",
+    "tags": [
+      "arabic-msa",
+      "security-ambiguity"
+    ],
+    "short_description": "تم قفل حسابي بعد عدة محاولات دخول فاشلة",
+    "description": "ظهرت لي رسالة أن الحساب مقفل بعد عدة محاولات فاشلة لتسجيل الدخول. أعتقد أنني أخطأت في كتابة كلمة المرور، لكن لا أستطيع الدخول الآن.",
+    "expected_article_ids": [
+      "KB0010162"
+    ],
+    "primary_article_id": "KB0010162",
+    "confusable_article_ids": [
+      "KB0010168"
+    ],
+    "expected_behavior": "answer",
+    "expected_answer": "1. Confirm whether the lockout came from the legitimate user or a suspicious attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or security questions. [Article: KB0010162]\n3. If legitimate, reset the password and choose a new, unique one. [Article: KB0010162]",
+    "provenance": {
+      "source_articles": [
+        "KB0010162"
+      ],
+      "source_steps": {
+        "KB0010162": [
+          1,
+          2,
+          4
+        ]
+      },
+      "derivation": "Modern Standard Arabic formal register (vs. dialect in other Arabic cases) for the lockout article."
+    }
+  },
+  {
+    "id": "rag_037",
+    "language": "en",
+    "category": "unanswerable",
+    "difficulty": "hard",
+    "tags": [
+      "out-of-scope",
+      "near-miss"
+    ],
+    "short_description": "Company email stuck in the outbox on my iPhone",
+    "description": "Emails I send from the Mail app on my iPhone sit in the outbox and never go out, though incoming mail works.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010168",
+      "KB0010174"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Checked all 25 articles: none covers email clients or mobile mail. Nearest by vocabulary are password reset and Wi-Fi articles, which would be wrong guidance; correct behavior is to escalate."
+    }
+  },
+  {
+    "id": "rag_038",
+    "language": "en",
+    "category": "unanswerable",
+    "difficulty": "hard",
+    "tags": [
+      "out-of-scope",
+      "near-miss"
+    ],
+    "short_description": "Need Adobe Acrobat Pro licence approved and installed",
+    "description": "Please approve and install a licensed copy of Adobe Acrobat Pro on my workstation. My manager has agreed verbally.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010163"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Licensing and procurement approval is not in the KB. KB0010163 mentions admin rights for installers, which is a near-miss distractor that must not be presented as an answer."
+    }
+  },
+  {
+    "id": "rag_039",
+    "language": "en",
+    "category": "unanswerable",
+    "difficulty": "medium",
+    "tags": [
+      "out-of-scope",
+      "business-system"
+    ],
+    "short_description": "Cannot see my payslip in the HR portal",
+    "description": "The payslip section of the HR portal shows an empty page for me since the payroll cut-off. Other colleagues can see theirs.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010153",
+      "KB0010162"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Business-application (payroll/HR) issue; the KB only covers generic endpoint, network and account issues. Account-related articles are lexical near-misses."
+    }
+  },
+  {
+    "id": "rag_040",
+    "language": "en",
+    "category": "unanswerable",
+    "difficulty": "medium",
+    "tags": [
+      "out-of-scope",
+      "physical-access"
+    ],
+    "short_description": "Badge does not open the server room door",
+    "description": "My access badge beeps red at the server room door although I was granted access last week.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010162"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Physical access control is not covered by any article; 'access' wording makes the account-lockout article a near-miss."
+    }
+  },
+  {
+    "id": "rag_041",
+    "language": "ar",
+    "category": "unanswerable",
+    "difficulty": "hard",
+    "tags": [
+      "arabic-egyptian",
+      "out-of-scope",
+      "near-miss"
+    ],
+    "short_description": "عايز أطلب تركيب برنامج أوتوكاد وتفعيل الرخصة",
+    "description": "محتاج AutoCAD على جهازي وعايز أعرف إزاي أحصل على الترخيص وموافقة المدير.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010163"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Arabic licensing request. No article covers software licensing or approvals; installer article KB0010163 is the near-miss distractor."
+    }
+  },
+  {
+    "id": "rag_042",
+    "language": "mixed",
+    "category": "unanswerable",
+    "difficulty": "medium",
+    "tags": [
+      "code-switching",
+      "out-of-scope"
+    ],
+    "short_description": "عايز أضبط الرد التلقائي (out-of-office) على الإيميل",
+    "description": "How do I set my out-of-office automatic reply and email signature? مش لاقي الإعداد في Outlook.",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [
+      "KB0010168"
+    ],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Mail-client configuration how-to; nothing in the KB. Bilingual to test that refusal behavior holds across languages."
+    }
+  },
+  {
+    "id": "rag_043",
+    "language": "en",
+    "category": "unanswerable",
+    "difficulty": "easy",
+    "tags": [
+      "off-topic",
+      "non-it"
+    ],
+    "short_description": "What is the sick leave policy?",
+    "description": "How many sick days am I entitled to per year and who do I notify?",
+    "expected_article_ids": [],
+    "primary_article_id": null,
+    "confusable_article_ids": [],
+    "expected_behavior": "escalate",
+    "expected_answer": "",
+    "provenance": {
+      "source_articles": [],
+      "source_steps": {},
+      "derivation": "Non-IT HR policy question; clearly outside the IT knowledge base. Used as the 'easy' end of the unanswerable score distribution."
+    }
+  }
+]

@@ -258,3 +258,135 @@ Contains 17 operational scenarios across 7 mandatory categories:
 python -m pytest tests/test_agent_eval_checks.py -v
 ```
 
+## RAG Evaluation (Sprint 4: Trust & Hardening)
+
+A repeatable pipeline that measures how well the assistant **retrieves** knowledge-base articles and how good and grounded its **suggested answers** are. It uses [DeepEval](https://deepeval.com) (LLM-judged metrics) plus a deterministic, non-LLM Hit@3 metric.
+
+Findings and recommendations from the first baseline run: [`docs/eval_findings.md`](docs/eval_findings.md). Terminal proof of that run: `docs/evidence/run_log.txt`.
+
+### What is in `eval/`
+
+| Path | Purpose |
+|---|---|
+| `datasets/rag_golden.json` | 43 incidents (36 answerable, 7 unanswerable; 9 Arabic or bilingual) with expected articles, expected answers and provenance |
+| `datasets/kb_index.json` | The 25 real KB article numbers and titles, used to validate the dataset |
+| `adapters.py` | `RagAdapter` interface: `retrieve(query, top_k)` and `generate_answer(...)`. `LiveAdapter` (real Qdrant + agent) and `SnapshotAdapter` (offline replay) |
+| `record_snapshot.py` | Records live results into `fixtures/rag_snapshot.json` |
+| `hit_at_k.py` | Deterministic Hit@k (no LLM) |
+| `judge.py` | LLM judge for DeepEval, using the LiteLLM proxy from environment variables |
+| `run_rag_eval.py` | The single evaluation command |
+| `config.yaml` | Paths, `top_k`, and every threshold |
+| `reports/` | `rag_report.md` and `rag_report.json` (generated) |
+
+### Setup
+
+Python 3.12 and [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv sync
+```
+
+Environment variables (in `.env`; **never commit real values**):
+
+| Variable | Used for |
+|---|---|
+| `LITELLM_BASE_URL`, `LITELLM_API_KEY` | The judge (and the agent) connect to the LiteLLM proxy |
+| `EVAL_JUDGE_MODEL` | Judge model name. Optional: falls back to `LLM_MODEL` |
+| `LLM_MODEL` | Agent model (also the fallback judge model) |
+| `QDRANT_URL`, `QDRANT_API_KEY` | Live mode only |
+| `EMBEDDING_MODEL_NAME`, `SCORE_THRESHOLD`, `TOP_K` | Live mode; recorded in the snapshot metadata |
+
+No keys or model names are stored in code, config or snapshots.
+
+### Snapshot mode (default, offline)
+
+Replays the recorded retrieval and agent results, so it needs no Qdrant, embedding model or agent. Only the judge LLM is called.
+
+```bash
+uv run python -m eval.run_rag_eval
+```
+
+Save a terminal log as evidence:
+
+```bash
+mkdir -p docs/evidence
+uv run python -m eval.run_rag_eval 2>&1 | tee docs/evidence/run_log.txt
+```
+
+Useful options:
+
+| Option | Effect |
+|---|---|
+| `--no-llm` | Deterministic metrics only (Hit@3, refusal, score separation). No judge calls |
+| `--check-judge` | Sends one test prompt to the judge and exits |
+| `--no-cache` | Ignore cached judge results (`reports/deepeval_cache.json`) |
+| `--limit N` | First N cases only |
+| `--strict` | Exit code 1 if any threshold fails (useful in CI) |
+
+If a query is not found in the snapshot (for example after the dataset was edited), the run stops with an error asking you to re-record. It never falls back silently.
+
+### Live mode
+
+Runs the real stack: embeds each incident with the configured model, searches Qdrant, and runs the real ReAct agent. The agent uses `FakeWriteBackPort`, so **nothing is ever written to ServiceNow**.
+
+```bash
+uv run python -m eval.run_rag_eval --mode live
+```
+
+### Recording a new snapshot
+
+Needs the live stack. The embedding model is cached in the Docker volume, so the simplest way (especially on Windows) is to record inside the app container:
+
+```bash
+docker compose run --rm --no-deps fastapi_app python -m eval.record_snapshot
+```
+
+Useful options: `--force` (re-record everything), `--limit 3` (smoke test), `--out PATH` (write elsewhere). Cases already recorded are reused. To test a different `SCORE_THRESHOLD` without editing `.env`:
+
+```bash
+docker compose run --rm --no-deps -e SCORE_THRESHOLD=0.55 fastapi_app python -m eval.record_snapshot --out eval/fixtures/rag_snapshot_t055.json
+```
+
+(then point `paths.snapshot` in `eval/config.yaml` to that file).
+
+### Configuration (`eval/config.yaml`)
+
+- `retrieval.top_k`: chunks retrieved per query. `hit_k`: k for Hit@k. `dedupe_docs`: count several chunks of one article once.
+- `thresholds.*`: pass thresholds for every metric (see below).
+- `judge.*`: **names** of the environment variables that hold the judge model, URL and key. `max_concurrency` limits parallel judge calls.
+
+### Metrics
+
+| Metric | Type | What it answers |
+|---|---|---|
+| Hit@3 | Deterministic | Is at least one expected article among the top 3 retrieved articles? (answerable cases only) |
+| Contextual precision | DeepEval | Are the relevant chunks ranked above the irrelevant ones? |
+| Contextual recall | DeepEval | Does the retrieved text contain everything the expected answer needs? |
+| Contextual relevancy | DeepEval | How much of the retrieved text is actually on topic? |
+| Faithfulness | DeepEval | Does the suggested answer say only what the retrieved chunks support? |
+| Answer relevancy | DeepEval | Does the answer address the incident? |
+| Procedure and citation | DeepEval G-Eval (custom) | Is the answer a numbered procedure with a `[Article: KBxxxxxxx]` citation per step? |
+| Citation grounded | Deterministic | Does every cited article appear among the chunks the agent retrieved? |
+| Refusal rate | Deterministic | Share of unanswerable incidents that were escalated instead of answered |
+
+Retrieval metrics run on all answerable cases. Generation metrics run only on cases where the agent produced an answer.
+
+### Reading the report (`eval/reports/rag_report.md`)
+
+1. **Summary table:** each metric, its result, its threshold and PASS/FAIL. A DeepEval metric passes when its mean score reaches the threshold. A metric marked with errors means the judge failed on some cases; fix the connection and re-run (successful results are cached).
+2. **False refusals:** answerable incidents the agent escalated instead of answering. A high number with a high Hit@3 means retrieval is fine but the answer/escalate decision is too strict.
+3. **Score separation:** the best retrieval score for answerable versus unanswerable incidents. AUC is the chance that an answerable incident scores higher than an unanswerable one (1.0 is perfect separation, 0.5 is no separation). The sweep table shows, per threshold, how many answerable incidents would be kept and how many unanswerable ones rejected; the best balanced accuracy is marked. The second table uses the scores the **agent** saw, because it writes its own search queries.
+4. **Flagged cases:** every case with a miss, a wrong escalation, a hallucinated answer, or a metric below its threshold, with the reasons.
+5. **All cases:** expected versus retrieved articles, rank, best score and outcome.
+
+`rag_report.json` holds the same data plus the judge's written reason for each score.
+
+### Tests
+
+Offline, no LLM, no network:
+
+```bash
+uv run pytest tests/test_eval_dataset.py -q
+```
+
+They check the dataset schema (size, language mix, article IDs, numbered answers with citations, provenance, no copied titles) and the Hit@k logic.
