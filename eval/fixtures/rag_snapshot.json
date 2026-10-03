@@ -1,0 +1,2465 @@
+{
+  "meta": {
+    "recorded_at": "2026-10-03T16:03:23+00:00",
+    "top_k": 5,
+    "score_threshold": 0.7,
+    "embedding_model": "BAAI/bge-m3",
+    "llm_model": "gemini/gemini-3.6-flash",
+    "dataset_sha256": "650c644702e3f8a1622e1eaf4f40d87b873082efb05b0fb11ac870a87d75deb1"
+  },
+  "entries": [
+    {
+      "case_id": "rag_001",
+      "query": "Laptop drops off home Wi-Fi every 10-15 minutes\nWorking from home on a consumer router. Roughly every 10-15 minutes my laptop loses the wireless connection, then reconnects by itself a minute later. It is wrecking my calls. Phone on the same Wi-Fi seems fine.",
+      "retrieval": [
+        {
+          "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+          "doc_id": "KB0010174",
+          "section": "chunk_1",
+          "score": 0.6795,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 1
+        },
+        {
+          "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+          "doc_id": "KB0010174",
+          "section": "chunk_0",
+          "score": 0.6551,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the router and modem to clear temporary network issues Check Wi-Fi signal strength and consider moving closer to the router, repositioning the access point, or using a wired connection Inspect cable connections for damage or looseness",
+          "doc_id": "KB0010171",
+          "section": "chunk_1",
+          "score": 0.636,
+          "title": "Slow Internet Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.6078,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        },
+        {
+          "text": "Slow Internet Connection Restart the PC, then run a speed test and compare it to the plan's expected speed Restart the router and modem to clear temporary network issues",
+          "doc_id": "KB0010171",
+          "section": "chunk_0",
+          "score": 0.5876,
+          "title": "Slow Internet Connection",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "1. Check router settings to confirm the network is broadcasting correctly with proper security settings. [Article: KB0010174]\n2. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n3. Check for signal interference or an overloaded connection when working remotely on a consumer router. [Article: KB0010174]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010174"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+            "doc_id": "KB0010174",
+            "section": "chunk_1",
+            "score": 0.7035,
+            "title": "Wi-Fi Keeps Disconnecting",
+            "chunk_index": 1
+          }
+        ],
+        "max_score": 0.7035,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_002",
+      "query": "Pages crawl although Wi-Fi shows full bars\nConnection never drops, but websites take ages to load and a speed test gives about 4 Mbps while our plan is 50 Mbps. Happens on the laptop and the desktop.",
+      "retrieval": [
+        {
+          "text": "Slow Internet Connection Restart the PC, then run a speed test and compare it to the plan's expected speed Restart the router and modem to clear temporary network issues",
+          "doc_id": "KB0010171",
+          "section": "chunk_0",
+          "score": 0.5596,
+          "title": "Slow Internet Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the router and modem to clear temporary network issues Check Wi-Fi signal strength and consider moving closer to the router, repositioning the access point, or using a wired connection Inspect cable connections for damage or looseness",
+          "doc_id": "KB0010171",
+          "section": "chunk_1",
+          "score": 0.5556,
+          "title": "Slow Internet Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+          "doc_id": "KB0010174",
+          "section": "chunk_1",
+          "score": 0.5409,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 1
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.5377,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check for hardware wear — dust buildup, an aging drive, a failing battery, or thermal throttling — and clean or test as needed Recommend a hardware upgrade (RAM/SSD) if software fixes don't resolve it",
+          "doc_id": "KB0010156",
+          "section": "chunk_4",
+          "score": 0.5304,
+          "title": "Slow Computer Performance",
+          "chunk_index": 4
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6409,
+        "reason": "No relevant knowledge base articles were found for troubleshooting slow Wi-Fi throughput and speed test discrepancies despite strong signal strength."
+      }
+    },
+    {
+      "case_id": "rag_003",
+      "query": "Downloads crawl and Teams lags only when I am on the company VPN\nFrom the home network everything is quick. The moment I connect to the corporate VPN, file downloads crawl and Teams video stutters. Disconnecting the VPN fixes it immediately.",
+      "retrieval": [
+        {
+          "text": "Slow VPN Connection Check the base internet connection speed outside the VPN to isolate the bottleneck Connect to a VPN server location closer to the user for better performance Try switching VPN protocols if the client supports more than one",
+          "doc_id": "KB0010172",
+          "section": "chunk_0",
+          "score": 0.6131,
+          "title": "Slow VPN Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Try switching VPN protocols if the client supports more than one Escalate to network admins if performance stays poor across servers/protocols",
+          "doc_id": "KB0010172",
+          "section": "chunk_1",
+          "score": 0.6126,
+          "title": "Slow VPN Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check firewall rules and recent VPN rule changes that might be blocking access Verify current group/permission level with the network/system administrator, especially after onboarding or team changes Clear cached credentials or reload the user profile if it appears corrupted",
+          "doc_id": "KB0010165",
+          "section": "chunk_2",
+          "score": 0.5754,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 2
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.5517,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.5503,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6891,
+        "reason": "No relevant knowledge base article was found above the confidence threshold for VPN speed and Teams performance issues."
+      }
+    },
+    {
+      "case_id": "rag_004",
+      "query": "Wireless printer ignores my jobs since I moved to the guest network\nPrint jobs sit in the queue and never come out of the 2nd-floor wireless printer. Last week my laptop was moved onto the guest Wi-Fi. Printer has paper and no error lights.",
+      "retrieval": [
+        {
+          "text": "Printer Not Working Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network Check for and clear any paper jams following the manufacturer's guidance",
+          "doc_id": "KB0010155",
+          "section": "chunk_0",
+          "score": 0.5911,
+          "title": "Printer Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Re-map the printer or reselect the correct device in the print dialog if configuration looks off Confirm the user has the required permissions on shared/office printers For network printers, troubleshoot the Wi-Fi/network connection separately if needed",
+          "doc_id": "KB0010155",
+          "section": "chunk_2",
+          "score": 0.587,
+          "title": "Printer Not Working",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check for and clear any paper jams following the manufacturer's guidance Reinstall or update the printer driver for the exact model and OS Re-map the printer or reselect the correct device in the print dialog if configuration looks off",
+          "doc_id": "KB0010155",
+          "section": "chunk_1",
+          "score": 0.5417,
+          "title": "Printer Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+          "doc_id": "KB0010174",
+          "section": "chunk_1",
+          "score": 0.5171,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 1
+        },
+        {
+          "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+          "doc_id": "KB0010174",
+          "section": "chunk_0",
+          "score": 0.5142,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5357,
+        "reason": "No relevant knowledge base articles were found for resolving wireless printing issues on the guest Wi-Fi network."
+      }
+    },
+    {
+      "case_id": "rag_005",
+      "query": "Access denied when printing to the shared floor printer\nI joined the finance team last week. I can print to my own desk printer fine, but the shared printer on our floor rejects every job with an access denied message.",
+      "retrieval": [
+        {
+          "text": "Re-map the printer or reselect the correct device in the print dialog if configuration looks off Confirm the user has the required permissions on shared/office printers For network printers, troubleshoot the Wi-Fi/network connection separately if needed",
+          "doc_id": "KB0010155",
+          "section": "chunk_2",
+          "score": 0.5888,
+          "title": "Printer Not Working",
+          "chunk_index": 2
+        },
+        {
+          "text": "Printer Not Working Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network Check for and clear any paper jams following the manufacturer's guidance",
+          "doc_id": "KB0010155",
+          "section": "chunk_0",
+          "score": 0.5303,
+          "title": "Printer Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Can't Access Shared Network Drives or Resources Restart the PC as a first step Confirm the user's credentials are correct for the network resource Ping/verify the server or shared resource is actually reachable",
+          "doc_id": "KB0010165",
+          "section": "chunk_0",
+          "score": 0.5185,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check for and clear any paper jams following the manufacturer's guidance Reinstall or update the printer driver for the exact model and OS Re-map the printer or reselect the correct device in the print dialog if configuration looks off",
+          "doc_id": "KB0010155",
+          "section": "chunk_1",
+          "score": 0.5087,
+          "title": "Printer Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Clear cached credentials or reload the user profile if it appears corrupted Escalate to network admins if access should be granted but isn't",
+          "doc_id": "KB0010165",
+          "section": "chunk_3",
+          "score": 0.5061,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 3
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.624,
+        "reason": "No relevant knowledge base articles were found to resolve the shared printer access denied issue."
+      }
+    },
+    {
+      "case_id": "rag_006",
+      "query": "Password reset email never arrives\nI forgot my password and clicked the reset link, but no email has come in 30 minutes. I also changed phones recently so I am not sure my authenticator still works.",
+      "retrieval": [
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.7261,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.7057,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.6758,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.6237,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.6226,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "1. Direct the user to self-service password reset via email link or security questions. [Article: KB0010168]\n2. Check spam or junk folders and confirm the correct email is on file if the reset email does not arrive. [Article: KB0010168]\n3. Re-register MFA if the reset invalidates the previous token. [Article: KB0010168]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010168"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+            "doc_id": "KB0010168",
+            "section": "chunk_0",
+            "score": 0.7216,
+            "title": "Forgotten Password",
+            "chunk_index": 0
+          },
+          {
+            "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+            "doc_id": "KB0010168",
+            "section": "chunk_1",
+            "score": 0.7079,
+            "title": "Forgotten Password",
+            "chunk_index": 1
+          }
+        ],
+        "max_score": 0.7216,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_007",
+      "query": "Back from long leave and cannot remember my login at all\nReturned after three months of leave. I do not remember my username or my password, so I cannot even start the reset process.",
+      "retrieval": [
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.6753,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.6414,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.6145,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.6097,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If legitimate, reset the password and advise the user to pick a new, unique one If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication",
+          "doc_id": "KB0010162",
+          "section": "chunk_2",
+          "score": 0.5955,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "1. Attempt username recovery first, usually via the account's registered email. [Article: KB0010153]\n2. If username recovery fails, escalate to the help desk for manual identity verification. [Article: KB0010153]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010153"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+            "doc_id": "KB0010153",
+            "section": "chunk_0",
+            "score": 0.7008,
+            "title": "Lost Username and Password",
+            "chunk_index": 0
+          }
+        ],
+        "max_score": 0.7162,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_008",
+      "query": "Locked out after wrong password attempts and an odd sign-in alert\nAfter typing my password wrong several times the account is now locked. I am fairly sure it was me, but I also got a strange sign-in alert from another country this morning.",
+      "retrieval": [
+        {
+          "text": "If legitimate, reset the password and advise the user to pick a new, unique one If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication",
+          "doc_id": "KB0010162",
+          "section": "chunk_2",
+          "score": 0.7172,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check system logs/event viewer for the source of the failed attempts If legitimate, reset the password and advise the user to pick a new, unique one",
+          "doc_id": "KB0010162",
+          "section": "chunk_1",
+          "score": 0.7078,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 1
+        },
+        {
+          "text": "Account Locked After Failed Login Attempts Confirm whether the lockout came from the legitimate user or a suspicious login attempt Verify identity via phone, email, or pre-set security questions Check system logs/event viewer for the source of the failed attempts",
+          "doc_id": "KB0010162",
+          "section": "chunk_0",
+          "score": 0.6968,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 0
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.6664,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.6591,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6253,
+        "reason": "No knowledge base articles met the confidence threshold for resolving account lockout and suspicious sign-in alerts."
+      }
+    },
+    {
+      "case_id": "rag_009",
+      "query": "Clicked a fake 'mailbox full' email and typed my password\nAn email from 'IT-Helpdesk' said my mailbox was full and asked me to verify. I clicked the link and entered my password before I noticed the sender address looked wrong. What now?",
+      "retrieval": [
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.6512,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.6481,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.6234,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        },
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.6063,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.6059,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "1. Report the message through the official phishing-report channel. [Article: KB0010158]\n2. Reset the affected password immediately and review recent account activity if credentials may have already been entered. [Article: KB0010158]\n3. Isolate the device if a malicious link was already clicked. [Article: KB0010158]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010158"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+            "doc_id": "KB0010158",
+            "section": "chunk_1",
+            "score": 0.73,
+            "title": "Suspected Phishing Email",
+            "chunk_index": 1
+          }
+        ],
+        "max_score": 0.73,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_010",
+      "query": "PC acting strange after installing a free PDF converter, antivirus flagged a trojan\nAfter installing a free PDF converter my PC is slow, desktop icons changed, and the antivirus popped up a trojan warning. The laptop is also connected to the office network and mapped drives.",
+      "retrieval": [
+        {
+          "text": "Run an antivirus/anti-malware scan to rule out infection Check for hardware wear — dust buildup, an aging drive, a failing battery, or thermal throttling — and clean or test as needed",
+          "doc_id": "KB0010156",
+          "section": "chunk_3",
+          "score": 0.5849,
+          "title": "Slow Computer Performance",
+          "chunk_index": 3
+        },
+        {
+          "text": "Restart the system to clear hung services and stalled background tasks Reschedule heavy Windows updates to off-hours Run an antivirus/anti-malware scan to rule out infection",
+          "doc_id": "KB0010156",
+          "section": "chunk_2",
+          "score": 0.5552,
+          "title": "Slow Computer Performance",
+          "chunk_index": 2
+        },
+        {
+          "text": "Update antivirus definitions first if they're out of date, then rescan Reset any credentials that may have been exposed Review logs for signs of spread to shared drives or other systems",
+          "doc_id": "KB0010159",
+          "section": "chunk_1",
+          "score": 0.549,
+          "title": "Suspected Virus or Malware Infection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check for hardware wear — dust buildup, an aging drive, a failing battery, or thermal throttling — and clean or test as needed Recommend a hardware upgrade (RAM/SSD) if software fixes don't resolve it",
+          "doc_id": "KB0010156",
+          "section": "chunk_4",
+          "score": 0.5472,
+          "title": "Slow Computer Performance",
+          "chunk_index": 4
+        },
+        {
+          "text": "Suspected Virus or Malware Infection Disconnect the affected device from the network to contain any spread Run a full scan with up-to-date antivirus/anti-malware software Update antivirus definitions first if they're out of date, then rescan",
+          "doc_id": "KB0010159",
+          "section": "chunk_0",
+          "score": 0.5449,
+          "title": "Suspected Virus or Malware Infection",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5149,
+        "reason": "Escalating incident to human service desk agent due to potential malware/trojan infection and lack of relevant KB documentation."
+      }
+    },
+    {
+      "case_id": "rag_011",
+      "query": "Ads and banners keep appearing even with the browser closed\nSpammy advertisement banners keep showing up on my screen all day, including when I am not browsing. It started after visiting a free streaming site.",
+      "retrieval": [
+        {
+          "text": "Excessive Pop-ups or Spam Educate the user on recognizing suspicious sites/links and avoiding them Recommend keeping the browser updated and using trusted sites only Install or verify anti-malware software that blocks pop-ups and filters spam",
+          "doc_id": "KB0010167",
+          "section": "chunk_0",
+          "score": 0.6345,
+          "title": "Excessive Pop-ups or Spam",
+          "chunk_index": 0
+        },
+        {
+          "text": "Suspected Phishing Email Do not click any links or open attachments in the message Check for common red flags: urgency, spelling errors, requests for credentials or personal data Report the message through the official phishing-report channel",
+          "doc_id": "KB0010158",
+          "section": "chunk_0",
+          "score": 0.4959,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 0
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.4953,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        },
+        {
+          "text": "Suspected Virus or Malware Infection Disconnect the affected device from the network to contain any spread Run a full scan with up-to-date antivirus/anti-malware software Update antivirus definitions first if they're out of date, then rescan",
+          "doc_id": "KB0010159",
+          "section": "chunk_0",
+          "score": 0.482,
+          "title": "Suspected Virus or Malware Infection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.4818,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6355,
+        "reason": "No relevant knowledge base articles were found regarding persistent ad banners appearing when the browser is closed."
+      }
+    },
+    {
+      "case_id": "rag_012",
+      "query": "Laptop takes 10 minutes to boot and disk sits at 94%\nTask Manager shows the disk at 94% right after login and everything lags. The laptop is 4 years old and has a lot of leftover installers on it.",
+      "retrieval": [
+        {
+          "text": "Check Task Manager for processes spiking CPU or disk use and stop the ones that don't matter Free up disk space by clearing temp files and removing unused programs Restart the system to clear hung services and stalled background tasks",
+          "doc_id": "KB0010156",
+          "section": "chunk_1",
+          "score": 0.581,
+          "title": "Slow Computer Performance",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check for hardware wear — dust buildup, an aging drive, a failing battery, or thermal throttling — and clean or test as needed Recommend a hardware upgrade (RAM/SSD) if software fixes don't resolve it",
+          "doc_id": "KB0010156",
+          "section": "chunk_4",
+          "score": 0.5518,
+          "title": "Slow Computer Performance",
+          "chunk_index": 4
+        },
+        {
+          "text": "Slow Computer Performance Close unused applications and browser tabs consuming memory or CPU Check Task Manager for processes spiking CPU or disk use and stop the ones that don't matter",
+          "doc_id": "KB0010156",
+          "section": "chunk_0",
+          "score": 0.5467,
+          "title": "Slow Computer Performance",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the system to clear hung services and stalled background tasks Reschedule heavy Windows updates to off-hours Run an antivirus/anti-malware scan to rule out infection",
+          "doc_id": "KB0010156",
+          "section": "chunk_2",
+          "score": 0.5271,
+          "title": "Slow Computer Performance",
+          "chunk_index": 2
+        },
+        {
+          "text": "Run an antivirus/anti-malware scan to rule out infection Check for hardware wear — dust buildup, an aging drive, a failing battery, or thermal throttling — and clean or test as needed",
+          "doc_id": "KB0010156",
+          "section": "chunk_3",
+          "score": 0.5268,
+          "title": "Slow Computer Performance",
+          "chunk_index": 3
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6135,
+        "reason": "No relevant knowledge base articles were found to resolve the high disk usage and slow boot issue."
+      }
+    },
+    {
+      "case_id": "rag_013",
+      "query": "Laptop too hot to touch and shuts down during video calls\nThe base of my laptop is burning hot, the fan screams, and it switches itself off in the middle of long calls.",
+      "retrieval": [
+        {
+          "text": "Check fan operation and replace any fan that's noisy or not spinning Reduce room humidity/ambient heat where possible Watch for CPU throttling as a sign temperatures are climbing too high",
+          "doc_id": "KB0010151",
+          "section": "chunk_1",
+          "score": 0.6289,
+          "title": "Computer Overheating",
+          "chunk_index": 1
+        },
+        {
+          "text": "Computer Overheating Confirm vents aren't blocked and the device has room to breathe Clean dust from vents and internal components using compressed air (device powered off and unplugged) Check fan operation and replace any fan that's noisy or not spinning",
+          "doc_id": "KB0010151",
+          "section": "chunk_0",
+          "score": 0.6226,
+          "title": "Computer Overheating",
+          "chunk_index": 0
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.5596,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.5417,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check app-level and OS-level permissions for microphone/camera access If the issue persists, inspect for a hardware fault and consider replacement",
+          "doc_id": "KB0010169",
+          "section": "chunk_1",
+          "score": 0.54,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6415,
+        "reason": "No relevant knowledge base articles were found for laptop overheating and thermal shutdown during video calls."
+      }
+    },
+    {
+      "case_id": "rag_014",
+      "query": "Desktop completely dead after the power cut yesterday\nNo lights, no fan, nothing happens when I press the power button since the building lost power yesterday.",
+      "retrieval": [
+        {
+          "text": "Test the outlet with another device to rule out a dead outlet Look and listen for signs of life (fan spin, blinking LEDs) suggesting partial power Try a different outlet or power cable",
+          "doc_id": "KB0010166",
+          "section": "chunk_1",
+          "score": 0.5703,
+          "title": "Computer Won't Power On",
+          "chunk_index": 1
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.5634,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        },
+        {
+          "text": "Computer Won't Power On Check that the power cable is firmly connected at both the wall outlet and the machine Test the outlet with another device to rule out a dead outlet",
+          "doc_id": "KB0010166",
+          "section": "chunk_0",
+          "score": 0.5547,
+          "title": "Computer Won't Power On",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check cables and hubs for a loose or damaged connection For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link",
+          "doc_id": "KB0010170",
+          "section": "chunk_2",
+          "score": 0.5024,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 2
+        },
+        {
+          "text": "Blue Screen of Death (Windows Crash) Restart the computer; a one-off BSOD can be a temporary glitch Install pending Windows updates, which often include fixes for known BSOD causes Note the stop code shown on the blue screen for troubleshooting/escalation",
+          "doc_id": "KB0010164",
+          "section": "chunk_0",
+          "score": 0.4995,
+          "title": "Blue Screen of Death (Windows Crash)",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.638,
+        "reason": "No relevant knowledge base articles were found above the threshold to address a desktop computer failing to turn on after a power outage."
+      }
+    },
+    {
+      "case_id": "rag_015",
+      "query": "Blue screen with CRITICAL_PROCESS_DIED twice today\nMy laptop crashed to a blue screen showing CRITICAL_PROCESS_DIED, then did it again an hour later after restarting.",
+      "retrieval": [
+        {
+          "text": "Note the stop code shown on the blue screen for troubleshooting/escalation If BSODs repeat, escalate for hardware diagnostics (RAM, disk, drivers)",
+          "doc_id": "KB0010164",
+          "section": "chunk_1",
+          "score": 0.6921,
+          "title": "Blue Screen of Death (Windows Crash)",
+          "chunk_index": 1
+        },
+        {
+          "text": "Blue Screen of Death (Windows Crash) Restart the computer; a one-off BSOD can be a temporary glitch Install pending Windows updates, which often include fixes for known BSOD causes Note the stop code shown on the blue screen for troubleshooting/escalation",
+          "doc_id": "KB0010164",
+          "section": "chunk_0",
+          "score": 0.6915,
+          "title": "Blue Screen of Death (Windows Crash)",
+          "chunk_index": 0
+        },
+        {
+          "text": "Application Crashes or Behaves Unexpectedly Close and reopen the application to clear temporary glitches Check for and install available updates, since many crashes are fixed in newer releases Identify other running software that might conflict and disable it",
+          "doc_id": "KB0010150",
+          "section": "chunk_0",
+          "score": 0.5771,
+          "title": "Application Crashes or Behaves Unexpectedly",
+          "chunk_index": 0
+        },
+        {
+          "text": "Test the outlet with another device to rule out a dead outlet Look and listen for signs of life (fan spin, blinking LEDs) suggesting partial power Try a different outlet or power cable",
+          "doc_id": "KB0010166",
+          "section": "chunk_1",
+          "score": 0.57,
+          "title": "Computer Won't Power On",
+          "chunk_index": 1
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.5662,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6563,
+        "reason": "No relevant knowledge base articles were found for the CRITICAL_PROCESS_DIED blue screen error."
+      }
+    },
+    {
+      "case_id": "rag_016",
+      "query": "Excel keeps closing by itself on large files after adding a PDF add-in\nSince installing a PDF add-in, Excel closes without warning whenever I open a large workbook. Other Office apps are fine.",
+      "retrieval": [
+        {
+          "text": "Identify other running software that might conflict and disable it Document the exact error and steps to reproduce it before escalating",
+          "doc_id": "KB0010150",
+          "section": "chunk_1",
+          "score": 0.5002,
+          "title": "Application Crashes or Behaves Unexpectedly",
+          "chunk_index": 1
+        },
+        {
+          "text": "Excessive Pop-ups or Spam Educate the user on recognizing suspicious sites/links and avoiding them Recommend keeping the browser updated and using trusted sites only Install or verify anti-malware software that blocks pop-ups and filters spam",
+          "doc_id": "KB0010167",
+          "section": "chunk_0",
+          "score": 0.4975,
+          "title": "Excessive Pop-ups or Spam",
+          "chunk_index": 0
+        },
+        {
+          "text": "Look for an autosave/version history snapshot in the source app (e.g., Microsoft 365 rolling versions) Check cloud sync status for a paused or partial upload that might explain a \"missing\" file Check shared drive/server snapshots for a backup copy",
+          "doc_id": "KB0010154",
+          "section": "chunk_1",
+          "score": 0.4957,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 1
+        },
+        {
+          "text": "Run data recovery software as a last resort if the file can't be found any other way Recommend a proper backup solution going forward if none exists",
+          "doc_id": "KB0010154",
+          "section": "chunk_3",
+          "score": 0.4951,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 3
+        },
+        {
+          "text": "Unsaved Work Lost After a Crash or Closure Check the application's autosave/recovery folder for a recent draft Look for temporary files the application may have created during the session",
+          "doc_id": "KB0010160",
+          "section": "chunk_0",
+          "score": 0.4937,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5069,
+        "reason": "No relevant knowledge base articles were found for Excel crashing or closing automatically due to a PDF add-in."
+      }
+    },
+    {
+      "case_id": "rag_017",
+      "query": "Accounting software installer demands admin rights then fails halfway\nThe installer says it needs administrator permission. After I retried, it stopped at about 60% and now will not start again. My C: drive is nearly full.",
+      "retrieval": [
+        {
+          "text": "Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant Free up disk space if the drive is near capacity, since installs can fail without room for temp files",
+          "doc_id": "KB0010163",
+          "section": "chunk_2",
+          "score": 0.7332,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 2
+        },
+        {
+          "text": "Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit) Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant",
+          "doc_id": "KB0010163",
+          "section": "chunk_1",
+          "score": 0.6783,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 1
+        },
+        {
+          "text": "Free up disk space if the drive is near capacity, since installs can fail without room for temp files Remove leftover files from a previous install attempt before retrying Reinstall the application to repair corrupted files or missing components",
+          "doc_id": "KB0010163",
+          "section": "chunk_3",
+          "score": 0.6494,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 3
+        },
+        {
+          "text": "Application Won't Launch or Install Confirm the software is compatible with the current OS and hardware Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit)",
+          "doc_id": "KB0010163",
+          "section": "chunk_0",
+          "score": 0.6133,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 0
+        },
+        {
+          "text": "Software Updates Failing to Install Confirm the internet connection is stable Free up disk space, since updates often need room for temporary files Restart the update service or troubleshoot it using OS-specific support tools",
+          "doc_id": "KB0010157",
+          "section": "chunk_0",
+          "score": 0.597,
+          "title": "Software Updates Failing to Install",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5626,
+        "reason": "No relevant knowledge base articles were found for resolving the accounting software installation failure due to insufficient disk space or administrative rights."
+      }
+    },
+    {
+      "case_id": "rag_018",
+      "query": "Windows update stuck failing with error 0x800f0922 every day\nThe monthly Windows update keeps trying and failing every night with error 0x800f0922. Internet is fine.",
+      "retrieval": [
+        {
+          "text": "Software Updates Failing to Install Confirm the internet connection is stable Free up disk space, since updates often need room for temporary files Restart the update service or troubleshoot it using OS-specific support tools",
+          "doc_id": "KB0010157",
+          "section": "chunk_0",
+          "score": 0.6538,
+          "title": "Software Updates Failing to Install",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the update service or troubleshoot it using OS-specific support tools Retry the update after a full restart",
+          "doc_id": "KB0010157",
+          "section": "chunk_1",
+          "score": 0.6462,
+          "title": "Software Updates Failing to Install",
+          "chunk_index": 1
+        },
+        {
+          "text": "Video Conferencing or Meeting App Failure Update the conferencing app to the latest version, since outdated versions often lose camera/mic support Confirm the correct microphone/camera/speaker is selected in the app's settings",
+          "doc_id": "KB0010161",
+          "section": "chunk_0",
+          "score": 0.5444,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the system to clear hung services and stalled background tasks Reschedule heavy Windows updates to off-hours Run an antivirus/anti-malware scan to rule out infection",
+          "doc_id": "KB0010156",
+          "section": "chunk_2",
+          "score": 0.5416,
+          "title": "Slow Computer Performance",
+          "chunk_index": 2
+        },
+        {
+          "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+          "doc_id": "KB0010174",
+          "section": "chunk_0",
+          "score": 0.5374,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5821,
+        "reason": "No relevant knowledge base articles were found for resolving Windows Update error 0x800f0922."
+      }
+    },
+    {
+      "case_id": "rag_019",
+      "query": "Second screen stays black with 'No signal' at my new desk\nAt the new desk I plug my laptop into the extra HDMI monitor but it just shows 'No signal'. The laptop screen works normally.",
+      "retrieval": [
+        {
+          "text": "External Monitor Not Detected Check the video cable connection at both ends and try a different cable Update the graphics/display drivers Restart the computer to clear a temporary detection issue",
+          "doc_id": "KB0010152",
+          "section": "chunk_0",
+          "score": 0.649,
+          "title": "External Monitor Not Detected",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the computer to clear a temporary detection issue Confirm the correct display mode (extend/duplicate) is selected in display settings",
+          "doc_id": "KB0010152",
+          "section": "chunk_1",
+          "score": 0.6133,
+          "title": "External Monitor Not Detected",
+          "chunk_index": 1
+        },
+        {
+          "text": "For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link Update or reinstall the relevant driver if the device is detected but not functioning",
+          "doc_id": "KB0010170",
+          "section": "chunk_3",
+          "score": 0.6034,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 3
+        },
+        {
+          "text": "Check cables and hubs for a loose or damaged connection For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link",
+          "doc_id": "KB0010170",
+          "section": "chunk_2",
+          "score": 0.581,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 2
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.5612,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6816,
+        "reason": "No relevant knowledge base article was found to resolve the issue with the external monitor showing 'No signal'."
+      }
+    },
+    {
+      "case_id": "rag_020",
+      "query": "Flash drive with my presentation does not appear in Explorer\nI plugged in a flash drive with my presentation and its light blinks, but nothing shows up in File Explorer.",
+      "retrieval": [
+        {
+          "text": "External Monitor Not Detected Check the video cable connection at both ends and try a different cable Update the graphics/display drivers Restart the computer to clear a temporary detection issue",
+          "doc_id": "KB0010152",
+          "section": "chunk_0",
+          "score": 0.4869,
+          "title": "External Monitor Not Detected",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check cables, hubs, and docking stations for a loose connection or faulty link Update the relevant USB/storage controller drivers Confirm the drive is formatted in a way the OS supports",
+          "doc_id": "KB0010173",
+          "section": "chunk_1",
+          "score": 0.4811,
+          "title": "USB or External Storage Device Not Recognized",
+          "chunk_index": 1
+        },
+        {
+          "text": "USB or External Storage Device Not Recognized Restart the computer to clear a temporary detection glitch Try the device in a different USB port Check cables, hubs, and docking stations for a loose connection or faulty link",
+          "doc_id": "KB0010173",
+          "section": "chunk_0",
+          "score": 0.4804,
+          "title": "USB or External Storage Device Not Recognized",
+          "chunk_index": 0
+        },
+        {
+          "text": "Confirm the drive is formatted in a way the OS supports Test the device on another computer to confirm whether the device itself is faulty",
+          "doc_id": "KB0010173",
+          "section": "chunk_2",
+          "score": 0.4699,
+          "title": "USB or External Storage Device Not Recognized",
+          "chunk_index": 2
+        },
+        {
+          "text": "Restart the computer to clear a temporary detection issue Confirm the correct display mode (extend/duplicate) is selected in display settings",
+          "doc_id": "KB0010152",
+          "section": "chunk_1",
+          "score": 0.4663,
+          "title": "External Monitor Not Detected",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5254,
+        "reason": "No relevant knowledge base articles were found for troubleshooting a USB flash drive not appearing in File Explorer."
+      }
+    },
+    {
+      "case_id": "rag_021",
+      "query": "Keyboard and mouse on the dock are dead but the laptop keys work\nSince this morning the wireless mouse and keyboard receiver plugged into the docking station do nothing. The laptop's built-in keyboard works fine.",
+      "retrieval": [
+        {
+          "text": "For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link Update or reinstall the relevant driver if the device is detected but not functioning",
+          "doc_id": "KB0010170",
+          "section": "chunk_3",
+          "score": 0.6842,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 3
+        },
+        {
+          "text": "Check cables and hubs for a loose or damaged connection For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link",
+          "doc_id": "KB0010170",
+          "section": "chunk_2",
+          "score": 0.6708,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 2
+        },
+        {
+          "text": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station) Test the peripheral in a different port to rule out a port-level fault Swap in a known-working device to confirm whether the original device has failed",
+          "doc_id": "KB0010170",
+          "section": "chunk_0",
+          "score": 0.5945,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 0
+        },
+        {
+          "text": "Update or reinstall the relevant driver if the device is detected but not functioning Replace the device if it fails consistently across ports and cables",
+          "doc_id": "KB0010170",
+          "section": "chunk_4",
+          "score": 0.5871,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 4
+        },
+        {
+          "text": "Swap in a known-working device to confirm whether the original device has failed Check cables and hubs for a loose or damaged connection",
+          "doc_id": "KB0010170",
+          "section": "chunk_1",
+          "score": 0.5767,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6299,
+        "reason": "No relevant knowledge base articles were found to resolve the issue with the USB keyboard and mouse receiver connected to the docking station."
+      }
+    },
+    {
+      "case_id": "rag_022",
+      "query": "Nobody can hear me in meetings although my headset worked yesterday\nIn Teams calls colleagues say they cannot hear me. The headset worked yesterday and still shows up in the device list. I recently changed some Windows privacy settings.",
+      "retrieval": [
+        {
+          "text": "Microphone or Webcam Not Working Restart the computer first Update the audio/webcam drivers Confirm the correct input device is selected in the app's settings Check app-level and OS-level permissions for microphone/camera access",
+          "doc_id": "KB0010169",
+          "section": "chunk_0",
+          "score": 0.5601,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check app-level and OS-level permissions for microphone/camera access If the issue persists, inspect for a hardware fault and consider replacement",
+          "doc_id": "KB0010169",
+          "section": "chunk_1",
+          "score": 0.5304,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check firewall rules and recent VPN rule changes that might be blocking access Verify current group/permission level with the network/system administrator, especially after onboarding or team changes Clear cached credentials or reload the user profile if it appears corrupted",
+          "doc_id": "KB0010165",
+          "section": "chunk_2",
+          "score": 0.5273,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 2
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.5241,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        },
+        {
+          "text": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station) Test the peripheral in a different port to rule out a port-level fault Swap in a known-working device to confirm whether the original device has failed",
+          "doc_id": "KB0010170",
+          "section": "chunk_0",
+          "score": 0.5196,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5324,
+        "reason": "No relevant knowledge base articles were found regarding microphone privacy settings and Teams audio issues."
+      }
+    },
+    {
+      "case_id": "rag_023",
+      "query": "Cannot share my screen in the browser meeting and the call keeps freezing\nJoining the meeting through the browser, the screen-share button does nothing and the video keeps freezing. Someone else is downloading a large update on our connection.",
+      "retrieval": [
+        {
+          "text": "Confirm the correct microphone/camera/speaker is selected in the app's settings Restart the browser and clear cached data if joining via a browser Disable or update browser plugins that may be blocking screen sharing Close background programs that are consuming bandwidth",
+          "doc_id": "KB0010161",
+          "section": "chunk_1",
+          "score": 0.6509,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 1
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.6073,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        },
+        {
+          "text": "Video Conferencing or Meeting App Failure Update the conferencing app to the latest version, since outdated versions often lose camera/mic support Confirm the correct microphone/camera/speaker is selected in the app's settings",
+          "doc_id": "KB0010161",
+          "section": "chunk_0",
+          "score": 0.6063,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check app-level and OS-level permissions for microphone/camera access If the issue persists, inspect for a hardware fault and consider replacement",
+          "doc_id": "KB0010169",
+          "section": "chunk_1",
+          "score": 0.5718,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Microphone or Webcam Not Working Restart the computer first Update the audio/webcam drivers Confirm the correct input device is selected in the app's settings Check app-level and OS-level permissions for microphone/camera access",
+          "doc_id": "KB0010169",
+          "section": "chunk_0",
+          "score": 0.5552,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6363,
+        "reason": "No relevant knowledge base articles were found for browser meeting screen sharing and video freezing issues."
+      }
+    },
+    {
+      "case_id": "rag_024",
+      "query": "Mapped Z: drive shows a red X since I started working from home\nThe Z: shared drive shows a red X when I work remotely and the folder will not open. My credentials work for other things.",
+      "retrieval": [
+        {
+          "text": "Ping/verify the server or shared resource is actually reachable Check the drive mapping and whether the mapped path dropped after a network change Check firewall rules and recent VPN rule changes that might be blocking access",
+          "doc_id": "KB0010165",
+          "section": "chunk_1",
+          "score": 0.5985,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 1
+        },
+        {
+          "text": "Can't Access Shared Network Drives or Resources Restart the PC as a first step Confirm the user's credentials are correct for the network resource Ping/verify the server or shared resource is actually reachable",
+          "doc_id": "KB0010165",
+          "section": "chunk_0",
+          "score": 0.5902,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 0
+        },
+        {
+          "text": "Clear cached credentials or reload the user profile if it appears corrupted Escalate to network admins if access should be granted but isn't",
+          "doc_id": "KB0010165",
+          "section": "chunk_3",
+          "score": 0.5206,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 3
+        },
+        {
+          "text": "Check firewall rules and recent VPN rule changes that might be blocking access Verify current group/permission level with the network/system administrator, especially after onboarding or team changes Clear cached credentials or reload the user profile if it appears corrupted",
+          "doc_id": "KB0010165",
+          "section": "chunk_2",
+          "score": 0.517,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check cables, hubs, and docking stations for a loose connection or faulty link Update the relevant USB/storage controller drivers Confirm the drive is formatted in a way the OS supports",
+          "doc_id": "KB0010173",
+          "section": "chunk_1",
+          "score": 0.5105,
+          "title": "USB or External Storage Device Not Recognized",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5571,
+        "reason": "No relevant knowledge base articles were found for troubleshooting the mapped Z: drive showing a red X while working remotely."
+      }
+    },
+    {
+      "case_id": "rag_025",
+      "query": "Budget spreadsheet disappeared from my Documents folder\nI cannot find the Q3 budget spreadsheet that was in my Documents folder yesterday. I did not delete it and I use OneDrive, so maybe something did not sync.",
+      "retrieval": [
+        {
+          "text": "Missing or Accidentally Deleted Files Search for the file by name across local and cloud locations Check the Recycle Bin / Trash Look for an autosave/version history snapshot in the source app (e.g., Microsoft 365 rolling versions)",
+          "doc_id": "KB0010154",
+          "section": "chunk_0",
+          "score": 0.5828,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 0
+        },
+        {
+          "text": "Look for an autosave/version history snapshot in the source app (e.g., Microsoft 365 rolling versions) Check cloud sync status for a paused or partial upload that might explain a \"missing\" file Check shared drive/server snapshots for a backup copy",
+          "doc_id": "KB0010154",
+          "section": "chunk_1",
+          "score": 0.5743,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 1
+        },
+        {
+          "text": "Unsaved Work Lost After a Crash or Closure Check the application's autosave/recovery folder for a recent draft Look for temporary files the application may have created during the session",
+          "doc_id": "KB0010160",
+          "section": "chunk_0",
+          "score": 0.5397,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Look for temporary files the application may have created during the session Use data recovery tools as a last resort; note that success isn't guaranteed",
+          "doc_id": "KB0010160",
+          "section": "chunk_1",
+          "score": 0.499,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check shared drive/server snapshots for a backup copy Ask the user to pause activity to avoid overwriting the file while it's being recovered Run data recovery software as a last resort if the file can't be found any other way",
+          "doc_id": "KB0010154",
+          "section": "chunk_2",
+          "score": 0.4787,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6069,
+        "reason": "No relevant knowledge base articles were found above the confidence threshold for recovering missing files in OneDrive or the Documents folder."
+      }
+    },
+    {
+      "case_id": "rag_026",
+      "query": "Word crashed after two hours of writing and I never saved\nI was writing a long report in Word, the application froze and closed, and when I reopened it there was nothing. I never pressed save.",
+      "retrieval": [
+        {
+          "text": "Unsaved Work Lost After a Crash or Closure Check the application's autosave/recovery folder for a recent draft Look for temporary files the application may have created during the session",
+          "doc_id": "KB0010160",
+          "section": "chunk_0",
+          "score": 0.5569,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Application Crashes or Behaves Unexpectedly Close and reopen the application to clear temporary glitches Check for and install available updates, since many crashes are fixed in newer releases Identify other running software that might conflict and disable it",
+          "doc_id": "KB0010150",
+          "section": "chunk_0",
+          "score": 0.5249,
+          "title": "Application Crashes or Behaves Unexpectedly",
+          "chunk_index": 0
+        },
+        {
+          "text": "Look for temporary files the application may have created during the session Use data recovery tools as a last resort; note that success isn't guaranteed",
+          "doc_id": "KB0010160",
+          "section": "chunk_1",
+          "score": 0.5242,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 1
+        },
+        {
+          "text": "If legitimate, reset the password and advise the user to pick a new, unique one If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication",
+          "doc_id": "KB0010162",
+          "section": "chunk_2",
+          "score": 0.4921,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check shared drive/server snapshots for a backup copy Ask the user to pause activity to avoid overwriting the file while it's being recovered Run data recovery software as a last resort if the file can't be found any other way",
+          "doc_id": "KB0010154",
+          "section": "chunk_2",
+          "score": 0.4903,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6411,
+        "reason": "No relevant knowledge base articles were found for recovering unsaved Word documents after an application crash."
+      }
+    },
+    {
+      "case_id": "rag_027",
+      "query": "Cannot open the shared drive and the VPN is painfully slow\nWorking remotely: the team shared drive will not open, and the VPN I use to reach it is extremely slow compared with my normal home internet.",
+      "retrieval": [
+        {
+          "text": "Slow VPN Connection Check the base internet connection speed outside the VPN to isolate the bottleneck Connect to a VPN server location closer to the user for better performance Try switching VPN protocols if the client supports more than one",
+          "doc_id": "KB0010172",
+          "section": "chunk_0",
+          "score": 0.6758,
+          "title": "Slow VPN Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Try switching VPN protocols if the client supports more than one Escalate to network admins if performance stays poor across servers/protocols",
+          "doc_id": "KB0010172",
+          "section": "chunk_1",
+          "score": 0.6415,
+          "title": "Slow VPN Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Ping/verify the server or shared resource is actually reachable Check the drive mapping and whether the mapped path dropped after a network change Check firewall rules and recent VPN rule changes that might be blocking access",
+          "doc_id": "KB0010165",
+          "section": "chunk_1",
+          "score": 0.6386,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 1
+        },
+        {
+          "text": "Can't Access Shared Network Drives or Resources Restart the PC as a first step Confirm the user's credentials are correct for the network resource Ping/verify the server or shared resource is actually reachable",
+          "doc_id": "KB0010165",
+          "section": "chunk_0",
+          "score": 0.6193,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check firewall rules and recent VPN rule changes that might be blocking access Verify current group/permission level with the network/system administrator, especially after onboarding or team changes Clear cached credentials or reload the user profile if it appears corrupted",
+          "doc_id": "KB0010165",
+          "section": "chunk_2",
+          "score": 0.6119,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6491,
+        "reason": "No relevant knowledge base articles were found above the confidence threshold to resolve the VPN slowness and shared drive access issues."
+      }
+    },
+    {
+      "case_id": "rag_028",
+      "query": "internet disconnected again\nMy internet is disconnected again this morning. Modem lights look normal.",
+      "retrieval": [
+        {
+          "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+          "doc_id": "KB0010174",
+          "section": "chunk_0",
+          "score": 0.6758,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 0
+        },
+        {
+          "text": "Slow Internet Connection Restart the PC, then run a speed test and compare it to the plan's expected speed Restart the router and modem to clear temporary network issues",
+          "doc_id": "KB0010171",
+          "section": "chunk_0",
+          "score": 0.6698,
+          "title": "Slow Internet Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the router and modem to clear temporary network issues Check Wi-Fi signal strength and consider moving closer to the router, repositioning the access point, or using a wired connection Inspect cable connections for damage or looseness",
+          "doc_id": "KB0010171",
+          "section": "chunk_1",
+          "score": 0.6545,
+          "title": "Slow Internet Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+          "doc_id": "KB0010174",
+          "section": "chunk_1",
+          "score": 0.6463,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 1
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.6431,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6522,
+        "reason": "No relevant knowledge base articles were found for the internet disconnection issue."
+      }
+    },
+    {
+      "case_id": "rag_029",
+      "query": "printr not workng\nprintr wont print anythin, shows in the list tho",
+      "retrieval": [
+        {
+          "text": "Check for and clear any paper jams following the manufacturer's guidance Reinstall or update the printer driver for the exact model and OS Re-map the printer or reselect the correct device in the print dialog if configuration looks off",
+          "doc_id": "KB0010155",
+          "section": "chunk_1",
+          "score": 0.5702,
+          "title": "Printer Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Printer Not Working Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network Check for and clear any paper jams following the manufacturer's guidance",
+          "doc_id": "KB0010155",
+          "section": "chunk_0",
+          "score": 0.567,
+          "title": "Printer Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Re-map the printer or reselect the correct device in the print dialog if configuration looks off Confirm the user has the required permissions on shared/office printers For network printers, troubleshoot the Wi-Fi/network connection separately if needed",
+          "doc_id": "KB0010155",
+          "section": "chunk_2",
+          "score": 0.5306,
+          "title": "Printer Not Working",
+          "chunk_index": 2
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.4789,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        },
+        {
+          "text": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station) Test the peripheral in a different port to rule out a port-level fault Swap in a known-working device to confirm whether the original device has failed",
+          "doc_id": "KB0010170",
+          "section": "chunk_0",
+          "score": 0.4766,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "1. Check for and clear any paper jams following the manufacturer's guidance. [Article: KB0010155]\n2. Reinstall or update the printer driver for the exact model and OS. [Article: KB0010155]\n3. Re-map the printer or reselect the correct device in the print dialog if configuration looks off. [Article: KB0010155]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010155"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Check for and clear any paper jams following the manufacturer's guidance Reinstall or update the printer driver for the exact model and OS Re-map the printer or reselect the correct device in the print dialog if configuration looks off",
+            "doc_id": "KB0010155",
+            "section": "chunk_1",
+            "score": 0.7199,
+            "title": "Printer Not Working",
+            "chunk_index": 1
+          }
+        ],
+        "max_score": 0.7199,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_030",
+      "query": "الواي فاي بيفصل كل شوية\nبشتغل من البيت من يومين، واللاب توب بيفصل من الواي فاي كل ١٠ أو ١٥ دقيقة وبيرجع لوحده بعد شوية، وده بيقطع الاجتماعات.",
+      "retrieval": [
+        {
+          "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+          "doc_id": "KB0010174",
+          "section": "chunk_1",
+          "score": 0.5881,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 1
+        },
+        {
+          "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+          "doc_id": "KB0010174",
+          "section": "chunk_0",
+          "score": 0.5801,
+          "title": "Wi-Fi Keeps Disconnecting",
+          "chunk_index": 0
+        },
+        {
+          "text": "Restart the router and modem to clear temporary network issues Check Wi-Fi signal strength and consider moving closer to the router, repositioning the access point, or using a wired connection Inspect cable connections for damage or looseness",
+          "doc_id": "KB0010171",
+          "section": "chunk_1",
+          "score": 0.5694,
+          "title": "Slow Internet Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check cables and hubs for a loose or damaged connection For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link",
+          "doc_id": "KB0010170",
+          "section": "chunk_2",
+          "score": 0.5556,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 2
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.5544,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "1. Restart the PC first. [Article: KB0010174]\n2. Have the device \"forget\" the network, then reconnect from scratch. [Article: KB0010174]\n3. Check router settings to confirm the network is broadcasting correctly with proper security settings. [Article: KB0010174]\n4. Restart the router to clear temporary glitches causing repeated drops. [Article: KB0010174]\n5. For remote workers on consumer routers, check for signal interference or an overloaded connection. [Article: KB0010174]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010174"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Wi-Fi Keeps Disconnecting Restart the PC first Have the device \"forget\" the network, then reconnect from scratch Check router settings to confirm the network is broadcasting correctly with proper security settings",
+            "doc_id": "KB0010174",
+            "section": "chunk_0",
+            "score": 0.7324,
+            "title": "Wi-Fi Keeps Disconnecting",
+            "chunk_index": 0
+          },
+          {
+            "text": "Check router settings to confirm the network is broadcasting correctly with proper security settings Restart the router to clear temporary glitches causing repeated drops For remote workers on consumer routers, check for signal interference or an overloaded connection",
+            "doc_id": "KB0010174",
+            "section": "chunk_1",
+            "score": 0.7282,
+            "title": "Wi-Fi Keeps Disconnecting",
+            "chunk_index": 1
+          }
+        ],
+        "max_score": 0.7324,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_031",
+      "query": "الطابعة مش بتطبع\nبعمل Print من الشغل والمستند بيفضل واقف في الطابور ومفيش حاجة بتخرج من الطابعة، والطابعة شغالة وفيها ورق.",
+      "retrieval": [
+        {
+          "text": "Check for and clear any paper jams following the manufacturer's guidance Reinstall or update the printer driver for the exact model and OS Re-map the printer or reselect the correct device in the print dialog if configuration looks off",
+          "doc_id": "KB0010155",
+          "section": "chunk_1",
+          "score": 0.6454,
+          "title": "Printer Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Printer Not Working Verify the cable connection or, for wireless printers, confirm both devices are on the same Wi-Fi network Check for and clear any paper jams following the manufacturer's guidance",
+          "doc_id": "KB0010155",
+          "section": "chunk_0",
+          "score": 0.6423,
+          "title": "Printer Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Re-map the printer or reselect the correct device in the print dialog if configuration looks off Confirm the user has the required permissions on shared/office printers For network printers, troubleshoot the Wi-Fi/network connection separately if needed",
+          "doc_id": "KB0010155",
+          "section": "chunk_2",
+          "score": 0.641,
+          "title": "Printer Not Working",
+          "chunk_index": 2
+        },
+        {
+          "text": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station) Test the peripheral in a different port to rule out a port-level fault Swap in a known-working device to confirm whether the original device has failed",
+          "doc_id": "KB0010170",
+          "section": "chunk_0",
+          "score": 0.5006,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 0
+        },
+        {
+          "text": "Update or reinstall the relevant driver if the device is detected but not functioning Replace the device if it fails consistently across ports and cables",
+          "doc_id": "KB0010170",
+          "section": "chunk_4",
+          "score": 0.4944,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 4
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5594,
+        "reason": "Escalating to a human service desk agent because no knowledge base articles met the relevance threshold for print jobs stuck in the queue."
+      }
+    },
+    {
+      "case_id": "rag_032",
+      "query": "نسيت كلمة السر ومش جايلي إيميل الاستعادة\nضغطت على نسيت كلمة المرور أكتر من مرة بس الرسالة مش بتوصل على الإيميل، وغيرت موبايلي من فترة.",
+      "retrieval": [
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.6953,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.6771,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.6712,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.6197,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.6129,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "1. Direct the user to self-service password reset using an email link or security questions. [Article: KB0010168]\n2. If the reset email does not arrive, check the spam or junk folder and confirm that the correct email is on file. [Article: KB0010168]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010168"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+            "doc_id": "KB0010168",
+            "section": "chunk_0",
+            "score": 0.7169,
+            "title": "Forgotten Password",
+            "chunk_index": 0
+          }
+        ],
+        "max_score": 0.7169,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_033",
+      "query": "VPN بطيء جدًا بس النت العادي سريع\nأول ما بتصل بالـ VPN كل حاجة بتبقى slow والـ downloads بتاخد وقت كبير، لكن من غير VPN النت عادي وسريع.",
+      "retrieval": [
+        {
+          "text": "Slow VPN Connection Check the base internet connection speed outside the VPN to isolate the bottleneck Connect to a VPN server location closer to the user for better performance Try switching VPN protocols if the client supports more than one",
+          "doc_id": "KB0010172",
+          "section": "chunk_0",
+          "score": 0.7214,
+          "title": "Slow VPN Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Try switching VPN protocols if the client supports more than one Escalate to network admins if performance stays poor across servers/protocols",
+          "doc_id": "KB0010172",
+          "section": "chunk_1",
+          "score": 0.6824,
+          "title": "Slow VPN Connection",
+          "chunk_index": 1
+        },
+        {
+          "text": "Slow Internet Connection Restart the PC, then run a speed test and compare it to the plan's expected speed Restart the router and modem to clear temporary network issues",
+          "doc_id": "KB0010171",
+          "section": "chunk_0",
+          "score": 0.5979,
+          "title": "Slow Internet Connection",
+          "chunk_index": 0
+        },
+        {
+          "text": "Inspect cable connections for damage or looseness Rule out crowded channels or aging network hardware as a cause For remote workers, test the modem and check for ISP outages Escalate to the ISP if the issue persists after local troubleshooting",
+          "doc_id": "KB0010171",
+          "section": "chunk_2",
+          "score": 0.5771,
+          "title": "Slow Internet Connection",
+          "chunk_index": 2
+        },
+        {
+          "text": "Restart the router and modem to clear temporary network issues Check Wi-Fi signal strength and consider moving closer to the router, repositioning the access point, or using a wired connection Inspect cable connections for damage or looseness",
+          "doc_id": "KB0010171",
+          "section": "chunk_1",
+          "score": 0.5701,
+          "title": "Slow Internet Connection",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "1. Check the base internet connection speed outside the VPN to isolate the bottleneck. [Article: KB0010172]\n2. Connect to a VPN server location closer to the user for better performance. [Article: KB0010172]\n3. Try switching VPN protocols if the client supports more than one. [Article: KB0010172]\n4. Escalate to network admins if performance stays poor across servers/protocols. [Article: KB0010172]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010172"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Try switching VPN protocols if the client supports more than one Escalate to network admins if performance stays poor across servers/protocols",
+            "doc_id": "KB0010172",
+            "section": "chunk_1",
+            "score": 0.7338,
+            "title": "Slow VPN Connection",
+            "chunk_index": 1
+          },
+          {
+            "text": "Slow VPN Connection Check the base internet connection speed outside the VPN to isolate the bottleneck Connect to a VPN server location closer to the user for better performance Try switching VPN protocols if the client supports more than one",
+            "doc_id": "KB0010172",
+            "section": "chunk_0",
+            "score": 0.7186,
+            "title": "Slow VPN Connection",
+            "chunk_index": 0
+          }
+        ],
+        "max_score": 0.7338,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_034",
+      "query": "اللاب توب سخن جدًا وبيقفل لوحده\nالجهاز بيسخن بشكل مبالغ فيه وصوت المروحة عالي، وبيطفي فجأة وأنا في وسط الاجتماع.",
+      "retrieval": [
+        {
+          "text": "Computer Overheating Confirm vents aren't blocked and the device has room to breathe Clean dust from vents and internal components using compressed air (device powered off and unplugged) Check fan operation and replace any fan that's noisy or not spinning",
+          "doc_id": "KB0010151",
+          "section": "chunk_0",
+          "score": 0.6045,
+          "title": "Computer Overheating",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check fan operation and replace any fan that's noisy or not spinning Reduce room humidity/ambient heat where possible Watch for CPU throttling as a sign temperatures are climbing too high",
+          "doc_id": "KB0010151",
+          "section": "chunk_1",
+          "score": 0.5859,
+          "title": "Computer Overheating",
+          "chunk_index": 1
+        },
+        {
+          "text": "Test the outlet with another device to rule out a dead outlet Look and listen for signs of life (fan spin, blinking LEDs) suggesting partial power Try a different outlet or power cable",
+          "doc_id": "KB0010166",
+          "section": "chunk_1",
+          "score": 0.5504,
+          "title": "Computer Won't Power On",
+          "chunk_index": 1
+        },
+        {
+          "text": "Try a different outlet or power cable If there's still no response, escalate for hardware diagnostics (PSU/motherboard)",
+          "doc_id": "KB0010166",
+          "section": "chunk_2",
+          "score": 0.5258,
+          "title": "Computer Won't Power On",
+          "chunk_index": 2
+        },
+        {
+          "text": "Check cables and hubs for a loose or damaged connection For docking stations, test devices directly on the laptop to isolate whether the dock is the weak link",
+          "doc_id": "KB0010170",
+          "section": "chunk_2",
+          "score": 0.523,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6796,
+        "reason": "No relevant knowledge base article was found regarding laptop overheating and unexpected shutdowns."
+      }
+    },
+    {
+      "case_id": "rag_035",
+      "query": "الميكروفون مش شغال في Teams (others can't hear me)\nالميكروفون كان شغال إمبارح، النهاردة في الاجتماع الناس بتقول إنهم مش سامعيني، وجربت أقفل وأفتح Teams من غير فايدة.",
+      "retrieval": [
+        {
+          "text": "Microphone or Webcam Not Working Restart the computer first Update the audio/webcam drivers Confirm the correct input device is selected in the app's settings Check app-level and OS-level permissions for microphone/camera access",
+          "doc_id": "KB0010169",
+          "section": "chunk_0",
+          "score": 0.607,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check app-level and OS-level permissions for microphone/camera access If the issue persists, inspect for a hardware fault and consider replacement",
+          "doc_id": "KB0010169",
+          "section": "chunk_1",
+          "score": 0.5906,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "Video Conferencing or Meeting App Failure Update the conferencing app to the latest version, since outdated versions often lose camera/mic support Confirm the correct microphone/camera/speaker is selected in the app's settings",
+          "doc_id": "KB0010161",
+          "section": "chunk_0",
+          "score": 0.5257,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Close background programs that are consuming bandwidth If the issue is device-specific, check that hardware and drivers are current",
+          "doc_id": "KB0010161",
+          "section": "chunk_2",
+          "score": 0.5224,
+          "title": "Video Conferencing or Meeting App Failure",
+          "chunk_index": 2
+        },
+        {
+          "text": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station) Test the peripheral in a different port to rule out a port-level fault Swap in a known-working device to confirm whether the original device has failed",
+          "doc_id": "KB0010170",
+          "section": "chunk_0",
+          "score": 0.5209,
+          "title": "Peripheral Devices Not Working (Keyboard, Mouse, Docking Station)",
+          "chunk_index": 0
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.6318,
+        "reason": "No relevant knowledge base articles were found above the confidence threshold for resolving Microsoft Teams microphone issues."
+      }
+    },
+    {
+      "case_id": "rag_036",
+      "query": "تم قفل حسابي بعد عدة محاولات دخول فاشلة\nظهرت لي رسالة أن الحساب مقفل بعد عدة محاولات فاشلة لتسجيل الدخول. أعتقد أنني أخطأت في كتابة كلمة المرور، لكن لا أستطيع الدخول الآن.",
+      "retrieval": [
+        {
+          "text": "Check system logs/event viewer for the source of the failed attempts If legitimate, reset the password and advise the user to pick a new, unique one",
+          "doc_id": "KB0010162",
+          "section": "chunk_1",
+          "score": 0.7447,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 1
+        },
+        {
+          "text": "Account Locked After Failed Login Attempts Confirm whether the lockout came from the legitimate user or a suspicious login attempt Verify identity via phone, email, or pre-set security questions Check system logs/event viewer for the source of the failed attempts",
+          "doc_id": "KB0010162",
+          "section": "chunk_0",
+          "score": 0.7203,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 0
+        },
+        {
+          "text": "If legitimate, reset the password and advise the user to pick a new, unique one If suspicious activity is suspected, reset the password immediately, sign out all sessions, and enable two-factor authentication",
+          "doc_id": "KB0010162",
+          "section": "chunk_2",
+          "score": 0.6985,
+          "title": "Account Locked After Failed Login Attempts",
+          "chunk_index": 2
+        },
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.6785,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.6686,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "1. Confirm whether the lockout came from the legitimate user or a suspicious login attempt. [Article: KB0010162]\n2. Verify identity via phone, email, or pre-set security questions. [Article: KB0010162]\n3. Check system logs/event viewer for the source of the failed attempts. [Article: KB0010162]\n4. If legitimate, reset the password and advise the user to pick a new, unique one. [Article: KB0010162]",
+        "outcome": "suggested",
+        "sources": [
+          "KB0010162"
+        ],
+        "retrieved_chunks": [
+          {
+            "text": "Check system logs/event viewer for the source of the failed attempts If legitimate, reset the password and advise the user to pick a new, unique one",
+            "doc_id": "KB0010162",
+            "section": "chunk_1",
+            "score": 0.7496,
+            "title": "Account Locked After Failed Login Attempts",
+            "chunk_index": 1
+          },
+          {
+            "text": "Account Locked After Failed Login Attempts Confirm whether the lockout came from the legitimate user or a suspicious login attempt Verify identity via phone, email, or pre-set security questions Check system logs/event viewer for the source of the failed attempts",
+            "doc_id": "KB0010162",
+            "section": "chunk_0",
+            "score": 0.7423,
+            "title": "Account Locked After Failed Login Attempts",
+            "chunk_index": 0
+          }
+        ],
+        "max_score": 0.7496,
+        "reason": null
+      }
+    },
+    {
+      "case_id": "rag_037",
+      "query": "Company email stuck in the outbox on my iPhone\nEmails I send from the Mail app on my iPhone sit in the outbox and never go out, though incoming mail works.",
+      "retrieval": [
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.4637,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.4492,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        },
+        {
+          "text": "Software Updates Failing to Install Confirm the internet connection is stable Free up disk space, since updates often need room for temporary files Restart the update service or troubleshoot it using OS-specific support tools",
+          "doc_id": "KB0010157",
+          "section": "chunk_0",
+          "score": 0.4476,
+          "title": "Software Updates Failing to Install",
+          "chunk_index": 0
+        },
+        {
+          "text": "Check app-level and OS-level permissions for microphone/camera access If the issue persists, inspect for a hardware fault and consider replacement",
+          "doc_id": "KB0010169",
+          "section": "chunk_1",
+          "score": 0.4447,
+          "title": "Microphone or Webcam Not Working",
+          "chunk_index": 1
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.4406,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.509,
+        "reason": "No relevant knowledge base articles were found for resolving emails stuck in the iOS Mail app outbox."
+      }
+    },
+    {
+      "case_id": "rag_038",
+      "query": "Need Adobe Acrobat Pro licence approved and installed\nPlease approve and install a licensed copy of Adobe Acrobat Pro on my workstation. My manager has agreed verbally.",
+      "retrieval": [
+        {
+          "text": "Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit) Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant",
+          "doc_id": "KB0010163",
+          "section": "chunk_1",
+          "score": 0.5898,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 1
+        },
+        {
+          "text": "Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant Free up disk space if the drive is near capacity, since installs can fail without room for temp files",
+          "doc_id": "KB0010163",
+          "section": "chunk_2",
+          "score": 0.5723,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 2
+        },
+        {
+          "text": "Application Won't Launch or Install Confirm the software is compatible with the current OS and hardware Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit)",
+          "doc_id": "KB0010163",
+          "section": "chunk_0",
+          "score": 0.5664,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 0
+        },
+        {
+          "text": "Install any missing framework or updated driver the app depends on Escalate to a specialist if the issue persists after these steps",
+          "doc_id": "KB0010163",
+          "section": "chunk_5",
+          "score": 0.5338,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 5
+        },
+        {
+          "text": "Re-map the printer or reselect the correct device in the print dialog if configuration looks off Confirm the user has the required permissions on shared/office printers For network printers, troubleshoot the Wi-Fi/network connection separately if needed",
+          "doc_id": "KB0010155",
+          "section": "chunk_2",
+          "score": 0.504,
+          "title": "Printer Not Working",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.4663,
+        "reason": "No relevant knowledge base articles were found for approving and installing Adobe Acrobat Pro licenses."
+      }
+    },
+    {
+      "case_id": "rag_039",
+      "query": "Cannot see my payslip in the HR portal\nThe payslip section of the HR portal shows an empty page for me since the payroll cut-off. Other colleagues can see theirs.",
+      "retrieval": [
+        {
+          "text": "Unsaved Work Lost After a Crash or Closure Check the application's autosave/recovery folder for a recent draft Look for temporary files the application may have created during the session",
+          "doc_id": "KB0010160",
+          "section": "chunk_0",
+          "score": 0.5037,
+          "title": "Unsaved Work Lost After a Crash or Closure",
+          "chunk_index": 0
+        },
+        {
+          "text": "Ping/verify the server or shared resource is actually reachable Check the drive mapping and whether the mapped path dropped after a network change Check firewall rules and recent VPN rule changes that might be blocking access",
+          "doc_id": "KB0010165",
+          "section": "chunk_1",
+          "score": 0.5011,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 1
+        },
+        {
+          "text": "Look for an autosave/version history snapshot in the source app (e.g., Microsoft 365 rolling versions) Check cloud sync status for a paused or partial upload that might explain a \"missing\" file Check shared drive/server snapshots for a backup copy",
+          "doc_id": "KB0010154",
+          "section": "chunk_1",
+          "score": 0.4989,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 1
+        },
+        {
+          "text": "Missing or Accidentally Deleted Files Search for the file by name across local and cloud locations Check the Recycle Bin / Trash Look for an autosave/version history snapshot in the source app (e.g., Microsoft 365 rolling versions)",
+          "doc_id": "KB0010154",
+          "section": "chunk_0",
+          "score": 0.4855,
+          "title": "Missing or Accidentally Deleted Files",
+          "chunk_index": 0
+        },
+        {
+          "text": "Clear cached credentials or reload the user profile if it appears corrupted Escalate to network admins if access should be granted but isn't",
+          "doc_id": "KB0010165",
+          "section": "chunk_3",
+          "score": 0.4831,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 3
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.4237,
+        "reason": "No relevant knowledge base articles were found for resolving payslip visibility issues in the HR portal."
+      }
+    },
+    {
+      "case_id": "rag_040",
+      "query": "Badge does not open the server room door\nMy access badge beeps red at the server room door although I was granted access last week.",
+      "retrieval": [
+        {
+          "text": "Can't Access Shared Network Drives or Resources Restart the PC as a first step Confirm the user's credentials are correct for the network resource Ping/verify the server or shared resource is actually reachable",
+          "doc_id": "KB0010165",
+          "section": "chunk_0",
+          "score": 0.5439,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 0
+        },
+        {
+          "text": "Ping/verify the server or shared resource is actually reachable Check the drive mapping and whether the mapped path dropped after a network change Check firewall rules and recent VPN rule changes that might be blocking access",
+          "doc_id": "KB0010165",
+          "section": "chunk_1",
+          "score": 0.5334,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 1
+        },
+        {
+          "text": "Clear cached credentials or reload the user profile if it appears corrupted Escalate to network admins if access should be granted but isn't",
+          "doc_id": "KB0010165",
+          "section": "chunk_3",
+          "score": 0.4983,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 3
+        },
+        {
+          "text": "Check firewall rules and recent VPN rule changes that might be blocking access Verify current group/permission level with the network/system administrator, especially after onboarding or team changes Clear cached credentials or reload the user profile if it appears corrupted",
+          "doc_id": "KB0010165",
+          "section": "chunk_2",
+          "score": 0.498,
+          "title": "Can't Access Shared Network Drives or Resources",
+          "chunk_index": 2
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.4952,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.4665,
+        "reason": "No knowledge base articles were found addressing physical access badge or door reader issues."
+      }
+    },
+    {
+      "case_id": "rag_041",
+      "query": "عايز أطلب تركيب برنامج أوتوكاد وتفعيل الرخصة\nمحتاج AutoCAD على جهازي وعايز أعرف إزاي أحصل على الترخيص وموافقة المدير.",
+      "retrieval": [
+        {
+          "text": "Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant Free up disk space if the drive is near capacity, since installs can fail without room for temp files",
+          "doc_id": "KB0010163",
+          "section": "chunk_2",
+          "score": 0.6238,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 2
+        },
+        {
+          "text": "Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit) Check that the account has the admin rights the installer needs, and route through IT if elevation is required and policy-compliant",
+          "doc_id": "KB0010163",
+          "section": "chunk_1",
+          "score": 0.6184,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 1
+        },
+        {
+          "text": "Application Won't Launch or Install Confirm the software is compatible with the current OS and hardware Verify the installer comes from a trusted source and matches the system's architecture (32-bit vs 64-bit)",
+          "doc_id": "KB0010163",
+          "section": "chunk_0",
+          "score": 0.5748,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 0
+        },
+        {
+          "text": "Install any missing framework or updated driver the app depends on Escalate to a specialist if the issue persists after these steps",
+          "doc_id": "KB0010163",
+          "section": "chunk_5",
+          "score": 0.5724,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 5
+        },
+        {
+          "text": "Reinstall the application to repair corrupted files or missing components Close or disable other running programs that may conflict with the launch Install any missing framework or updated driver the app depends on",
+          "doc_id": "KB0010163",
+          "section": "chunk_4",
+          "score": 0.545,
+          "title": "Application Won't Launch or Install",
+          "chunk_index": 4
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.5122,
+        "reason": "No relevant knowledge base articles were found for requesting and licensing AutoCAD software."
+      }
+    },
+    {
+      "case_id": "rag_042",
+      "query": "عايز أضبط الرد التلقائي (out-of-office) على الإيميل\nHow do I set my out-of-office automatic reply and email signature? مش لاقي الإعداد في Outlook.",
+      "retrieval": [
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.5706,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Lost Username and Password Attempt username recovery first, usually via the account's registered email If that fails, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010153",
+          "section": "chunk_0",
+          "score": 0.5325,
+          "title": "Lost Username and Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "If that fails, escalate to the help desk for manual identity verification Once identity is confirmed, issue a temporary password and require an immediate change on next login",
+          "doc_id": "KB0010153",
+          "section": "chunk_1",
+          "score": 0.527,
+          "title": "Lost Username and Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.5131,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.4918,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.4682,
+        "reason": "No relevant knowledge base articles were found for configuring out-of-office automatic replies or email signatures in Outlook."
+      }
+    },
+    {
+      "case_id": "rag_043",
+      "query": "What is the sick leave policy?\nHow many sick days am I entitled to per year and who do I notify?",
+      "retrieval": [
+        {
+          "text": "Isolate the device if a malicious link was already clicked Remind the user of phishing awareness best practices",
+          "doc_id": "KB0010158",
+          "section": "chunk_2",
+          "score": 0.3922,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 2
+        },
+        {
+          "text": "Forgotten Password Direct the user to self-service password reset (email link or security questions) If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file",
+          "doc_id": "KB0010168",
+          "section": "chunk_0",
+          "score": 0.3818,
+          "title": "Forgotten Password",
+          "chunk_index": 0
+        },
+        {
+          "text": "Re-register MFA if the reset invalidates the previous token Sign out of all active sessions and log back in fresh once the new password is set If self-service isn't available, escalate to the help desk for manual identity verification",
+          "doc_id": "KB0010168",
+          "section": "chunk_2",
+          "score": 0.3674,
+          "title": "Forgotten Password",
+          "chunk_index": 2
+        },
+        {
+          "text": "Report the message through the official phishing-report channel If credentials may have already been entered, reset the affected password immediately and review recent account activity Isolate the device if a malicious link was already clicked",
+          "doc_id": "KB0010158",
+          "section": "chunk_1",
+          "score": 0.366,
+          "title": "Suspected Phishing Email",
+          "chunk_index": 1
+        },
+        {
+          "text": "If the reset email doesn't arrive, check spam/junk and confirm the correct email is on file If security questions fail, verify the answers or update them once identity is confirmed Re-register MFA if the reset invalidates the previous token",
+          "doc_id": "KB0010168",
+          "section": "chunk_1",
+          "score": 0.3655,
+          "title": "Forgotten Password",
+          "chunk_index": 1
+        }
+      ],
+      "answer": {
+        "text": "",
+        "outcome": "escalated",
+        "sources": [],
+        "retrieved_chunks": [],
+        "max_score": 0.3967,
+        "reason": "No knowledge base articles found regarding the sick leave policy and entitlement details."
+      }
+    }
+  ]
+}
