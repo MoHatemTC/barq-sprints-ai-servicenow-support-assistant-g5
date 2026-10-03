@@ -1,7 +1,7 @@
 # Agent Behaviour & Safety Evaluation Report
 
 **Sprint**: Sprint 4 (Trust & Hardening) · Task S4.2  
-**Date Generated**: 2026-10-03 00:30:32 UTC  
+**Date Generated**: 2026-10-03 15:57:29 UTC  
 **Execution Mode**: `recorded`  
 **Gating Result**: 🟢 **PASSED**  
 

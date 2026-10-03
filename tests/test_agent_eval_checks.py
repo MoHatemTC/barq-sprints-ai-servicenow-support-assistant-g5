@@ -256,3 +256,135 @@ def test_adapter_recorded_replay():
     assert transcript.scenario_id == "SCN-ANS-01"
     assert transcript.terminal_tool == "suggestAnswer"
     assert len(transcript.steps) >= 2
+
+
+# =========================================================================== #
+# 5. Custom Grounding & Judge Config Tests
+# =========================================================================== #
+
+def test_judge_config_resolution_from_env(monkeypatch):
+    """Verify judge model, API key, and base URL load cleanly from environment variables."""
+    from eval.metrics import get_judge_config
+
+    monkeypatch.setenv("JUDGE_MODEL", "custom-judge-gpt4")
+    monkeypatch.setenv("JUDGE_API_KEY", "secret-judge-key-123")
+    monkeypatch.setenv("JUDGE_BASE_URL", "https://api.custom-judge.com/v1")
+
+    cfg = get_judge_config()
+    assert cfg["model"] == "custom-judge-gpt4"
+    assert cfg["api_key"] == "secret-judge-key-123"
+    assert cfg["base_url"] == "https://api.custom-judge.com/v1"
+
+    # Test fallback to project LiteLLM environment variables
+    monkeypatch.delenv("JUDGE_MODEL")
+    monkeypatch.delenv("JUDGE_API_KEY")
+    monkeypatch.delenv("JUDGE_BASE_URL")
+    monkeypatch.setenv("LLM_MODEL", "gemini-2.5-flash")
+    monkeypatch.setenv("LITELLM_API_KEY", "litellm-test-key")
+    monkeypatch.setenv("LITELLM_BASE_URL", "https://litellm.barq.internal")
+
+    cfg_fallback = get_judge_config()
+    assert cfg_fallback["model"] == "gemini-2.5-flash"
+    assert cfg_fallback["api_key"] == "litellm-test-key"
+    assert cfg_fallback["base_url"] == "https://litellm.barq.internal"
+
+
+def test_custom_grounding_metric_backed_steps_pass():
+    """Verify custom grounding passes when all steps are substantiated by KB observations."""
+    from eval.metrics import CustomProceduralGroundingMetric
+
+    metric = CustomProceduralGroundingMetric(threshold=0.85)
+    scenario = {
+        "id": "SCN-TEST-ANS",
+        "expected_final_tool": "suggestAnswer",
+        "evaluation_criteria": {"grounding_required": True},
+    }
+
+    transcript = ExecutionTranscript(
+        scenario_id="SCN-TEST-ANS",
+        incident_number="INC0010001",
+        sys_id="0" * 32,
+        status="suggested",
+        terminal_tool="suggestAnswer",
+        terminal_payload={
+            "suggested_response": "1. Restart the PC first [Article: KB0010174].\n2. Have device forget the network and reconnect [Article: KB0010174].",
+            "citations": ["KB0010174"],
+        },
+        steps=[
+            TranscriptStep(
+                step=1,
+                kind="tool",
+                tool="searchKB",
+                observation={
+                    "chunks": [
+                        {
+                            "article_id": "KB0010174",
+                            "title": "Wi-Fi Troubleshooting",
+                            "text": "Restart the PC first. Have the device forget the network, then reconnect from scratch.",
+                        }
+                    ]
+                },
+            ),
+            TranscriptStep(step=2, kind="tool", tool="suggestAnswer"),
+        ],
+        tool_sequence=["searchKB", "suggestAnswer"],
+        retrieved_articles=["KB0010174"],
+        cited_articles=["KB0010174"],
+    )
+
+    result = metric.measure(transcript, scenario)
+    assert result.passed is True
+    assert result.score >= 0.85
+    assert "strictly substantiated" in result.reason
+
+
+def test_custom_grounding_metric_catches_command_hallucination():
+    """Verify custom grounding catches and penalizes unbacked CLI commands not in KB text."""
+    from eval.metrics import CustomProceduralGroundingMetric
+
+    metric = CustomProceduralGroundingMetric(threshold=0.85)
+    scenario = {
+        "id": "SCN-TEST-ANS",
+        "expected_final_tool": "suggestAnswer",
+        "evaluation_criteria": {"grounding_required": True},
+    }
+
+    # Agent invents 'netsh' CLI command not mentioned in KB article
+    transcript = ExecutionTranscript(
+        scenario_id="SCN-TEST-ANS",
+        incident_number="INC0010001",
+        sys_id="0" * 32,
+        status="suggested",
+        terminal_tool="suggestAnswer",
+        terminal_payload={
+            "suggested_response": "1. Open terminal and run netsh interface reset [Article: KB0010174].\n2. Format the hard drive completely [Article: KB0010174].",
+            "citations": ["KB0010174"],
+        },
+        steps=[
+            TranscriptStep(
+                step=1,
+                kind="tool",
+                tool="searchKB",
+                observation={
+                    "chunks": [
+                        {
+                            "article_id": "KB0010174",
+                            "title": "Wi-Fi Troubleshooting",
+                            "text": "Restart the computer and verify Wi-Fi is toggled on in Windows settings.",
+                        }
+                    ]
+                },
+            ),
+            TranscriptStep(step=2, kind="tool", tool="suggestAnswer"),
+        ],
+        tool_sequence=["searchKB", "suggestAnswer"],
+        retrieved_articles=["KB0010174"],
+        cited_articles=["KB0010174"],
+    )
+
+    result = metric.measure(transcript, scenario)
+    assert result.passed is False
+    assert result.score < 0.85
+    assert "Command hallucination detected" in result.reason
+    assert "netsh" in result.reason
+
