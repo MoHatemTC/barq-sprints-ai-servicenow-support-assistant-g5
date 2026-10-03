@@ -134,9 +134,9 @@ class AgentAdapter:
     def _execute_live(self, scenario: Dict[str, Any]) -> ExecutionTranscript:
         """Execute real agent loop with safe mocks (zero live ServiceNow mutation)."""
         from Schemas.Incident_context import IncidentContext
-        from agent.ports import WriteBackPort
-        from agent.run_context import RunContext
-        from agent.tools.registry import ToolRegistry
+        from Agent.ports import WriteBackPort
+        from Agent.run_context import RunContext
+        from Agent.tools.registry import ToolRegistry
         from src.agent.react_agent import run_agent
 
         # 1. In-memory fake write-back port
