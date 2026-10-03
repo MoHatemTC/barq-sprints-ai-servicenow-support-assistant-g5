@@ -3,7 +3,7 @@ name = "barq-sprints-ai-servicenow-support-assistant-g5"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
     "annotated-doc==0.0.5",
@@ -12,7 +12,7 @@ dependencies = [
     "asyncpg>=0.31.0",
     "beautifulsoup4",
     "certifi==2026.7.22",
-    "click==8.5.0",
+    "click>=8.1,<8.4",
     "colorama==0.4.6",
     "fastapi==0.141.1",
     "h11==0.16.0",
@@ -66,5 +66,10 @@ explicit = true
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[dependency-groups]
+dev = [
+    "deepeval>=4",
+]
 
 
