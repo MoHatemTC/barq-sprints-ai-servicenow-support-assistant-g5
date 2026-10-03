@@ -1,4 +1,4 @@
-﻿## ServiceNow Write-back & Human Review
+## ServiceNow Write-back & Human Review
 
 Sprint 3 (S3.6) adds the ServiceNow write-back client and human review surface for AI-generated incident suggestions.
 
@@ -214,3 +214,47 @@ python -m scripts.make_evidence      # rewrites docs/evidence/answerable_run.md,
 python -m pytest                     # Python tests (offline)
 node --test tests/js/servicenow_scripts.test.js   # ServiceNow script logic (also run by pytest)
 ```
+
+---
+
+## Sprint 4: Agent Behaviour & Safety Evaluation (S4.2)
+
+Evaluates agent behavior, tool selection, guardrail enforcement, and safety across complete execution runs using **DeepEval**, custom **G-Eval** metrics, and **deterministic structural checks**.
+
+### Architecture & Modes
+
+1. **Recorded Replay Mode (Default)**: Replays pre-recorded transcripts (`eval/fixtures/agent_runs.json`). Deterministic, 0 token cost, offline, ideal for CI/CD gating:
+   ```bash
+   python eval/run_agent_eval.py --mode recorded
+   ```
+2. **Live Execution Mode**: Runs the real ReAct agent loop against test scenarios using `FakeWriteBackPort` (guaranteeing zero modification to any live ServiceNow instance):
+   ```bash
+   python eval/run_agent_eval.py --mode live --llm-judge
+   ```
+
+### Evaluation Dataset (`eval/datasets/agent_scenarios.json`)
+Contains 17 operational scenarios across 7 mandatory categories:
+- **Answerable**: Standard IT incidents (`searchKB` $\rightarrow$ `suggestAnswer`).
+- **Unanswerable**: Out-of-domain facilities/hardware queries (`searchKB` $\rightarrow$ `requestHR`).
+- **Prompt Injection**: Delimiter escapes (`</incident_data>`), jailbreaks, role overrides.
+- **Unauthorized Actions**: Demands to close, resolve, or reassign tickets.
+- **Ambiguous Inputs**: Single-word inputs ("broken"), fragmented blue screen symptoms.
+- **Arabic Incidents**: Multilingual tickets in Arabic.
+- **Trap Scenarios**: Matching articles with `workflow_state: 'retired'` or `'draft'` (must filter out and escalate).
+
+### DeepEval & G-Eval Metrics
+- **Tool Correctness**: Compares agent tool trajectories against expected tool ordering.
+- **Grounding**: Verifies procedural suggestions derive strictly from retrieved KB chunks with valid inline citations.
+- **Safety & Scope**: Verifies resistance to prompt injection and enforces strictly advisory scope.
+- **Hand-off Quality**: Verifies clean human escalation via `requestHR` without speculative guessing.
+
+### Gating Configuration & Reports
+- **Config**: `eval/agent_config.yaml` defines pass rate thresholds (85% overall, 100% deterministic, zero tolerance on injections/traps). Runner exits with code 1 if any threshold is breached.
+- **Reports**: Markdown evaluation scorecards generated in `eval/reports/agent_report.md`.
+- **Failure Analysis**: Root cause deep dive and remediation proposals documented in `docs/agent_eval_findings.md`.
+
+### Evaluation Unit Tests
+```bash
+python -m pytest tests/test_agent_eval_checks.py -v
+```
+
