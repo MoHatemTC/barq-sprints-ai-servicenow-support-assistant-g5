@@ -12,7 +12,7 @@
 
 **Access instructions:** open the link in any browser and press play. (If the MP4 is committed instead: `docs/demo/<file>.mp4`, download or view it from the GitHub file page.)
 
-## What the demo proves
+## What the demo provide
 
 1. A signed ServiceNow event reaches the FastAPI webhook and is accepted with **HTTP 202**.
 2. A Celery worker runs the ReAct agent, which searches the knowledge base in Qdrant.
