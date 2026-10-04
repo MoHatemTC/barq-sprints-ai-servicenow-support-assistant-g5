@@ -56,6 +56,7 @@ class KnowledgeRetriever:
 
         # No score_threshold here on purpose: we want the best score
         # even when it is below threshold (FR-17 confidence, demo, traces).
+        fetch_limit = max(self.top_k * 4, self.top_k)
         response = self.qdrant.client.query_points(
             collection_name=self.qdrant.collection_name,
             query=vector,
@@ -67,14 +68,17 @@ class KnowledgeRetriever:
                     )
                 ]
             ),
-            limit=self.top_k,
+            limit=fetch_limit,
             with_payload=True,
         )
 
-        hits = []
-        for point in response.points:
+        ranked: dict[str, dict[str, Any]] = {}
+
+        def add_ranked(point, rank: int, source: str, score: float) -> None:
             payload = point.payload or {}
-            hits.append(
+            key = str(point.id)
+            hit = ranked.setdefault(
+                key,
                 {
                     "article_id": payload.get("article_id"),
                     "title": payload.get("title"),
@@ -88,11 +92,37 @@ class KnowledgeRetriever:
                     "heading_path": payload.get("heading_path", []),
                     "section_ids": payload.get("section_ids", []),
                     "content_types": payload.get("content_types", []),
-                    "score": round(float(point.score or 0.0), 4),
-                }
+                    "score": 0.0,
+                    "bm25_score": 0.0,
+                    "rank_score": 0.0,
+                },
             )
+            hit["rank_score"] += 1 / (60 + rank)
+            if source == "dense":
+                hit["score"] = round(float(score), 4)
+            else:
+                hit["bm25_score"] = round(float(score), 4)
 
-        chunks = [h for h in hits if h["score"] >= self.minimum_score]
+        for rank, point in enumerate(response.points, start=1):
+            add_ranked(point, rank, "dense", float(point.score or 0.0))
+
+        for rank, (point, score) in enumerate(
+            self.qdrant.search_bm25(
+                query.strip(),
+                self.allowed_workflow_states,
+                fetch_limit,
+            ),
+            start=1,
+        ):
+            add_ranked(point, rank, "bm25", score)
+
+        hits = sorted(
+            ranked.values(),
+            key=lambda hit: hit["rank_score"],
+            reverse=True,
+        )[: self.top_k]
+        best_dense_score = max((hit["score"] for hit in ranked.values()), default=0.0)
+        chunks = hits if best_dense_score >= self.minimum_score else []
         reason = None if chunks else "no chunk above threshold"
         return self._result(query, hits, chunks, reason)
 

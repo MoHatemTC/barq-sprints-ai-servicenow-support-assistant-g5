@@ -111,6 +111,39 @@ uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001
 uv run scripts/parse_pdf.py --pdf kbpdf.pdf --output data/parsed/doc_001 --overwrite
 ```
 
+### Structure-aware semantic chunking and indexing
+
+The parsed Markdown can be split into metadata-rich chunks, then embedded and
+indexed in Qdrant:
+
+```bash
+uv run "chunking and indexing/chunking.py" \
+  --input data/parsed/doc_001/document.md \
+  --output data/parsed/doc_001/chunks.json \
+  --target-words 400 \
+  --overlap-words 60 \
+  --semantic-threshold 0.55
+
+uv run "chunking and indexing/index_chunks.py" \
+  --input data/parsed/doc_001/chunks.json \
+  --article-id doc_001
+```
+
+The chunker compares embeddings of adjacent prose sentences and starts a new
+semantic segment when their cosine similarity falls below the threshold. It
+still respects headings and protected content such as tables, code, and
+diagrams. Retrieval combines dense-vector ranking with BM25 lexical ranking
+over the text payloads already stored in Qdrant. BM25's corpus snapshot is
+cached per process for 60 seconds and invalidated by writes made through the
+same Qdrant service. Refreshing that snapshot scans the collection, so a
+dedicated sparse index will be preferable if the indexed corpus grows large.
+
+The default dense embedding model is `BAAI/bge-m3` with 1024 dimensions.
+Its model-specific Qdrant collection is `kb_baai_bge_m3` by default. The first
+startup with this model creates an empty collection and reindexes the
+published ServiceNow articles; run `uv run python reindex.py` to force a
+rebuild after changing the model or chunking behavior.
+
 ### 🎯 Parser Tool Selection Rationale
 1. **IBM Docling (`docling`):** Selected for state-of-the-art layout analysis, native Markdown table export, bounding box tracking, and page division.
 2. **RapidOCR (`rapidocr`):** Lightweight, multi-lingual OCR engine supporting Arabic & English text detection without heavy external dependencies.

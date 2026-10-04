@@ -15,11 +15,12 @@ class FakeEmbedder:
 
 class FakeQdrantClient:
     def query_points(self, **kwargs):
-        assert kwargs["limit"] == 5
+        assert kwargs["limit"] == 20
         assert kwargs["with_payload"] is True
         return SimpleNamespace(
             points=[
                 SimpleNamespace(
+                    id="dense-hit",
                     score=0.91,
                     payload={
                         "article_id": "doc_001",
@@ -46,6 +47,12 @@ class FakeQdrant:
     def __init__(self):
         self.client = FakeQdrantClient()
 
+    def search_bm25(self, query, workflow_states, limit):
+        assert query == "duplicate webhook event"
+        assert workflow_states == ("published",)
+        assert limit == 20
+        return []
+
 
 def test_document_retrieval_preserves_provenance_metadata():
     retriever = KnowledgeRetriever(
@@ -66,3 +73,35 @@ def test_document_retrieval_preserves_provenance_metadata():
     assert hit["section_ids"] == ["KB-11"]
     assert hit["heading_path"][-1] == "The webhook contract KB-11"
     assert hit["content_types"] == ["prose", "table"]
+
+
+def test_document_retrieval_fuses_dense_and_bm25_candidates():
+    lexical_point = SimpleNamespace(
+        id="lexical-only",
+        score=0.0,
+        payload={
+            "article_id": "doc_002",
+            "title": "Webhook duplicate handling",
+            "text": "A duplicate webhook event is ignored.",
+            "workflow_state": "published",
+        },
+    )
+
+    class HybridQdrant(FakeQdrant):
+        def search_bm25(self, query, workflow_states, limit):
+            return [(lexical_point, 4.2)]
+
+    retriever = KnowledgeRetriever(
+        qdrant=HybridQdrant(),
+        embedder=FakeEmbedder(),
+        minimum_score=0.70,
+        top_k=5,
+    )
+
+    result = retriever.retrieve("duplicate webhook event")
+
+    assert result["human_review_required"] is False
+    assert {hit["article_id"] for hit in result["chunks"]} == {"doc_001", "doc_002"}
+    lexical_hit = next(hit for hit in result["chunks"] if hit["article_id"] == "doc_002")
+    assert lexical_hit["score"] == 0.0
+    assert lexical_hit["bm25_score"] == 4.2

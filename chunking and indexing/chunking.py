@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable
 
 
 PAGE_RE = re.compile(r"^\s*<!--\s*page:\s*(\d+)\s*-->\s*$")
@@ -18,6 +21,11 @@ DIAGRAM_RE = re.compile(r"^>\s*\[Diagram\s+p\.(\d+)\]", re.I)
 TABLE_SEPARATOR_RE = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 SENTENCE_RE = re.compile(r"(?<=[.!?؟])\s+(?=[A-Z0-9`\"'\[(])")
+DEFAULT_SEMANTIC_THRESHOLD = 0.55
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+	sys.path.insert(0, str(REPOSITORY_ROOT))
 
 
 @dataclass
@@ -27,6 +35,7 @@ class Block:
 	page_end: int | None
 	heading_path: list[str] = field(default_factory=list)
 	content_type: str = "prose"
+	semantic_boundary_before: bool = False
 
 	@property
 	def word_count(self) -> int:
@@ -188,32 +197,94 @@ def _split_sentences(text: str) -> list[str]:
 	return [part.strip() for part in SENTENCE_RE.split(text) if part.strip()]
 
 
-def _split_prose(block: Block, target_words: int, overlap_words: int) -> list[Block]:
+def _sentence_similarities(
+	sentences: list[str],
+	encoder: Callable[[list[str]], list[list[float]]] | None,
+) -> list[float] | None:
+	if encoder is None or len(sentences) < 2:
+		return None
+
+	vectors = encoder(sentences)
+	if len(vectors) != len(sentences):
+		raise ValueError("Sentence encoder returned a different number of vectors than inputs")
+
+	similarities: list[float] = []
+	for previous, current in zip(vectors, vectors[1:]):
+		if len(previous) != len(current):
+			raise ValueError("Sentence encoder returned vectors with inconsistent dimensions")
+		dot = sum(left * right for left, right in zip(previous, current))
+		previous_norm = math.sqrt(sum(value * value for value in previous))
+		current_norm = math.sqrt(sum(value * value for value in current))
+		if not previous_norm or not current_norm:
+			similarities.append(0.0)
+		else:
+			similarities.append(dot / (previous_norm * current_norm))
+	return similarities
+
+
+def _split_prose(
+	block: Block,
+	target_words: int,
+	overlap_words: int,
+	similarities: list[float] | None = None,
+	semantic_threshold: float = DEFAULT_SEMANTIC_THRESHOLD,
+) -> list[Block]:
 	sentences = _split_sentences(block.text)
 	if not sentences:
 		return [block]
 
 	result: list[Block] = []
-	current: list[str] = []
-	count = 0
-	for sentence in sentences:
-		sentence_words = len(sentence.split())
-		if current and count + sentence_words > target_words:
-			result.append(Block(" ".join(current), block.page_start, block.page_end, block.heading_path, "prose"))
-			overlap: list[str] = []
-			overlap_count = 0
-			for previous in reversed(current):
-				previous_count = len(previous.split())
-				if overlap_count + previous_count > overlap_words:
-					break
-				overlap.insert(0, previous)
-				overlap_count += previous_count
-			current = overlap
-			count = overlap_count
-		current.append(sentence)
-		count += sentence_words
-	if current:
-		result.append(Block(" ".join(current), block.page_start, block.page_end, block.heading_path, "prose"))
+	segments: list[list[str]] = [[]]
+	for index, sentence in enumerate(sentences):
+		if (
+			index
+			and similarities is not None
+			and similarities[index - 1] < semantic_threshold
+		):
+			segments.append([])
+		segments[-1].append(sentence)
+
+	for segment_index, segment in enumerate(segments):
+		current: list[str] = []
+		count = 0
+		first_piece = True
+		for sentence in segment:
+			sentence_words = len(sentence.split())
+			if current and count + sentence_words > target_words:
+				result.append(
+					Block(
+						" ".join(current),
+						block.page_start,
+						block.page_end,
+						block.heading_path,
+						"prose",
+						semantic_boundary_before=segment_index > 0 and first_piece,
+					)
+				)
+				first_piece = False
+				overlap: list[str] = []
+				overlap_count = 0
+				for previous in reversed(current):
+					previous_count = len(previous.split())
+					if overlap_count + previous_count > overlap_words:
+						break
+					overlap.insert(0, previous)
+					overlap_count += previous_count
+				current = overlap
+				count = overlap_count
+			current.append(sentence)
+			count += sentence_words
+		if current:
+			result.append(
+				Block(
+					" ".join(current),
+					block.page_start,
+					block.page_end,
+					block.heading_path,
+					"prose",
+					semantic_boundary_before=segment_index > 0 and first_piece,
+				)
+			)
 	return result
 
 
@@ -276,7 +347,13 @@ def _split_protected(block: Block, target_words: int) -> list[Block]:
 	return [block]
 
 
-def _chunk_blocks(blocks: list[Block], target_words: int, overlap_words: int) -> list[dict]:
+def _chunk_blocks(
+	blocks: list[Block],
+	target_words: int,
+	overlap_words: int,
+	semantic_encoder: Callable[[list[str]], list[list[float]]] | None = None,
+	semantic_threshold: float = DEFAULT_SEMANTIC_THRESHOLD,
+) -> list[dict]:
 	chunks: list[dict] = []
 	pending: list[Block] = []
 	pending_words = 0
@@ -308,7 +385,15 @@ def _chunk_blocks(blocks: list[Block], target_words: int, overlap_words: int) ->
 
 	for block in blocks:
 		if block.content_type == "prose":
-			pieces = _split_prose(block, target_words, overlap_words)
+			sentences = _split_sentences(block.text)
+			similarities = _sentence_similarities(sentences, semantic_encoder)
+			pieces = _split_prose(
+				block,
+				target_words,
+				overlap_words,
+				similarities,
+				semantic_threshold,
+			)
 		elif block.content_type in {"table", "diagram"}:
 			pieces = _split_protected(block, target_words)
 		else:
@@ -316,7 +401,7 @@ def _chunk_blocks(blocks: list[Block], target_words: int, overlap_words: int) ->
 		for piece in pieces:
 			piece_words = piece.word_count
 			protected = piece.content_type in {"table", "diagram", "code", "procedure"}
-			if pending and protected:
+			if pending and (piece.semantic_boundary_before or protected):
 				emit()
 			elif pending and pending_words + piece_words > target_words:
 				emit()
@@ -326,12 +411,37 @@ def _chunk_blocks(blocks: list[Block], target_words: int, overlap_words: int) ->
 	return chunks
 
 
-def build_chunks(input_path: Path, target_words: int = 400, overlap_words: int = 60) -> list[dict]:
+def _default_sentence_encoder() -> Callable[[list[str]], list[list[float]]]:
+	from Services.embedding_service import EmbeddingService
+
+	return EmbeddingService().embed_chunks
+
+
+def build_chunks(
+	input_path: Path,
+	target_words: int = 400,
+	overlap_words: int = 60,
+	semantic_threshold: float = DEFAULT_SEMANTIC_THRESHOLD,
+	sentence_encoder: Callable[[list[str]], list[list[float]]] | None = None,
+) -> list[dict]:
 	if target_words < 1 or overlap_words < 0:
 		raise ValueError("target_words must be positive and overlap_words cannot be negative")
+	if not -1.0 <= semantic_threshold <= 1.0:
+		raise ValueError("semantic_threshold must be between -1 and 1")
 	document = input_path.read_text(encoding="utf-8")
 	blocks = parse_blocks(document)
-	chunks = _chunk_blocks(blocks, target_words, overlap_words)
+	if sentence_encoder is None and any(
+		block.content_type == "prose" and len(_split_sentences(block.text)) > 1
+		for block in blocks
+	):
+		sentence_encoder = _default_sentence_encoder()
+	chunks = _chunk_blocks(
+		blocks,
+		target_words,
+		overlap_words,
+		sentence_encoder,
+		semantic_threshold,
+	)
 	document_id = input_path.parent.name
 	source_file = input_path.name
 	for chunk in chunks:
@@ -356,9 +466,20 @@ def main() -> None:
 	)
 	parser.add_argument("--target-words", type=int, default=400)
 	parser.add_argument("--overlap-words", type=int, default=60)
+	parser.add_argument(
+		"--semantic-threshold",
+		type=float,
+		default=DEFAULT_SEMANTIC_THRESHOLD,
+		help="Split prose when adjacent sentence similarity falls below this value.",
+	)
 	args = parser.parse_args()
 
-	chunks = build_chunks(args.input, args.target_words, args.overlap_words)
+	chunks = build_chunks(
+		args.input,
+		args.target_words,
+		args.overlap_words,
+		args.semantic_threshold,
+	)
 	args.output.parent.mkdir(parents=True, exist_ok=True)
 	args.output.write_text(json.dumps(chunks, ensure_ascii=False, indent=2), encoding="utf-8")
 	print(f"Wrote {len(chunks)} chunks to {args.output}")

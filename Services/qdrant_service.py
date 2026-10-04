@@ -1,6 +1,10 @@
+import math
 import os
-import uuid
 import re
+import threading
+import time
+import uuid
+from collections import Counter
 
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
@@ -18,14 +22,16 @@ from Services.embedding_service import EMBEDDING_MODEL_NAME
 
 load_dotenv()
 
-# Must match the embedding model: bge-base-en-v1.5 = 768 dims.
+# BGE-M3 and bge-large-en-v1.5 both produce 1024-dimensional dense vectors.
 # EMBEDDING_MODEL_NAME comes from embedding_service (single source of truth).
 # The collection name is derived from it, so a model change = new empty
 # collection = automatic reindex at startup.
-VECTOR_SIZE = int(os.getenv("EMBEDDING_VECTOR_SIZE", "768"))
+VECTOR_SIZE = int(os.getenv("EMBEDDING_VECTOR_SIZE", "1024"))
 _model_slug = re.sub(r"[^a-z0-9]+", "_", EMBEDDING_MODEL_NAME.lower()).strip("_")
-COLLECTION_NAME = os.getenv("QDRANT_COLLECTION_PREFIX", "kb") + "_" + _model_slug  # -> kb_baai_bge_base_en_v1_5
+COLLECTION_NAME = os.getenv("QDRANT_COLLECTION_PREFIX", "kb") + "_" + _model_slug  # -> kb_baai_bge_m3
 INDEXED_FIELDS = ("article_id", "workflow_state", "category")
+BM25_TOKEN_RE = re.compile(r"\w+", re.UNICODE)
+BM25_CACHE_TTL_SECONDS = 60
 
 
 class QdrantService:
@@ -38,6 +44,8 @@ class QdrantService:
         port: int | None = None,
     ):
         self.collection_name = collection_name or COLLECTION_NAME
+        self._bm25_cache: tuple[float, list[tuple[object, list[str]]]] | None = None
+        self._bm25_lock = threading.RLock()
 
         url = url or os.getenv("QDRANT_URL")
         api_key = os.getenv("QDRANT_API_KEY")
@@ -149,6 +157,7 @@ class QdrantService:
                 collection_name=self.collection_name,
                 points=points,
             )
+            self._invalidate_bm25_cache()
 
         print(f"Upserted {len(points)} chunks for article {article_id}.")
 
@@ -166,6 +175,7 @@ class QdrantService:
                 )
             ),
         )
+        self._invalidate_bm25_cache()
         print(f"Deleted all chunks for article {article_id}.")
 
     # ------------------------------------------------------------------ #
@@ -184,6 +194,102 @@ class QdrantService:
             with_vectors=False,
         )
         return points
+
+    def search_bm25(
+        self,
+        query: str,
+        workflow_states: tuple[str, ...],
+        limit: int,
+    ) -> list[tuple[object, float]]:
+        """Rank stored chunk text with BM25, returning points and lexical scores."""
+        query_terms = BM25_TOKEN_RE.findall(query.casefold())
+        if not query_terms or limit < 1:
+            return []
+
+        documents = [
+            (point, terms)
+            for point, terms in self._get_bm25_documents()
+            if (point.payload or {}).get("workflow_state") in workflow_states
+        ]
+        if not documents:
+            return []
+
+        document_count = len(documents)
+        average_length = sum(len(terms) for _, terms in documents) / document_count
+        document_frequencies: Counter[str] = Counter()
+        for _, terms in documents:
+            document_frequencies.update(set(terms))
+
+        query_frequencies = Counter(query_terms)
+        k1 = 1.5
+        b = 0.75
+        scored = []
+        for point, terms in documents:
+            frequencies = Counter(terms)
+            document_length = len(terms)
+            score = 0.0
+            for term, query_frequency in query_frequencies.items():
+                term_frequency = frequencies[term]
+                if not term_frequency:
+                    continue
+                inverse_document_frequency = math.log(
+                    1
+                    + (document_count - document_frequencies[term] + 0.5)
+                    / (document_frequencies[term] + 0.5)
+                )
+                denominator = term_frequency + k1 * (
+                    1 - b + b * document_length / average_length
+                )
+                score += (
+                    inverse_document_frequency
+                    * term_frequency
+                    * (k1 + 1)
+                    / denominator
+                    * query_frequency
+                )
+            if score > 0:
+                scored.append((point, score))
+
+        return sorted(scored, key=lambda item: item[1], reverse=True)[:limit]
+
+    def _get_bm25_documents(self) -> list[tuple[object, list[str]]]:
+        with self._bm25_lock:
+            now = time.monotonic()
+            if self._bm25_cache and now - self._bm25_cache[0] < BM25_CACHE_TTL_SECONDS:
+                return self._bm25_cache[1]
+
+            points = []
+            offset = None
+            while True:
+                page, offset = self.client.scroll(
+                    collection_name=self.collection_name,
+                    limit=256,
+                    offset=offset,
+                    with_payload=True,
+                    with_vectors=False,
+                )
+                points.extend(page)
+                if offset is None:
+                    break
+
+            documents = [
+                (
+                    point,
+                    BM25_TOKEN_RE.findall(
+                        str((point.payload or {}).get("text", "")).casefold()
+                    ),
+                )
+                for point in points
+            ]
+            self._bm25_cache = (
+                now,
+                [(point, terms) for point, terms in documents if terms],
+            )
+            return self._bm25_cache[1]
+
+    def _invalidate_bm25_cache(self) -> None:
+        with self._bm25_lock:
+            self._bm25_cache = None
 
     def count_points(self) -> int:
         """Used by the startup check to decide whether a reindex is needed."""

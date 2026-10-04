@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
-DEFAULT_MODEL_NAME = "BAAI/bge-base-en-v1.5"
+DEFAULT_MODEL_NAME = "BAAI/bge-m3"
 # Single source of truth: qdrant_service imports this to build the collection name.
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME") or DEFAULT_MODEL_NAME
 
