@@ -2,6 +2,8 @@ services:
 
   fastapi_app:
 
+    profiles: [app]
+
     build: .
 
     container_name: fastapi_support_assistant
@@ -33,6 +35,9 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
     networks:
       - app_network
@@ -88,7 +93,7 @@ services:
     build: .
     container_name: celery_worker
 
-    command: celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=2
+    command: celery -A Worker.celery_app:celery_app worker --loglevel=INFO --concurrency=1
 
     restart: always
 
@@ -96,17 +101,30 @@ services:
       - .env
 
     environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      REDIS_URL: redis://redis:6379/0
       REDIS_HOST: redis
       REDIS_PORT: 6379
       HF_HOME: /hf_cache
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
+      LANGFUSE_BASE_URL: http://host.docker.internal:3000
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
 
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
 
     volumes:
       - .:/app
       - hf_cache:/hf_cache
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
 
     depends_on:
@@ -115,6 +133,9 @@ services:
 
       postgres_db:
         condition: service_healthy
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
     networks:
       - app_network

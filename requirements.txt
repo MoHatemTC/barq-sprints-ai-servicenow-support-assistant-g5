@@ -332,11 +332,11 @@ tokenizers==0.22.2
     # via
     #   sentence-transformers
     #   transformers
-torch==2.14.0 ; sys_platform == 'darwin'
+torch==2.14.1 ; sys_platform == 'darwin'
     # via
     #   barq-sprints-ai-servicenow-support-assistant-g5
     #   sentence-transformers
-torch==2.14.0+cpu ; sys_platform != 'darwin'
+torch ; sys_platform != 'darwin'
     # via
     #   barq-sprints-ai-servicenow-support-assistant-g5
     #   sentence-transformers

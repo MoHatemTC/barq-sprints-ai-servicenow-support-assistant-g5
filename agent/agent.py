@@ -31,6 +31,8 @@ ALLOWED_WORKFLOW_STATES = tuple(
 )
 
 
+from langfuse import observe
+
 class KnowledgeRetriever:
     """Embed the query, search published chunks, apply the score threshold."""
 
@@ -49,6 +51,7 @@ class KnowledgeRetriever:
         self.top_k = top_k
         self.allowed_workflow_states = allowed_workflow_states
 
+    @observe(as_type="retriever", name="retrieve-knowledge")
     def retrieve(self, query: str) -> dict[str, Any]:
         """Full result: chunks above threshold + scores for tracing/confidence."""
         if not query or not query.strip():

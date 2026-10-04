@@ -93,8 +93,8 @@ IP_PATTERN = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d{1,5})?\b")
 API_KEY_PATTERN = re.compile(r"\b(?:sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{30,}|AKIA[0-9A-Z]{16})\b")
 
 
-def mask_pii(text: str) -> str:
-    """Tier 1 Master Masking Function:
+def mask_pii_deterministic(text: str) -> str:
+    """Tier 1 Pre-Flight Deterministic Sanitizer:
     Applies IP masking, credential regex (EN + AR), API keys, and Shannon entropy.
     """
     if not text:
@@ -113,3 +113,22 @@ def mask_pii(text: str) -> str:
     masked = mask_high_entropy_tokens(masked)
 
     return masked
+
+
+def mask_pii(text: str) -> str:
+    """Master Masking Function:
+    Applies local Qwen 2.5:3b model via Ollama for intelligent PII redaction (EN + AR),
+    with automatic fallback to deterministic regex/entropy masking.
+    """
+    if not text:
+        return ""
+
+    # Pre-mask deterministic credentials/IPs first
+    deterministic_masked = mask_pii_deterministic(text)
+
+    # Apply Qwen 2.5:3b contextual PII masking
+    try:
+        from utils.ollama_masker import mask_pii_with_qwen
+        return mask_pii_with_qwen(deterministic_masked)
+    except Exception:
+        return deterministic_masked
