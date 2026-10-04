@@ -33,6 +33,9 @@ class RunContext(BaseModel):
     # ReAct loop execution log (S3.4): llm / tool / guardrail / fallback events
     events: List[Dict[str, Any]] = Field(default_factory=list, description="Ordered execution steps of the agent loop")
 
+    # Pre-normalized query set by run_pipeline before the agent starts
+    initial_search_query: Optional[str] = Field(default=None, description="Normalized/optimized search query derived from the incident text")
+
     def record_retrieval(self, query: str, chunks: List[Dict[str, Any]], best_score: float) -> None:
         """Record the results of a searchKB query."""
         self.retrieval_history.append({

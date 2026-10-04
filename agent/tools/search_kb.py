@@ -63,47 +63,18 @@ class SearchKBTool:
 
         cleaned_query = query.strip()
 
-        # 3. Dense search execution with clean error handling
+        # 3. Hybrid search execution (Dense + Sparse with RRF) with clean error handling
         try:
-            # Generate query embedding
-            vector = self.embedder.embed_text(cleaned_query)
+            from Services.hybrid_retriever import HybridRetriever
 
-            # Query Qdrant with published-only filter
-            # Support both 'workflow_state' and 'status' payload attributes
-                        # Query Qdrant with published-only filter (FR-11).
-            # Only 'workflow_state' is used: it is on every chunk and it has a
-            # payload index. Qdrant Cloud rejects filters on non-indexed keys
-            # (e.g. 'status') with 400 "Index required but not found".
-            state_filter = Filter(
-                must=[
-                    FieldCondition(
-                        key="workflow_state",
-                        match=MatchAny(any=list(self.allowed_states)),
-                    ),
-                ]
-            )
-            client = getattr(self.qdrant_service, "client", self.qdrant_service)
-            collection_name = getattr(self.qdrant_service, "collection_name", "kb_collection")
-
-            response = client.query_points(
-                collection_name=collection_name,
-                query=vector,
-                query_filter=state_filter,
-                limit=self.top_k,
-                with_payload=True,
+            retriever = HybridRetriever(
+                qdrant_service=self.qdrant_service,
+                embedder=self.embedder,
+                top_k=self.top_k,
+                allowed_states=self.allowed_states,
             )
 
-            hits: List[Dict[str, Any]] = []
-            for point in getattr(response, "points", []):
-                payload = point.payload or {}
-                hits.append({
-                    "article_id": payload.get("article_id") or payload.get("number"),
-                    "title": payload.get("title") or payload.get("short_description") or "",
-                    "content": payload.get("text") or payload.get("content") or "",
-                    "chunk_index": payload.get("chunk_index", 0),
-                    "workflow_state": payload.get("workflow_state") or payload.get("status") or "published",
-                    "score": round(float(point.score or 0.0), 4),
-                })
+            hits = retriever.search(cleaned_query, top_k=self.top_k)
 
             best_score = max((h["score"] for h in hits), default=0.0)
             passed_chunks = [h for h in hits if h["score"] >= self.score_threshold]

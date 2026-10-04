@@ -35,6 +35,8 @@ from src.agent.prompts.system_prompt import PROMPT_VERSION, SYSTEM_PROMPT
 from src.agent.run_context import RunContext
 from Services.response_formatter import CITATION_RE
 
+from langfuse import observe, get_client
+
 logger = logging.getLogger(__name__)
 
 
@@ -244,11 +246,30 @@ def is_transient(exc: Exception) -> bool:
     return any(n in name for n in TRANSIENT_NAMES)
 
 
+@observe(as_type="generation", name="llm-generation")
+def _single_llm_call(llm, messages, attempt: int, max_attempts: int) -> AIMessage:
+    ai_message = llm.invoke(messages)
+    try:
+        usage = getattr(ai_message, "usage_metadata", None) or {}
+        model = getattr(ai_message, "response_metadata", {}).get("model_name") or getattr(llm, "model_name", None) or os.getenv("LLM_MODEL", "gemini-2.5-flash")
+        update_args = {"model": model}
+        if usage:
+            update_args["usage_details"] = {
+                "input": usage.get("input_tokens", 0),
+                "output": usage.get("output_tokens", 0),
+                "total": usage.get("total_tokens", 0),
+            }
+        get_client().update_current_generation(**update_args)
+    except Exception as exc:
+        logger.debug("Failed to update langfuse generation: %s", exc)
+    return ai_message
+
+
 def invoke_with_retry(llm, messages, config: AgentConfig, sleep: Callable[[float], None]) -> AIMessage:
     attempts = config.llm_retries + 1
     for attempt in range(1, attempts + 1):
         try:
-            return llm.invoke(messages)
+            return _single_llm_call(llm, messages, attempt, attempts)
         except Exception as exc:
             if not is_transient(exc):
                 raise AgentFailure(f"LLM error (not retryable): {type(exc).__name__}: {exc}") from exc
@@ -271,6 +292,7 @@ def _tokens(msg: AIMessage) -> int:
     return int(usage.get("total_tokens") or 0)
 
 
+@observe(as_type="tool")
 def _run_tool(tool_map: dict, call: dict) -> dict:
     name = call.get("name")
     tool = tool_map.get(name)
@@ -278,7 +300,8 @@ def _run_tool(tool_map: dict, call: dict) -> dict:
         return {"error": f"unknown tool '{name}'. Allowed: {sorted(tool_map)}"}
     try:
         result = tool.invoke(call.get("args") or {})
-        return result if isinstance(result, dict) else {"result": result}
+        output = result if isinstance(result, dict) else {"result": result}
+        return output
     except Exception as exc:  # bad args, tool crash -> observation, not a crash
         logger.warning("Tool %s failed: %s", name, exc)
         return {"error": f"{type(exc).__name__}: {exc}"}
@@ -300,6 +323,7 @@ def _force_escalation(ctx: RunContext, tool_map: dict, reason: str) -> None:
 # --------------------------------------------------------------------------- #
 # The loop
 # --------------------------------------------------------------------------- #
+@observe(as_type="agent", name="react-agent")
 def run_agent(
     sys_id: str,
     incident: Any,
@@ -418,6 +442,7 @@ def run_agent(
             # Close the run locally as an escalation that was never written back.
             forced_reason = f"ServiceNow write-back failed: {writeback_error}"
             ctx.log("fallback", reason=forced_reason)
+            ctx.log("tool", name="requestHR", args={"reason": forced_reason}, observation={"status": "error", "error": writeback_error}, forced=True)
             ctx.mark_finished("requestHR", {"reason": forced_reason, "escalated": True,
                                             "writeback_ok": False})
         else:

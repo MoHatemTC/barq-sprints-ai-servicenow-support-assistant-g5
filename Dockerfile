@@ -12,12 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
-# Install CPU-only PyTorch first
-RUN pip install --no-cache-dir \
-    torch \
-    --index-url https://download.pytorch.org/whl/cpu
-
-# Install the remaining Python dependencies
+# Install the Python dependencies (which will include standard GPU PyTorch from PyPI)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files

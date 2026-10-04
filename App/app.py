@@ -20,8 +20,7 @@ logger = logging.getLogger("servicenow_webhook.startup")
 async def lifespan(app: FastAPI):
     await db.connect()
 
-    # Load the model and Qdrant client once, so the first incident isn't slow.
-    await asyncio.to_thread(get_embedder)
+    # Load Qdrant client once for status checks.
     qdrant = await asyncio.to_thread(get_qdrant)
 
     # Empty collection (fresh setup or new EMBEDDING_MODEL_NAME) -> rebuild.
