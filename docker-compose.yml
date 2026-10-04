@@ -108,10 +108,13 @@ services:
       HF_HOME: /hf_cache
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
-      LANGFUSE_BASE_URL: http://host.docker.internal:3000
+      LANGFUSE_BASE_URL: http://langfuse-web:3000
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
-
+      LANGFUSE_TIMEOUT: 3
+      OTEL_EXPORTER_OTLP_TRACES_TIMEOUT: 3
+      OTEL_EXPORTER_OTLP_TIMEOUT: 3000
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
 
     volumes:
@@ -139,6 +142,7 @@ services:
 
     networks:
       - app_network
+      - langfuse_default
 
 volumes:
 
@@ -151,3 +155,6 @@ networks:
 
   app_network:
     driver: bridge
+
+  langfuse_default:
+    external: true
