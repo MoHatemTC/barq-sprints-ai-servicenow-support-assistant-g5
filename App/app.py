@@ -10,6 +10,7 @@ load_dotenv()
 from App.database import db
 from Routes import webhook
 from Routes.kb import router as kb_router
+from Routes.resolution import router as resolution_router
 from Services.KB_ingestion_service import reindex_all
 from Services.shared import get_embedder, get_qdrant
 
@@ -45,3 +46,5 @@ app = FastAPI(
 
 app.include_router(webhook.router)
 app.include_router(kb_router)
+app.include_router(resolution_router)
+

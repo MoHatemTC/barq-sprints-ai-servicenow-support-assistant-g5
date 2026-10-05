@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 
-# Install the Python dependencies (which will include standard GPU PyTorch from PyPI)
+# Install the Python dependencies from the pinned requirements file.
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files

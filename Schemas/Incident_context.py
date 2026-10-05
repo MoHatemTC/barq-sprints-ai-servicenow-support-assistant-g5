@@ -6,6 +6,8 @@ from pydantic import BaseModel
 class IncidentContext(BaseModel):
     sys_id: str
     original_number: str
+    short_description: str = ""
+    description: str = ""
     sanitized_query: str
     truncated_description: str
     extracted_tags: List[str]

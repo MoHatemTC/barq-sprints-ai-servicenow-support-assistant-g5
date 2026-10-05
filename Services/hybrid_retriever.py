@@ -299,4 +299,5 @@ class HybridRetriever:
         # 4. Perform Reciprocal Rank Fusion (RRF)
         fused_hits = self.reciprocal_rank_fusion(dense_hits, sparse_hits)
 
-        return fused_hits[:k]
+        # Keep the retriever observation compact while preserving the normal top-k behavior.
+        return fused_hits[:k][:5]

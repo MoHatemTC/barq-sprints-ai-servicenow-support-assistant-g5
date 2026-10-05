@@ -28,8 +28,10 @@ class IncidentContextPreparer:
         return IncidentContext(
             sys_id=sys_id,
             original_number=number,
+            short_description=short_desc or "",
+            description=desc or "",
             sanitized_query=final_query,
             truncated_description=safe_desc,
             extracted_tags=tags,
-            is_safe=is_safe_flag
+            is_safe=is_safe_flag,
         )
