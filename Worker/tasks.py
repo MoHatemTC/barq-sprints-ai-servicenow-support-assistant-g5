@@ -373,11 +373,25 @@ def process_incident_worker(self, incident):
                 return incident_context
 
             # --------------------------------------------------
-            # 9. Run the AI pipeline
+            # 9. Run the AI pipeline / Cache Lookup
             # --------------------------------------------------
             result = incident_handler(
                 incident_context
             )
+
+            if isinstance(result, dict) and result.get("cached"):
+                logger.info(
+                    "[REDIS CACHE HIT] Incident %s (sys_id: %s) solved using previously verified ServiceNow resolution (Cached from incident %s). AI pipeline bypassed.",
+                    worker_payload.number,
+                    worker_payload.sys_id,
+                    result.get("cached_incident_number"),
+                )
+            else:
+                logger.info(
+                    "[AI PIPELINE EXECUTION] Incident %s (sys_id: %s) processed using AI/RAG pipeline.",
+                    worker_payload.number,
+                    worker_payload.sys_id,
+                )
 
             # --------------------------------------------------
             # 10. Mark the event as completed
@@ -387,7 +401,7 @@ def process_incident_worker(self, incident):
             )
 
             # --------------------------------------------------
-            # 11. Return the AI result
+            # 11. Return the result
             # --------------------------------------------------
             return result
 

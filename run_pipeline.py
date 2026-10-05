@@ -22,6 +22,7 @@ from dotenv import load_dotenv
 
 from src.agent.factory import build_agent_tools, new_run_context
 from src.agent.react_agent import AgentFailure, AgentResult, run_agent
+from App.resolved_incident_cache import ResolvedIncidentCache
 from Schemas.Incident_context import IncidentContext
 from Services.exporters import to_html, to_json, to_markdown
 from Services.query_normalizer import normalize_incident
@@ -68,7 +69,87 @@ def process_incident(ctx: IncidentContext) -> dict:
             # Guardrail from Sprint 2: never let a flagged payload reach the agent
             response = build_escalation("The incident text was flagged as unsafe.", number)
         else:
-            # --- 3-Tier Defense: Normalize query before starting agent ---
+            # --- Exact-Match Redis Cache Lookup ---
+            short_desc = getattr(ctx, "short_description", "")
+            desc = getattr(ctx, "description", "")
+            if not short_desc and ctx.sanitized_query:
+                parts = ctx.sanitized_query.split("\n", 1)
+                short_desc = parts[0]
+                desc = parts[1] if len(parts) > 1 else ctx.truncated_description
+
+            cached_data = ResolvedIncidentCache.get_cached_resolution(short_desc, desc)
+            if cached_data:
+                logger.info(
+                    "[CACHE HIT] Exact-match verified resolution found in Redis for incident %s (sys_id: %s).",
+                    number,
+                    ctx.sys_id,
+                )
+                logger.info(
+                    "[CACHE HIT] Returning verified solution from previously resolved ServiceNow incident %s.",
+                    cached_data.get("number"),
+                )
+                try:
+                    from utils.console_tracer import print_cache_hit_trace
+                    print_cache_hit_trace(ctx, cached_data)
+                except Exception as t_exc:
+                    logger.debug("Console trace print warning: %s", t_exc)
+
+                resolution_text = cached_data.get("close_notes", "")
+                confidence = float(cached_data.get("ai_confidence") or 1.0)
+
+                # --- Write back cached resolution to ServiceNow ---
+                try:
+                    from src.agent.factory import get_write_back_port
+                    wb = get_write_back_port()
+                    wb_res = wb.suggest(
+                        sys_id=ctx.sys_id,
+                        number=number,
+                        payload={
+                            "ai_suggested_response": resolution_text,
+                            "ai_confidence": confidence,
+                        },
+                    )
+                    logger.info(
+                        "ServiceNow write-back for cached incident %s: %s",
+                        number,
+                        wb_res,
+                    )
+                    cached_num = cached_data.get("number")
+                    note = (
+                        f"[AI CACHE HIT] Verified solution populated from previously "
+                        f"resolved incident {cached_num or 'historical database'}."
+                    )
+                    wb.add_work_note(sys_id=ctx.sys_id, number=number, note=note)
+                except Exception as wb_exc:
+                    logger.warning(
+                        "ServiceNow write-back for cached incident %s failed: %s",
+                        number,
+                        wb_exc,
+                    )
+
+                payload = {
+                    "source": "previously_resolved_incident",
+                    "verified": True,
+                    "resolution": resolution_text,
+                    "ai_suggested_response": resolution_text,
+                    "ai_confidence": confidence,
+                    "human_review_required": True,
+                    "escalated": False,
+                    "citations": [],
+                    "cached": True,
+                    "cached_incident_number": cached_data.get("number"),
+                    "cached_sys_id": cached_data.get("sys_id"),
+                }
+                out = Path("outputs")
+                out.mkdir(exist_ok=True)
+                (out / f"{number}.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+                return payload
+
+            # --- CACHE MISS: continue existing AI pipeline unchanged ---
+            logger.info(
+                "[CACHE MISS] Exact-match Redis lookup miss for incident %s. Proceeding with AI pipeline.",
+                number,
+            )
             raw_text = ctx.sanitized_query or ctx.truncated_description
             normalized = normalize_incident(raw_text)
             
