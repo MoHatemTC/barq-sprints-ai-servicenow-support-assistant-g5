@@ -2,6 +2,7 @@ import logging
 import asyncio
 import os
 import random
+import threading
 from importlib import import_module
 
 import httpx
@@ -395,5 +396,20 @@ def process_incident_worker(self, incident):
             # the event loop.
             await db.disconnect()
 
-    return asyncio.run(run())
+    result = asyncio.run(run())
+
+    # Fire-and-forget Langfuse flush in a daemon thread.
+    # This ensures Langfuse tracing never blocks or kills the Celery task.
+    def _flush_langfuse():
+        try:
+            from langfuse import get_client
+            get_client().flush()
+        except Exception as exc:
+            logger.debug("Langfuse background flush skipped: %s", exc)
+
+    t = threading.Thread(target=_flush_langfuse, daemon=True)
+    t.start()
+    t.join(timeout=3.0)  # max 3s wait — then move on regardless
+
+    return result
 

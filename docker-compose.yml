@@ -23,10 +23,16 @@ services:
       QDRANT_PORT: 6333
       POSTGRES_HOST: postgres_db
       POSTGRES_PORT: 5432
+      LANGFUSE_BASE_URL: http://langfuse-web:3000
+      LANGFUSE_TIMEOUT: 30
+      LANGFUSE_FLUSH_AT: 32
+      LANGFUSE_FLUSH_INTERVAL: 2
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
       HF_HOME: /hf_cache
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      OTEL_EXPORTER_OTLP_TRACES_TIMEOUT: 10000
+      OTEL_EXPORTER_OTLP_TIMEOUT: 10000
 
     volumes:
       - .:/app
@@ -41,6 +47,7 @@ services:
 
     networks:
       - app_network
+      - langfuse_default
 
 
   postgres_db:
@@ -111,9 +118,11 @@ services:
       LANGFUSE_BASE_URL: http://langfuse-web:3000
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
-      LANGFUSE_TIMEOUT: 3
-      OTEL_EXPORTER_OTLP_TRACES_TIMEOUT: 3
-      OTEL_EXPORTER_OTLP_TIMEOUT: 3000
+      LANGFUSE_TIMEOUT: 30
+      LANGFUSE_FLUSH_AT: 32
+      LANGFUSE_FLUSH_INTERVAL: 2
+      OTEL_EXPORTER_OTLP_TRACES_TIMEOUT: 10000
+      OTEL_EXPORTER_OTLP_TIMEOUT: 10000
       OLLAMA_BASE_URL: http://host.docker.internal:11434
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres_db:5432/${POSTGRES_DB:-servicenow_ai}
 
